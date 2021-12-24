@@ -135,19 +135,6 @@ class Product extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    fetch_products: (offset) => {
-       return dispatch(actFetchProductsRequest(token, offset))
-    },
-    delete_product: (id, token) => {
-      dispatch(actDeleteProductRequest(id, token))
-    },
-    find_products: (token, searchText) => {
-      return dispatch(actFindProductsRequest(token, searchText))
-    }
-  }
-}
 
 
 
