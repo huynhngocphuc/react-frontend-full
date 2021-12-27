@@ -56,12 +56,19 @@ class Register extends Component {
     console.log(user);
     startLoading();
     await this.props.registerRequest(user);
-
-    // doneLoading();
+    this.setState ({
+      fullname: '',
+      gmail: '',
+      password: '',
+      repassword: '',
+      phonenumber:'',
+      address:''
+    } ) 
+    doneLoading();
   }
 
   render() {
-    const { fullname, gmail, phonenumber,address } = this.state;
+    const { fullname, gmail, phonenumber,address,password,repassword } = this.state;
     return (
       <div className="col-sm-12 col-md-12 col-lg-6 col-xs-12">
         <form onSubmit={(event) => this.handleSubmit(event)} >
@@ -91,6 +98,7 @@ class Register extends Component {
               <div className="col-md-6 mb-20">
                 <label>Mật khẩu*</label>
                 <input
+                  value={password}
                   onChange={this.handleChange}
                   className="mb-0"
                   type="password"
@@ -100,7 +108,7 @@ class Register extends Component {
               <div className="col-md-6 mb-20">
                 <label>Nhập lại mật khẩu *</label>
                 <input
-                  
+                   value={repassword}
                   onChange={this.handleChange}
                   className="mb-0"
                   type="password"

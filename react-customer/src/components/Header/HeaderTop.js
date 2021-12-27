@@ -1,11 +1,24 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 import './style.css'
+import { actTokenRequest } from '../../redux/actions/auth'
+import { startLoading, doneLoading } from '../../utils/loading'
 
 
 class HeaderTop extends Component {
+  logOut = async () => {
+    localStorage.removeItem('_auth');
+    const token = null;
+    startLoading();
+    await this.props.setTokenRedux(token);
+    doneLoading();
+  }
 
-
+  loadingPage = () => {
+    startLoading();
+    doneLoading();
+  }
 
   render() {
     const { user } = this.props;
@@ -35,16 +48,17 @@ class HeaderTop extends Component {
                   </li>
                   <li>
                     {
-                      (!user) ? <Link to="/login-register" className="fix-link-color language-selector-wrapper"> Login </Link> :
-                        <div className="dropdown show">
+                      (!user)
+                        ? (<Link onClick={() => this.loadingPage()} to="/login-register" className="fix-link-color language-selector-wrapper"> Login </Link>)
+                        : (<div className="dropdown show">
                           <Link to="#" className=" fix-link-color dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Setting
                           </Link>
                           <div className="fix-text-item dropdown-menu ht-setting-list " aria-labelledby="dropdownMenuLink">
                             <Link className="fix-text-item dropdown-item" to="/profile">Thông tin cá nhân</Link>
-                            <Link to="/login-register" className="fix-text-item dropdown-item" href="/">Đăng xuất</Link>
+                            <Link onClick={this.logOut} to="/login-register" className="fix-text-item dropdown-item" href="/">Đăng xuất</Link>
                           </div>
-                        </div>
+                        </div>)
                     }
                   </li>
                 </ul>
@@ -58,4 +72,19 @@ class HeaderTop extends Component {
 }
 
 
-export default (HeaderTop)
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.auth
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setTokenRedux: (token) => {
+      dispatch(actTokenRequest(token))
+    }
+  }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(HeaderTop)

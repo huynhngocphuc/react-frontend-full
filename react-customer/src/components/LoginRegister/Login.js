@@ -13,92 +13,91 @@ class Login extends Component {
 
   constructor(props) {
     super(props);
-    // this.verifyCallback = this.verifyCallback.bind(this);
+    
     this.state = {
-      email: "",
+      username: "",
       password: "",
-      isVerified: false
+      
     }
   }
 
-  // handleChange = event => {
-  //   const name = event.target.name;
-  //   const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-  //   this.setState({
-  //     [name]: value
-  //   });
-  // }
+  handleChange = event => {
+    const name = event.target.name;
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    this.setState({
+      [name]: value
+    });
+  }
 
-  // recaptchaLoaded(){
-  //   //reload captcha
-  // }
 
-  // handleSubmit = async event => {
-  //   event.preventDefault();
-  //   const { email, password, isVerified } = this.state;
-  //   //verifi captcha
-  //   if (isVerified) {
-  //     if (password.length < 6 || password.length > 32) {
-  //       return toast.error('Password must be 6-32 characters');
-  //     }
-  //     const user = {
-  //       email,
-  //       password
-  //     }
-  //     startLoading();
-  //     await this.props.loginRequest(user);
-  //     doneLoading();
-  //   } else {
-  //     return toast.error('Please confirm captcha');
-  //   }
-  // }
-  // verifyCallback(res) {
-  //   if (res) {
-  //     this.setState({
-  //       isVerified: true
-  //     })
-  //   }
-  // }
+
+  handleSubmit = async event => {
+    event.preventDefault();
+    const { username, password } = this.state;
+      if (password.length < 6 || password.length > 32) {
+        return toast.error('Mật khẩu từ 6-24 ký tự');
+      }
+      const user = {
+        username,
+        password
+      }
+      console.log(user)
+      startLoading();
+      await this.props.loginRequest(user);
+      doneLoading();
+     
+  }
+
 
   render() {
-    const { email, password } = this.state;
+    const { username, password } = this.state;
     const { user } = this.props;
-    
+    if(user !== null)
+    {
+      return <Redirect to="/"></Redirect>
+    }
     return (
       <div className="col-sm-12 col-md-12 col-xs-12 col-lg-6 mb-30">
         {/* Login Form s*/}
-        <form >
+        <form onSubmit={(event) => this.handleSubmit(event)}>
           <div className="login-form">
             <h4 className="login-title">Login</h4>
             <div className="row">
               <div className="col-md-12 col-12 mb-20">
-                <label>Email Address*</label>
-                <input  value={email} className="mb-0" type="email" placeholder="Email Address" name='email' />
+                <label>Gmail *</label>
+                <input
+                  value={username}
+                  onChange={this.handleChange}
+                  className="mb-0"
+                  type="email"
+                  placeholder="Nhập gmail"
+                  name='username'
+                />
               </div>
               <div className="col-12 mb-20">
-                <label>Password</label>
-                <input value={password} className="mb-0" type="password" placeholder="Password" name='password' />
+                <label>Mật khẩu</label>
+                <input
+                  value={password}
+                  onChange={this.handleChange}
+                  className="mb-0"
+                  type="password"
+                  placeholder="Mật khẩu"
+                  name='password'
+                />
               </div>
               <div className="col-md-8">
                 <div className="check-box d-inline-block ml-0 ml-md-2 mt-10">
                   <input type="checkbox" id="remember_me" />
-                  <label htmlFor="remember_me">Remember me</label>
+                  <label htmlFor="remember_me">Nhớ tài khoản</label>
                 </div>
               </div>
               <div className="col-md-4 mt-10 mb-20 text-left text-md-right">
-                <Link to="/forgot-password"> Forgotten pasward?</Link>
+                <Link to="/forgot-password"> Quên mật khẩu</Link>
               </div>
               <div className="col-md-4">
-                <button className="register-button mt-0 mb-3">Login</button>
+                <button className="register-button mt-0 mb-3">Đăng nhập</button>
               </div>
-              <div className="col-md-8">
-                <Recaptcha
-                  sitekey="6Lcd9sEUAAAAAAEj4w9sjBETFKCPXVmcPelQzGjK"
-                  render="explicit"
-                  
-                 
-                />
-              </div>
+             
             </div>
           </div>
         </form>
@@ -108,18 +107,18 @@ class Login extends Component {
 }
 
 
-// const mapStateToProps = (state) => {
-//   return {
-//     user: state.auth
-//   }
-// }
+const mapStateToProps = (state) => {
+  return {
+    user: state.auth
+  }
+}
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     loginRequest: (user) => {
-//       dispatch(actLoginRequest(user))
-//     }
-//   }
-// }
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loginRequest: (user) => {
+      dispatch(actLoginRequest(user))
+    }
+  }
+}
 
-export default (Login)
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
 import { toast } from "react-toastify";
-import callApi from '../utils/apiCaller';
+import { Redirect } from 'react-router-dom';
+import callApi from '../../utils/apiCaller';
+import { startLoading, doneLoading } from '../../utils/loading'
 class ActiveRegister extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            code: this.props.match.match.params
+            code: this.props.code,
+            isActive: false
         }
     }
     handleChange = (event) => {
@@ -16,19 +19,38 @@ class ActiveRegister extends Component {
             [name]: value
         });
     }
+    
+    async componentWillMount(){
+        const { code } = this.state.code
+        console.log(code)
+        startLoading();
+        const res = await callApi(`registration/activate/${code}`, 'GET',null);
+        doneLoading();
+        if(res && res.status === 200){
+            toast.success('Xác thực thành công')
+            this.setState({isActive :true})
+        }
+
+    }
     handleSubmit = async (event) => {
         event.preventDefault();
         const { code } = this.state.code
         console.log(code)
+        startLoading();
         const res = await callApi(`registration/activate/${code}`, 'GET',null);
-        console.log(res)
+        doneLoading();
         if(res && res.status === 200){
             toast.success('Xác thực thành công')
+            this.setState({isActive :true})
         }
     }
 
     render() {
         const { code } = this.state.code
+        const {isActive} = this.state
+        if (isActive ) {
+            return <Redirect to="/"></Redirect>
+        }
         return (
             <div className="col-sm-12 col-md-12 col-lg-6 col-xs-12 d-flex justify-content-center">
                 <form onSubmit={(event) => this.handleSubmit(event)}>
