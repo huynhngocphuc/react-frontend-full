@@ -5,6 +5,8 @@ import nameRole from './nameRole';
 import dashboard from './dashboard'
 import users from './users';
 import products from './products';
+import categories from './categories';
+import producers from './producers';
 
 const appReducers = combineReducers({
     auth,
@@ -12,7 +14,9 @@ const appReducers = combineReducers({
     nameRole,
     dashboard,
     users,
-    products
+    products,
+    categories,
+    producers
     
 })
 

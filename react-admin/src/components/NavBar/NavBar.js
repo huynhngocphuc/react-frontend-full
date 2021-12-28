@@ -29,10 +29,10 @@ class NavBar extends Component {
   }
   render() {
 
-    console.log(this.props)
+    
     const { user } = this.state;
     const newUser = user && user.length ? user[0] : null;
-    console.log("user",newUser);
+    
     return (
       <nav className="side-navbar">
         {/* Sidebar Header*/}

@@ -30,7 +30,6 @@ class App extends Component {
     token = localStorage.getItem("_auth");
     if (token) {
       this.props.add_token_redux(token);
-
     }
   }
   render() {

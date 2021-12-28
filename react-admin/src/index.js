@@ -6,7 +6,7 @@ import { createStore, applyMiddleware } from 'redux';
 import appReducers from './redux/reducers';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
-import { ToastContainer,toast } from 'react-toastify';
+import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 

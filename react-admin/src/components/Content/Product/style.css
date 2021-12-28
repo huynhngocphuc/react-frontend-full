@@ -14,3 +14,15 @@
   width: 100%;
   object-fit: contain;
 }
+.fix-margin {
+  margin: auto;
+  padding-top: 1%;
+}
+
+.fix-create {
+  margin-left: 77%;
+}
+.fix-action {
+  font-size: 20px;
+  margin: 5px;
+}

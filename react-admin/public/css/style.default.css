@@ -14,6 +14,11 @@ https://bootstrapious.com/p/admin-template
 *     GENERAL STYLES
 * ==========================================================
 */
+
+:root{
+    --primary-color:#f6684c;
+}
+
 body {
   overflow-x: hidden;
 }
@@ -1675,10 +1680,11 @@ section.charts div[class*="col-"] {
 .form-control:focus {
   color: #495057;
   background-color: #fff;
-  border-color: #796AEE;
+  border-color: var(--primary-color);
+  
   outline: none;
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(121, 106, 238, 0.25);
-  box-shadow: 0 0 0 0.2rem rgba(121, 106, 238, 0.25);
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(238, 106, 106, 0.25);
+  box-shadow: 0 0 0 0.2rem rgba(238, 106, 106, 0.25);
 }
 
 .form-control-sm {
@@ -1799,7 +1805,7 @@ button, input[type='submit'] {
 }
 
 .checkbox-template:checked::before, .radio-template:checked::before {
-  background: #796AEE;
+  background: var(--primary-color);
 }
 
 .checkbox-template:checked::after, .radio-template:checked::after {

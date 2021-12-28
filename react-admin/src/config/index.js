@@ -1,14 +1,14 @@
 export const config = {
     api: {
-        url: 'http://localhost:8082'
+        url: 'http://localhost:8082/admin'
     },
     firebaseConfig: {
-        apiKey: "AIzaSyA_LvFzPR14BDq5-z3oFKhNDytqml2bPMo",
-        authDomain: "fir-react-upload-28bc5.firebaseapp.com",
-        projectId: "fir-react-upload-28bc5",
-        storageBucket: "fir-react-upload-28bc5.appspot.com",
-        messagingSenderId: "1096957491909",
-        appId: "1:1096957491909:web:7dde9bea72ce3e79164eac",
-        measurementId: "G-X1SHVKC4RR"
+        apiKey: "AIzaSyAGXEK1PU-mNzOuCAyHWTFZ3ih2EiHtI_8",
+        authDomain: "react-uploadimage-5d9bf.firebaseapp.com",
+        projectId: "react-uploadimage-5d9bf",
+        storageBucket: "react-uploadimage-5d9bf.appspot.com",
+        messagingSenderId: "709819787551",
+        appId: "1:709819787551:web:867660e5cc32385bdfa82a",
+        measurementId: "G-SYC6VPZYTB"
     }
 }
