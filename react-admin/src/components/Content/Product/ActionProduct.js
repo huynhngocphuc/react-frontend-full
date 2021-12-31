@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-
+import { Link } from 'react-router-dom'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-// import { actAddProductRequest, actGetProductRequest, actEditProductRequest } from '../../../redux/actions/product';
+import { actAddProductRequest, actEditProductRequest } from '../../../redux/actions/product';
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom';
 import callApi from '../../../utils/apiCaller';
@@ -36,26 +36,41 @@ class ActionProduct extends Component {
       descriptionProduct: '',
       dataCategories: [],
       dataProducer: [],
-      categoryId: 0,
-      supplierId: 0,
+      categoryId: 1,
+      supplierId: 1,
       // hình để đưa ra giao diện
-      img: null
-      
-
+      img: null,
+      redirectToProduct: false,
+      loading: false,
     };
     id = this.props.id
   }
 
   async componentDidMount() {
+    if (id) {
+      const res = await callApi(`product/${id}`, 'GET', null);
+      if (res && res.status === 200) {
+        console.log("dữ liệu trả về", res.data, res.data.supplierFKDto.supplierId)
+        this.setState({
+          productName: res.data.productName,
+          quantity: res.data.quantity,
+          productImage: res.data.productImage,
+          discount: res.data.discount,
+          unitPrice: res.data.unitPrice,
+          descriptionProduct: res.data.descriptionProduct,
+          categoryId:res.data.categoryFKDto.categoryId,
+          supplierId: res.data.supplierFKDto.supplierId
+        })
+      }
+    }
 
     const resCategories = await callApi('category/all', 'GET', null);
     this.setState({
-      dataCategories: resCategories.data,
+      dataCategories: resCategories.data
     })
-
     const resProducer = await callApi('supplier/all', 'GET', null);
     this.setState({
-      dataProducer: resProducer.data,
+      dataProducer: resProducer.data
     })
 
   }
@@ -67,6 +82,12 @@ class ActionProduct extends Component {
     this.setState({
       [name]: value
     });
+  }
+  handleChangeSelecProducer = (event) => {
+    let value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    this.setState({
+      supplierId: value
+    })
   }
   handleChangeImage = (event) => {
     if (event.target.files[0]) {
@@ -81,25 +102,77 @@ class ActionProduct extends Component {
   }
   handleSubmit = async (event) => {
     event.preventDefault();
-    const { 
-      productName, 
-      quantity, 
-      discount, 
-      unitPrice, 
+    const {
+      productName,
+      quantity,
+      discount,
+      unitPrice,
       descriptionProduct,
       categoryId,
-      supplierId } = this.state;
-      let { productImage, img } = this.state;
-      if (img !== null && img !== productImage) {
-        console.log("vao rooi");
-        productImage = await uploadImage(img);
-        console.log(productImage);
+      supplierId, loading } = this.state;
+    let { productImage, img } = this.state;
+    this.setState({
+      loading: true
+    })
+    if (img !== null && img !== productImage) {
+      console.log("vao rooi");
+      productImage = await uploadImage(img);
+
+    }
+    const newProductName = productName === '' ? null : productName;
+    const newQuantity = parseInt(quantity);
+    const newDiscount = parseInt(discount);
+    const newUnitPrice = parseInt(unitPrice);
+    const newDescriptionProduct = descriptionProduct === '' ? 'không mô tả' : descriptionProduct;
+    const newCategoryId = parseInt(categoryId);
+    const newSupplierId = parseInt(supplierId);
+    const newImage = productImage === '' ? 'http://via.placeholder.com/300x200' : productImage;
+    console.log("image", newImage)
+    if (!id) {
+      const newProduct = {
+        productName: newProductName,
+        quantity: newQuantity,
+        discount: newDiscount,
+        unitPrice: newUnitPrice,
+        descriptionProduct: newDescriptionProduct,
+        categoryId: newCategoryId,
+        supplierId: newSupplierId,
+        productImage: newImage
       }
-      
+      console.log("data", newProduct)
+      await this.props.add_Product(newProduct);
+      this.setState({
+        productName: '',
+        quantity: 0,
+        productImage: '',
+        discount: 0,
+        unitPrice: 0,
+        descriptionProduct: '',
+        categoryId: null,
+        supplierId: 1,
+        img : null,
+        loading: false
+      })
 
-      
+    }
+    else {
+      const editProduct = {
+        productName: newProductName,
+        quantity: newQuantity,
+        discount: newDiscount,
+        unitPrice: newUnitPrice,
+        descriptionProduct: newDescriptionProduct,
+        categoryId: newCategoryId,
+        supplierId: newSupplierId,
+        productImage: newImage
+      }
+      await this.props.edit_Product(id, editProduct);
+      this.setState({
+        loading: false,
+        redirectToProduct: true
+      })
 
-
+    }
   }
   modules = {
     toolbar: [
@@ -119,8 +192,10 @@ class ActionProduct extends Component {
   ];
 
   render() {
-    const { productName, quantity, productImage, discount, unitPrice, descriptionProduct,dataProducer, categoryId, dataCategories, supplierId } = this.state;
-    
+    const { productName, quantity, productImage, discount, unitPrice, descriptionProduct, dataProducer, categoryId, dataCategories, supplierId,loading,redirectToProduct} = this.state;
+    if (redirectToProduct) {
+      return <Redirect to='/products'></Redirect>
+    }
     return (
       <div className="content-inner">
         {/* Page Header*/}
@@ -130,8 +205,7 @@ class ActionProduct extends Component {
             sizeUnit={"px"}
             size={30}
             color={'#796aeebd'}
-            loading={false}
-
+            loading={loading}
           />
         </div>
         <header className="page-header">
@@ -142,7 +216,7 @@ class ActionProduct extends Component {
         {/* Breadcrumb*/}
         <div className="breadcrumb-holder container-fluid">
           <ul className="breadcrumb">
-            <li className="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+            <li className="breadcrumb-item"><Link to="/">Trang chủ</Link></li>
             <li className="breadcrumb-item active">Sản phẩm</li>
           </ul>
         </div>
@@ -245,7 +319,7 @@ class ActionProduct extends Component {
                                   {
                                     item.categoryId === categoryId ?
                                       <input
-                                        id={index}
+                                        id={item.categoryId}
                                         name="categoryId"
                                         checked
                                         value={categoryId}
@@ -255,7 +329,7 @@ class ActionProduct extends Component {
                                         className="radio-template" />
                                       :
                                       <input
-                                        id={index}
+                                        id={item.categoryId}
                                         name="categoryId"
                                         value={categoryId}
                                         onChange={this.handleChange}
@@ -278,11 +352,11 @@ class ActionProduct extends Component {
                           Nhà cung cấp
                         </label>
                         <div className="col-sm-9">
-                          <select className="form-control mb-3" name="supplierId">
+                          <select className="form-control mb-3" name="supplierId" value={supplierId} onChange={this.handleChangeSelecProducer}>
                             {
                               dataProducer && dataProducer.length ? dataProducer.map((item, index) => {
                                 return (
-                                  <option key={index} value={item.supplierId} >{item.supplierName}</option>
+                                  <option key={item.supplierId} value={item.supplierId} >{item.supplierName}</option>
                                 )
                               }) : null
                             }
@@ -293,8 +367,8 @@ class ActionProduct extends Component {
                       {/* chức năng */}
                       <div className="form-group row">
                         <div className="col-sm-4 offset-sm-3">
-                          <button type="reset" className="btn btn-secondary" style={{ marginRight: 2 }}>Cancel</button>
-                          <button type="submit" className="btn btn-primary">Save changes</button>
+                          <Link to='/products' type="reset" className="btn btn-secondary" style={{ marginRight: 2 }}>Thoát</Link>
+                          <button type="submit" className="btn btn-primary">Lưu</button>
                         </div>
                       </div>
                     </form>
@@ -311,5 +385,15 @@ class ActionProduct extends Component {
   }
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    add_Product: (newProduct) => {
+      dispatch(actAddProductRequest(newProduct))
+    },
+    edit_Product: (id, data) => {
+      dispatch(actEditProductRequest(id, data))
+    }
+  }
+}
 
-export default (ActionProduct)
+export default connect(null, mapDispatchToProps)(ActionProduct)

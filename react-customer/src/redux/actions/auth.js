@@ -32,17 +32,6 @@ export const actRegisterRequest = (user) => {
         }
     };
 }
-// export const actActiveRequest = (code) => {
-//     console.log(code)
-//     return async () => {
-//         const res = await callApi(`registration/activate/${code}`, 'GET',null);
-//         if (res && res.status === 200) {
-//             console.log(res)
-//             toast.success('Xác thực thành công')
-//         }
-//         toast.success('Xác thực thành công')
-//     };
-// }
 
 export const actTokenRequest = (token) => {
     return async dispatch => {
@@ -73,11 +62,24 @@ export const actPasswordRequest = (user) => {
         const res = await callApi('auth/reset', 'POST', user);
         if (res && res.status === 200) {
             const mes = res.data.message ? res.data.message:"Đổi mật khẩu thành công";
-            
+            localStorage.removeItem("_mailreset");
             toast.success(mes)
         }
     };
 }
+// export const actActiveRequest = (code) => {
+//     console.log(code)
+//     return async () => {
+//         const res = await callApi(`registration/activate/${code}`, 'GET',null);
+//         if (res && res.status === 200) {
+//             console.log(res)
+//             toast.success('Xác thực thành công')
+//         }
+//         toast.success('Xác thực thành công')
+//     };
+// }
+
+
 // export const actUpdateMeRequset = (data, token) => {
 //     return async dispatch => {
 //         const res = await callApi('users/me', 'PUT', data, token);

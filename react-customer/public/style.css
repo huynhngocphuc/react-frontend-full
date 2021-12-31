@@ -73,7 +73,7 @@
 /*  1.1 Basic
 /*----------------------------------------*/
 :root{
-	--primary-color:#f6684c;
+	--primary-color:#f68169;
 }
 body {
 	color: #242424 !important;
@@ -1874,7 +1874,7 @@ textarea:focus {
 }
 /*Sticky*/
 .header-sticky.sticky {
-	background: rgba(254,215,0,.8);
+	background: rgba(246, 129, 105, 0.8);
 	left: 0;
 	position: fixed;
 	right: 0;
@@ -2299,7 +2299,7 @@ textarea:focus {
 .add-actions-link li.add-cart {
 	float: left;
 	margin: 0;
-	background: #fecf33;
+	background: #fff;
 	border: 1px solid #e1e1e1;
 	transition: all 0.3s ease-in-out;
 	width: 120px;
@@ -2320,7 +2320,8 @@ textarea:focus {
 	transition: all 300ms ease-in 0s;
 }
 .add-actions-link li.add-cart.active a {
-	color: #242424;
+	color: #000000;
+	
 }
 .add-actions-link li:hover a, 
 .add-actions-link li.add-cart:hover a {

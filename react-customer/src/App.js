@@ -2,13 +2,10 @@ import React, { Component } from "react";
 import routes from "./routes";
 import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 import Header from "./components/Header/Header";
-// import Footer from "./components/Footer/Footer";
-// import { actFetchCartRequest } from "./redux/actions/cart";
-// import { connect } from "react-redux";
-// import { actTokenRequest } from "./redux/actions/auth";
-// import Social from "./components/Social/Social";
-// import { actFetchFavoritesRequest } from "./redux/actions/rating";
+import { connect } from "react-redux";
+import { actTokenRequest } from "./redux/actions/auth";
 import { css } from '@emotion/core';
+import { actShowLoading } from "./redux/actions/loading";
 import ClipLoader from 'react-spinners/ClipLoader';
 
 import './style.css'
@@ -22,8 +19,11 @@ const override = css`
     z-index: 9999;
 `;
 
-export default class App extends Component {
-
+class App extends Component {
+  componentDidMount() {
+    const token = localStorage.getItem("_auth");
+    this.props.add_token_redux(token);
+  }
   render() {
     const { loading } = this.props;
     return (
@@ -83,4 +83,20 @@ export default class App extends Component {
     return <Switch>{result}</Switch>;
   };
 }
+const mapStateToProps = (state) => {
+  return {
+    loading: state.loading
+  }
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    add_token_redux: token => {
+      dispatch(actTokenRequest(token));
+    },
+    statusLoading: () => {
+      dispatch(actShowLoading());
+    }
+  };
+}
 
+export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -2,16 +2,15 @@ import React, { Component } from 'react'
 import './style.css'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { actFetchProducersRequest,actDeleteProducerRequest} from '../../../redux/actions/producer';
+import { actFetchUsersRequest,actDeleteUserRequest } from '../../../redux/actions/user';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-
 import Paginator from 'react-js-paginator';
+
 const MySwal = withReactContent(Swal)
 
 
-
-class Producer extends Component {
+class User extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,52 +21,85 @@ class Producer extends Component {
   }
 
   componentDidMount() {
-    this.fetch_reload_data(); //recive data from return promise dispatch
+    this.fetch_reload_data();
   }
-  fetch_reload_data() {
 
-    this.props.fetch_producers()
-      .catch(err => {
-        console.log(err);
-      })
+  fetch_reload_data() {
+    this.props.fetch_users().then(res => {
+      this.setState({
+        total: res.totalPage
+      });
+    }).catch(err => {
+      console.log(err);
+    })
   }
+  pageChange(content) {
+    const page = content;
+    this.props.fetch_users(page);
+    this.setState({
+      currentPage: content
+    })
+    window.scrollTo(0, 0);
+  }
+
   handleRemove = (id,name) => {
+    console.log("id",id)
     MySwal.fire({
-      title: `Xóa nhà cung cấp ${name} ?`,
-      text: "Bạn chắc chắn muốn xóa nhà cung cấp này !",
+      title: 'Xóa?',
+      text: `Bạn chắc chắn xóa tài khoản  ! ${name}`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes'
+      confirmButtonText: 'Có',
+      cancelButtonText:'Không'
     }).then(async (result) => {
       if (result.value) {
-        await this.props.delete_producer(id);
+        await this.props.delete_user(id);
         Swal.fire(
-          'Đã xóa!',
-          `Nhà cung cấp ${name} của bạn đã được xóa.`,
+          'Deleted!',
+          'Your file has been deleted.',
           'success'
         )
       }
     })
   }
+
+  handleChange = (event) => {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value
+    });
+  }
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+   
+  }
+
+  // downloadExcel = () => {
+  //   const key = 'users'
+  //   exportExcel(key)
+  // }
+
   render() {
-    let { producers } = this.props;
+    let { users } = this.props;
     const { searchText, total } = this.state;
-    console.log("dữ liệu nhà cung cấp",producers)
     return (
       <div className="content-inner">
         {/* Page Header*/}
         <header className="page-header">
           <div className="container-fluid">
-            <h2 className="no-margin-bottom">Nhà cung cấp</h2>
+            <h2 className="no-margin-bottom">Khách hàng</h2>
           </div>
         </header>
         {/* Breadcrumb*/}
         <div className="breadcrumb-holder container-fluid">
           <ul className="breadcrumb">
             <li className="breadcrumb-item"><Link to="/">Trang chủ</Link></li>
-            <li className="breadcrumb-item active">Nhà cung cấp</li>
+            <li className="breadcrumb-item active">khách hàng</li>
           </ul>
         </div>
         <section className="tables pt-3">
@@ -76,21 +108,21 @@ class Producer extends Component {
               <div className="col-lg-12">
                 <div className="card">
                   <div className="card-header d-flex align-items-center">
-                    <h3 className="h4">Dữ liệu nhà cung cấp</h3>
-                    <button style={{ border: 0, background: "white" }}> <i className="fa fa-file-excel-o"
-                      style={{ fontSize: 18, color: '#1d7044' }}> Excel</i></button>
+                    <h3 className="h4">Dữ liệu khách hàng</h3>
+                    {/* <button onClick={()=>this.downloadExcel()} style={{ border: 0, background: "white" }}> <i className="fa fa-file-excel-o"
+                        style={{fontSize: 18, color: '#1d7044'}}> Excel</i></button> */}
                   </div>
-                  <form
+                  <form onSubmit={(event) => this.handleSubmit(event)}
                     className="form-inline md-form form-sm mt-0" style={{ justifyContent: 'flex-end', paddingTop: 5, paddingRight: 20 }}>
                     <div>
                       <button style={{ border: 0, background: 'white' }}><i className="fa fa-search" aria-hidden="true"></i></button>
-                      <input name="searchText"
+                      <input
+                        name="searchText"
                         onChange={this.handleChange}
-
+                        value={searchText}
                         className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
                         aria-label="Search" />
                     </div>
-                    <Link to="/producers/add" className="btn btn-primary" > Thêm mới</Link>
                   </form>
                   <div className="card-body">
                     <div className="table-responsive">
@@ -98,30 +130,28 @@ class Producer extends Component {
                         <thead>
                           <tr>
                             <th>STT</th>
-                            <th>Tên</th>
-                            <th>Hình ảnh</th>
+                            <th>Email</th>
+                            <th>Tên khách hàng</th>
+                            <th style={{ textAlign: "center" }}>Tên đăng nhập</th>
+                            <th style={{ textAlign: "center" }}>SĐT</th>
+                            <th style={{ textAlign: "center" }}>Địa chỉ</th>
                             <th style={{ textAlign: "center" }}>Chức năng</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {producers && producers.length ? producers.map((item, index) => {
+                          {users && users.length ? users.map((item, index) => {
                             return (
                               <tr key={index}>
                                 <th scope="row">{index + 1}</th>
-                                <td>{item.supplierName}</td>
-                                <td style={{ textAlign: "center" }}>
-                                  <div className="fix-cart">
-                                    <img src={item && item.supplierImage ?item.supplierImage:null} className="fix-img" alt="not found" />
-                                  </div>
-                                </td>
-
+                                <td>{item.gmailCustomer}</td>
+                                <td>{item.fullnameCustomer}</td>
+                                <td>{item.userCustomer}</td>
+                                <td>{item.phoneNumberCustomer}</td>
+                                <td>{item.address}</td>
                                 <td style={{ textAlign: "center" }}>
                                   <div>
-                                    <span title='Edit' className="fix-action"><Link to={`producers/edit/${item.supplierId}`}> <i className="fa fa-edit"></i></Link></span>
-                                    <span
-                                      onClick={() => this.handleRemove(item.supplierId,item.supplierName)}
-                                      title='Delete'
-                                      className="fix-action"><Link to="#"> <i className="fa fa-trash" style={{ color: '#ff00008f' }}></i></Link></span>
+                                    <span title='Edit' className="fix-action"><Link to={`/customers/edit/${item.customerId}`}> <i className="fa fa-edit"></i></Link></span>
+                                    <span title='Delete' onClick={() => this.handleRemove(item.customerId,item.fullnameCustomer)} className="fix-action"><Link to="#"> <i className="fa fa-trash" style={{ color: '#ff00008f' }}></i></Link></span>
                                   </div>
                                 </td>
                               </tr>
@@ -135,7 +165,7 @@ class Producer extends Component {
                 <nav aria-label="Page navigation example" style={{ float: "right" }}>
                   <ul className="pagination">
                     <Paginator
-                      pageSize={10}
+                      pageSize={1}
                       totalElements={total}
                       onPageChangeCallback={(e) => { this.pageChange(e) }}
                     />
@@ -145,27 +175,28 @@ class Producer extends Component {
             </div>
           </div>
         </section>
-
-      </div >
+        {/* Page Footer*/}
+      
+      </div>
     )
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    producers: state.producers
+    users: state.users
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetch_producers: () => {
-      return dispatch(actFetchProducersRequest())
+    fetch_users: (page) => {
+      return dispatch(actFetchUsersRequest(page))
     },
-    delete_producer: (id, token) => {
-      dispatch(actDeleteProducerRequest(id, token))
+    delete_user: (id) => {
+      dispatch(actDeleteUserRequest(id))
     }
-
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(Producer)
+
+export default connect(mapStateToProps, mapDispatchToProps)(User)

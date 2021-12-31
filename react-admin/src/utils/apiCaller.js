@@ -22,6 +22,7 @@ export default async function callApi(endpoint, method = 'GET', body, token) {
       return data;
     } else {
       console.log("vào chổ không token")
+      console.log("lúc gửi data đi 5555",body,endpoint)
       data = await axios({
         method: method,
         url: `${Config.API_URL}/${endpoint}`,
@@ -33,10 +34,12 @@ export default async function callApi(endpoint, method = 'GET', body, token) {
   catch (err) {
     
     if (err.response && err.response.data) {
+      console.log(err.response.data)
+      const error = err.response.data.message || err.response.data[0].defaultMessage;
       MySwal.fire({
         icon: 'error',
         title: 'Lỗi',
-        text: `${err.response.data.message}`
+        text: `${error}`
       })
     } else {
       MySwal.fire({

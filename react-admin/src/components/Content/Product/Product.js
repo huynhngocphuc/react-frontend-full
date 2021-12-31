@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import './style.css'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { actFetchProductsRequest } from '../../../redux/actions/product';
+import { actFetchProductsRequest,actDeleteProductRequest } from '../../../redux/actions/product';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import MyFooter from '../../MyFooter/MyFooter'
@@ -35,16 +35,37 @@ class Product extends Component {
       console.log(err);
     })
   }
-  pageChange(content){
-   
+  pageChange(content) {
+
     const page = content;
     this.props.fetch_products(page);
     this.setState({
       currentPage: content
     })
     window.scrollTo(0, 0);
-    
+
   }
+  handleRemove = (id,name) => {
+    MySwal.fire({
+      title: `Xóa sản phẩm ${name} ?`,
+      text: "Bạn chắc chắn muốn xóa sản phẩm này !",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes'
+    }).then(async (result) => {
+      if (result.value) {
+        await this.props.delete_product(id, token);
+        Swal.fire(
+          'Đã xóa!',
+          'Sản phẩm của bạn đã được xóa.',
+          'success'
+        )
+      }
+    })
+  }
+
   render() {
     let { products } = this.props;
     const { searchText, total } = this.state;
@@ -82,7 +103,7 @@ class Product extends Component {
                       <input
                         name="searchText"
                         onChange={this.handleChange}
-                        
+
                         className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
                         aria-label="Search" />
                     </div>
@@ -106,21 +127,27 @@ class Product extends Component {
                           {products && products.length ? products.map((item, index) => {
                             return (
                               <tr key={index}>
-                                
+
                                 <td>{item.productName}</td>
                                 <td><p className="text-truncate" style={{ width: 300 }}>{item.descriptionProduct}</p></td>
-                                <td>{item.unitPrice}</td>
+                                <td>{item.unitPrice.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})}</td>
                                 <td>{item.quantity}</td>
                                 {/* <td>{item.properties}</td> */}
                                 <td style={{ textAlign: "center" }}>
                                   <div className="fix-cart">
-                                    <img src={item && item.image ? item.image : null} className="fix-img" alt="not found" />
+                                    <img src={item && item.productImage ? item.productImage : null} className="fix-img" alt="not found" />
                                   </div>
                                 </td>
                                 <td style={{ textAlign: "center" }}>
                                   <div>
-                                    <span title='Edit' className="fix-action"><Link to='/'> <i className="fa fa-edit"></i></Link></span>
-                                    <span title='Delete' className="fix-action"><Link to="#"> <i className="fa fa-trash" style={{ color: '#ff00008f' }}></i></Link></span>
+                                    <span title='Edit' className="fix-action"><Link to={`/products/edit/${item.productId}`}> <i className="fa fa-edit"></i></Link></span>
+                                    <span
+                                      onClick={() => this.handleRemove(item.productId,item.productName)}
+                                      title='Delete'
+                                      className="fix-action">
+                                      <Link to="#">
+                                        <i className="fa fa-trash" style={{ color: '#ff00008f' }}></i>
+                                      </Link></span>
                                   </div>
                                 </td>
                               </tr>
@@ -133,11 +160,11 @@ class Product extends Component {
                 </div>
                 <nav aria-label="Page navigation example" style={{ float: "right" }}>
                   <ul className="pagination">
-                  <Paginator
-                        pageSize={1}
-                        totalElements={total}
-                        onPageChangeCallback={(e) => {this.pageChange(e)}}
-                      />
+                    <Paginator
+                      pageSize={1}
+                      totalElements={total}
+                      onPageChangeCallback={(e) => { this.pageChange(e) }}
+                    />
                   </ul>
                 </nav>
               </div>
@@ -160,6 +187,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetch_products: (page) => {
       return dispatch(actFetchProductsRequest(page))
+    },
+    delete_product: (id) => {
+      dispatch(actDeleteProductRequest(id))
     }
 
   }

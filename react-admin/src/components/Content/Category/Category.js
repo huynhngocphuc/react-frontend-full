@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-import { actFetchCategoriesRequest } from '../../../redux/actions/category';
+import { actFetchCategoriesRequest,actDeleteCategoryRequest } from '../../../redux/actions/category';
 import MyFooter from '../../MyFooter/MyFooter'
 import Paginator from 'react-js-paginator';
 
@@ -39,6 +39,26 @@ class Category extends Component {
     this.setState({
       [name]: value
     });
+  }
+  handleRemove = (id,name) => {
+    MySwal.fire({
+      title: `Xóa nhà loại sản phẩm ${name} ?`,
+      text: "Bạn chắc chắn muốn xóa loại sản phẩm này này !",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes'
+    }).then(async (result) => {
+      if (result.value) {
+        await this.props.delete_category(id);
+        Swal.fire(
+          'Đã xóa!',
+          `Loại sản phẩm ${name} của bạn đã được xóa.`,
+          'success'
+        )
+      }
+    })
   }
 
 
@@ -90,9 +110,8 @@ class Category extends Component {
                         <thead>
                           <tr>
                             <th>STT</th>
-                            <th>Tên</th>
-                            <th>Mô tả</th>
-                            <th>Hình ảnh</th>
+                            <th style={{ textAlign: "center" }}>Tên</th>
+                            {/* <th>Hình ảnh</th> */}
                             <th style={{ textAlign: "center" }}>Action</th>
                           </tr>
                         </thead>
@@ -101,17 +120,16 @@ class Category extends Component {
                             return (
                               <tr key={index}>
                                 <th scope="row">{index + 1}</th>
-                                <td>{item.categoryName}</td>
-                                <td>chưa có mô tả</td>
-                                <td style={{ textAlign: "center" }}>
+                                <td style={{ textAlign: "center" }}>{item.categoryName}</td>
+                                {/* <td style={{ textAlign: "center" }}>
                                     <div className="fix-cart2">
                                       <img src="./img/logo/icon.png" className="fix-img2" alt="avatar" />
                                     </div>                 
-                                </td>
+                                </td> */}
                                 <td style={{ textAlign: "center" }}>
                                   <div>
                                     <span title='Edit' className="fix-action"><Link to={`categories/edit/${item.categoryId}`}> <i className="fa fa-edit"></i></Link></span>
-                                    <span title='Delete' onClick={() => this.handleRemove(item.categoryId)} className="fix-action"><Link to="#"> <i className="fa fa-trash" style={{ color: '#ff00008f' }}></i></Link></span>
+                                    <span title='Delete' onClick={() => this.handleRemove(item.categoryId,item.categoryName)} className="fix-action"><Link to="#"> <i className="fa fa-trash" style={{ color: '#ff00008f' }}></i></Link></span>
                                   </div>
                                 </td>
                               </tr>
@@ -148,6 +166,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetch_categories: () => {
       return dispatch(actFetchCategoriesRequest())
+    },
+    delete_category: (id) => {
+      dispatch(actDeleteCategoryRequest(id))
     }
   }
 }

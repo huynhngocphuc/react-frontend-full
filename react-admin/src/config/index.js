@@ -1,6 +1,6 @@
 export const config = {
     api: {
-        url: 'http://localhost:8082/admin'
+        url: 'http://localhost:8083/admin'
     },
     firebaseConfig: {
         apiKey: "AIzaSyAGXEK1PU-mNzOuCAyHWTFZ3ih2EiHtI_8",

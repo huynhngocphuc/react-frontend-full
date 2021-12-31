@@ -4,15 +4,25 @@ import LoginRegisterPage from './pages/LoginRegisterPage';
 import ActivePage from './pages/ActivePage';
 import NotFoundPage from './pages/NotFoundPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ProductDetailPage from './pages/ProductDetailPage';
 import ResetPasswordPage from './pages/ResetPasswordPage'
-
-
-
+import ShopCategoryPage from './pages/ShopCategoryPage';
+import ProductPage from './pages/ProductPage';
 const routes = [
   {
     path: '/',
     exact: true,
     main: (match) => < HomePage match={match} />
+  },
+  {
+    path: '/products',
+    exact: true,
+    main: (match) => < ProductPage match={match}/>
+  },
+  {
+    path: '/products/:id',
+    exact: true,
+    main: (match) => < ProductDetailPage match={match} />
   },
   {
     path: '/login-register',
@@ -33,6 +43,11 @@ const routes = [
     path: '/activate/:code',
     exact: true,
     main: (match) => < ActivePage match={match} />
+  },
+  {
+    path: '/categories/:name',
+    exact: false,
+    main: (match) => <ShopCategoryPage match={match} />
   },
   {
     path: '',

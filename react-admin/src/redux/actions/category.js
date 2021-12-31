@@ -34,3 +34,53 @@ export const actFetchCategories = categories => {
         categories
     }
 }
+
+
+export const actAddCategoryRequest = (data) => {
+    return async dispatch => {
+      const res = await callApi('category', 'POST', data);
+      if (res && res.status === 201) {
+        toast.success('Thêm loại sản phẩm thành công')
+        dispatch(actAddCategory(res.data));
+      }
+    }
+  }
+  
+  export const actAddCategory = (data) => {
+    return {
+      type: Types.ADD_CATEGORY,
+      data
+    }
+  }
+
+export const actDeleteCategoryRequest = (id) => {
+    return async dispatch => {
+        await callApi(`category/delete/${id}`, 'PUT', null);
+        dispatch(actDeleteCategory(id));
+    }
+}
+
+export const actDeleteCategory = (id) => {
+    return {
+        type: Types.REMOVE_CATEGORY,
+        id
+    }
+}
+
+
+export const actEditCategoryRequest = (id, data) => {
+    return async dispatch => {
+      const res = await callApi(`category/${id}`, 'PUT', data);
+      if (res && res.status === 200) {
+        toast.success('Sửa sản phẩm thành công')
+        dispatch(actEditCategory(res.data));
+      }
+    }
+  }
+  
+  export const actEditCategory = (data) => {
+    return {
+      type: Types.EDIT_CATEGORY,
+      data
+    }
+  }
