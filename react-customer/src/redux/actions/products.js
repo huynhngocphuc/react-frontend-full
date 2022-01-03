@@ -2,87 +2,46 @@ import * as Types from '../../constants/ActionType';
 import callApi from '../../utils/apiCaller';
 import { actShowLoading, actHiddenLoading } from './loading'
 
+
+// lấy toàn bộ sản phẩm
 export const actFetchProductsRequest = (page) => {
     const newPage = page === null || page === undefined ? 1 : page
-    
-    
-    return dispatch => {
-    dispatch(actShowLoading());
-       return new Promise((resolve, reject) => {
-        callApi(`view/product/search?page=${newPage}`, 'GET')
-          .then(res => {
-            if (res && res.status === 200) {
-                console.log("đây là trả về",res.data.listProduct)
-                dispatch(actFetchProducts(res.data.listProduct));
-                resolve(res.data);
-                setTimeout(function(){ dispatch(actHiddenLoading()) }, 200);
-            }
-          })
-          .catch(err => {
-            console.log(err);
-            reject(err);
-            setTimeout(function(){ dispatch(actHiddenLoading()) }, 200);
-          });
-      });
-    };
-  };
 
-export const actFetchProductsPriceRequest = (price, id) => {
-    let minPrice;
-    let maxPrice;
-    if (price === 1.5) {
-        minPrice = 10;
-        maxPrice = 50;
-    }
-    if (price === 5.2) {
-        minPrice = 50;
-        maxPrice = 200;
-    }
-    if (price === 2.1) {
-        minPrice = 200;
-        maxPrice = 1000;
-    }
-    if (price === 1) {
-        minPrice = 1000;
-        maxPrice = 99999999999;
-    }
-    const limit = 12;
+
     return dispatch => {
         dispatch(actShowLoading());
         return new Promise((resolve, reject) => {
-            callApi(`categories/${id}/products?limit=${limit}&orderBy=-createdAt&minPrice=${minPrice}&maxPrice=${maxPrice}`, 'GET', null)
-            .then(res => {
-            if (res && res.status === 200) {
-                dispatch(actGetProductOfCategory(res.data.results));
-                resolve(res.data);
-                setTimeout(function(){ dispatch(actHiddenLoading()) }, 200);
-            }  
-            })
-            .catch(err => {
-              console.log(err);
-              reject(err);
-              setTimeout(function(){ dispatch(actHiddenLoading()) }, 200);
-            });
+            callApi(`view/product/search?page=${newPage}`, 'GET')
+                .then(res => {
+                    if (res && res.status === 200) {
+                        console.log("đây là trả về", res.data.listProduct)
+                        dispatch(actFetchProducts(res.data.listProduct));
+                        resolve(res.data);
+                        setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    reject(err);
+                    setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
+                });
         });
-    }
-}
+    };
+};
 
-export const actFetchProducts = (products) => {
-    return {
-        type: Types.FETCH_PRODUCTS,
-        products
-    }
-}
 
+
+
+// lấy sản phẩm theo id
 export const actGetProductRequest = (id) => {
     return async dispatch => {
         dispatch(actShowLoading());
         const res = await callApi(`view/product/${id}`, 'GET');
         if (res && res.status === 200) {
-            console.log("vào đây rồi lấy thông tin luôn rồi",res.data)
+            console.log("vào đây rồi lấy thông tin luôn rồi", res.data)
             dispatch(actGetProduct(res.data));
         }
-        setTimeout(function(){ dispatch(actHiddenLoading()) }, 200);
+        setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
     }
 }
 
@@ -92,197 +51,81 @@ export const actGetProduct = (product) => {
         product
     }
 }
+// lấy sản phẩm theo từ khóa
+export const actGetProductOfKeyRequest = (key, page) => {
+    const newPage = page === null || page === undefined ? 1 : page
+    const newKey = (key === undefined || key === '' || key === null) ? 'latop' : key
+    console.log(newPage,newKey)
+    return dispatch => {
+        dispatch(actShowLoading());
+        return new Promise((resolve, reject) => {
+            callApi(`view/product/search?keyword=${newKey}&page=${newPage}`, 'GET')
+                .then(res => {
+                    if (res && res.status === 200) {
+                        console.log("trả về rồi",res.data.listProduct)
+                        dispatch(actFetchProducts(res.data.listProduct));
+                        resolve(res.data);
+                        setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    reject(err);
+                    setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
+                });
+        });
+    };
+}
+//lấy sản phẩm theo loại 
 
-//Fetch product by category
+export const actGetProductOfCategoryRequest = (name, page) => {
+    const newPage = page === null || page === undefined ? 1 : page
+    const newCategory = (name === undefined || name === '' || name === null) ? 'latop' : name
+    console.log(newPage,newCategory)
+    return dispatch => {
+        dispatch(actShowLoading());
+        return new Promise((resolve, reject) => {
+            callApi(`view/product/search?category=${newCategory}&page=${newPage}`, 'GET')
+                .then(res => {
+                    if (res && res.status === 200) {
+                        
+                        dispatch(actFetchProducts(res.data.listProduct));
+                        resolve(res.data);
+                        setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    reject(err);
+                    setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
+                });
+        });
+    };
+}
 
-export const actGetProductOfCategoryRequest = (name,page) => {
+export const actFetchProducts = (products) => {
+    return {
+        type: Types.FETCH_PRODUCTS,
+        products
+    }
+}
+// lấy 10 sản phẩm giảm giá
+
+export const actFetchProductsDiscountRequest = (page) => {
     const newOffset = page === null || page === undefined ? 1 : page
-    const newValue = (name === undefined || name === '' || name === null) ? 'latop' : name
-    return dispatch => {
-    dispatch(actShowLoading());
-      return new Promise((resolve, reject) => {
-        callApi(`/view/product/search?category=${name}&page=${page}`, 'GET')
-          .then(res => {
-            if (res && res.status === 200) {
-                dispatch(actGetProductOfCategory(res.data.listProduct));
-                resolve(res.data);
-                setTimeout(function(){ dispatch(actHiddenLoading()) }, 200);
-            }
-          })
-          .catch(err => {
-            console.log(err);
-            reject(err);
-            setTimeout(function(){ dispatch(actHiddenLoading()) }, 200);
-          });
-      });
-    };
-  };
-
-export const actGetProductOfCategory = (products) => {
-    return {
-        type: Types.FETCH_CATEGORIES_PRODUCT,
-        products
-    }
-}
-
-//Search products
-export const actSearchProductsRequest = (q) => {
     return async dispatch => {
-        dispatch(actShowLoading());
-        const res = await callApi(`products?q=${q}`, 'GET', null);
-        if (res && res.status === 200) { 
-            dispatch(actSearchProducts(res.data.results));
-        }
-        setTimeout(function(){ dispatch(actHiddenLoading()) }, 200);
-    };
-}
-
-export const actSearchProducts = (products) => {
-    return {
-        type: Types.SEARCH_PRODUCTS,
-        products
-    }
-}
-
-//Fetch products new
-export const actFetchProductsNewRequest = (q) => {
-    const offset = q ? q : 0;
-    const limit = 10;
-    return async dispatch => {
-        dispatch(actShowLoading());
-        const res = await callApi(`products?limit=${limit}&offset=${offset}&orderBy=-createdAt`, 'GET', null);
+        const res = await callApi(`view/product/10discount`, 'GET', null);
         if (res && res.status === 200) {
-            dispatch(actFetchProductsNew(res.data.results));
-        }
-        setTimeout(function(){ dispatch(actHiddenLoading()) }, 200);
-
-    };
-}
-
-export const actFetchProductsNew = (products) => {
-    return {
-        type: Types.FETCH_PRODUCTS_NEW,
-        products
-    }
-}
-
-//Fetch products category laptop
-export const actFetchProductsLaptopRequest = (q) => {
-    const offset = q ? q : 0;
-    const limit = 8;
-    return async dispatch => {
-        const res = await callApi(`categories/5/products?limit=${limit}&offset=${offset}&orderBy=-createdAt`, 'GET', null);
-        if (res && res.status === 200) {
-            dispatch(actFetchProductsLaptop(res.data.results));
-        }
-
-    };
-}
-
-export const actFetchProductsLaptop = (products) => {
-    return {
-        type: Types.FETCH_PRODUCTS_LAPTOP,
-        products
-    }
-}
-
-//Fetch products category office
-export const actFetchProductsOfficeRequest = (q) => {
-    const offset = q ? q : 0;
-    const limit = 10;
-    return async dispatch => {
-        const res = await callApi(`categories/4/products?limit=${limit}&offset=${offset}&orderBy=-createdAt`, 'GET', null);
-        if (res && res.status === 200) {
-            dispatch(actFetchProductsOffice(res.data.results));
+            dispatch(actFetchProductsDiscount(res.data));
         }
     };
 }
 
-export const actFetchProductsOffice = (products) => {
+export const actFetchProductsDiscount = (products) => {
     return {
-        type: Types.FETCH_PRODUCTS_OFFICE,
-        products
-    }
-}
-//Fetch products other
-export const actFetchProductsOtherRequest = (q, categoryId) => {
-    const category = categoryId;
-    const offset = q ? q : 0;
-    const limit = 10;
-    return async dispatch => {
-        const res = await callApi(`categories/${category}/products?limit=${limit}&offset=${offset}&orderBy=-createdAt`, 'GET', null);
-        if (res && res.status === 200) {
-            dispatch(actFetchProductsOther(res.data.results));
-        }
-    };
-}
-
-export const actFetchProductsOther = (products) => {
-    return {
-        type: Types.FETCH_PRODUCTS_OHTER,
+        type: Types.FETCH_PRODUCTS_DISCOUNT,
         products
     }
 }
 
-
-export const actFetchProductsOfProducerRequest = (id) => {
-    const limit = 9;
-    return dispatch => {
-    dispatch(actShowLoading());
-       return new Promise((resolve, reject) => {
-        callApi(`producer/${id}/products?limit=${limit}&orderBy=-createdAt`, 'GET', null, null)
-          .then(res => {
-            if (res && res.status === 200) { 
-                dispatch(actFetchProductOfProducer(res.data.results));
-                resolve(res.data);
-                setTimeout(function(){ dispatch(actHiddenLoading()) }, 200);
-            }
-          })
-          .catch(err => {
-            console.log(err);
-            reject(err);
-            setTimeout(function(){ dispatch(actHiddenLoading()) }, 200);
-          });
-      });
-    };
-}
-
-export const actFetchProductOfProducer = (products) => {
-    return {
-        type: Types.FETCH_PRODUCTS,
-        products
-    }
-}
-
-export const actFetchProductsOfRatingPointRequest = (categoryId, point) => {
-    console.log(categoryId);
-    console.log(point);
-    
-    const limit = 9;
-    return dispatch => {
-    dispatch(actShowLoading());
-       return new Promise((resolve, reject) => {
-        callApi(`products/category/${categoryId}/point/${point}?limit=${limit}&orderBy=-createdAt`, 'GET', null, null)
-          .then(res => {
-            if (res && res.status === 200) { 
-                dispatch(actFetchProductOfRatingPoint(res.data.results));
-                resolve(res.data);
-                setTimeout(function(){ dispatch(actHiddenLoading()) }, 200);
-            }
-          })
-          .catch(err => {
-            console.log(err);
-            reject(err);
-            setTimeout(function(){ dispatch(actHiddenLoading()) }, 200);
-          });
-      });
-    };
-}
-
-export const actFetchProductOfRatingPoint = (products) => {
-    return {
-        type: Types.FETCH_PRODUCTS,
-        products
-    }
-}
 

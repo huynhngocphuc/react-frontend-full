@@ -1,10 +1,44 @@
 import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
+import { toast } from 'react-toastify';
+import { connect } from 'react-redux'
+
+import { startLoading, doneLoading } from '../../utils/loading'
+import {actGetProductOfKeyRequest} from '../../redux/actions/products'
+
+
 
 let token;
 class HeaderMiddle extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      textSearch: ''
+    }
+  }
+  handleChange = event => {
+    const name = event.target.name;
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    this.setState({
+      [name]: value
+    });
+  }
+  handleClick = async () => {
+    const { textSearch } = this.state;
+    if (textSearch === '' || textSearch === null) {
+      return toast.error('Vui lòng nhập sản phẩm cần tìm ...');
+    }
+    startLoading();
+    console.log("text search",textSearch)
+    await this.props.searchProduct(textSearch);
+    this.setState({
+      textSearch: null
+    })
+    doneLoading();
+  }
 
   render() {
+    const { textSearch } = this.state;
     return (
       <div className="header-middle pl-sm-0 pr-sm-0 pl-xs-0 pr-xs-0">
         <div className="container">
@@ -18,9 +52,9 @@ class HeaderMiddle extends Component {
                       width: '180px',
                       height: '48px',
                       borderRadius: '15px',
-                      boxShadow:'inset 0 -3em 3em rgba(0,0,0,0.1),0 0  0 2px rgb(255,255,255), 0.3em 0.3em 1em rgba(0,0,0,0.3)'
+                      boxShadow: 'inset 0 -3em 3em rgba(0,0,0,0.1),0 0  0 2px rgb(255,255,255), 0.3em 0.3em 1em rgba(0,0,0,0.3)'
                     }}
-                  alt="" />
+                    alt="" />
                 </Link>
               </div>
             </div>
@@ -28,10 +62,17 @@ class HeaderMiddle extends Component {
             {/* Begin Header Middle Right Area */}
             <div className="col-lg-9 pl-0 ml-sm-15 ml-xs-15">
               {/* Begin Header Middle Searchbox Area */}
-              <form className="hm-searchbox">
-                <input name="textSearch" type="text" placeholder="Tìm kiếm sản phẩm ..." />
+              <form className="hm-searchbox" >
+                <input
+                  name="textSearch"
+                  value={textSearch}
+                  onChange={this.handleChange}
+                  type="text"
+                  placeholder="Tìm kiếm sản phẩm ..." />
                 {/* <button className="li-btn" type="submit"></button> */}
-                <Link to='/products/search'>
+                <Link
+                  onClick={this.handleClick}
+                  to={`/products/search/${textSearch}`}>
                   <button className="li-btn" type="submit"><i className="fa fa-search" /></button>
                 </Link>
               </form>
@@ -51,7 +92,7 @@ class HeaderMiddle extends Component {
                   <li className="hm-minicart">
                     <Link to="/cart">
                       <div className="hm-minicart-trigger">
-                      <i className="item-icon fab fa-opencart"></i>
+                        <i className="item-icon fab fa-opencart"></i>
                         <span className="item-text">
                           <span className="cart-item-count"></span>
                         </span>
@@ -69,6 +110,13 @@ class HeaderMiddle extends Component {
   }
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    searchProduct: (key) => {
+      dispatch(actGetProductOfKeyRequest(key))
+    }
+  }
+}
 
 
-export default (HeaderMiddle)
+export default connect(null, mapDispatchToProps)(HeaderMiddle)

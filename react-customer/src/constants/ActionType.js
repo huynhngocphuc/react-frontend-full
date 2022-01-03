@@ -2,6 +2,7 @@ export const FETCH_PRODUCTS = 'FETCH_PRODUCTS';
 export const FETCH_PRODUCTS_NEW = 'FETCH_PRODUCTS_NEW';
 export const FETCH_PRODUCTS_LAPTOP = 'FETCH_PRODUCTS_LAPTOP';
 export const FETCH_PRODUCTS_OFFICE = 'FETCH_PRODUCTS_OFFICE';
+export const FETCH_PRODUCTS_DISCOUNT = 'FETCH_PRODUCTS_DISCOUNT';
 export const FETCH_PRODUCTS_OHTER = 'FETCH_PRODUCTS_OHTER';
 
 
@@ -19,6 +20,12 @@ export const ADD_CART = "ADD_CART";
 export const UPDATE_CART = "UPDATE_CART";
 export const REMOVE_CART = "REMOVE_CART";
 export const CLEAR_CART = " CLEAR_CART";
+
+export const FETCH_BILL = "FETCH_BILL";
+export const ADD_BILL = "ADD_BILL";
+export const UPDATE_BILL = "UPDATE_BILL";
+export const REMOVE_BILL = "REMOVE_BILL";
+export const CLEAR_BILL = " CLEAR_BILL";
 
 export const LOGIN = 'LOGIN';
 export const REGISTER = 'REGISTER';

@@ -28,10 +28,12 @@ export default async function callApi(endpoint, method = 'GET', body, token) {
   }
   catch (err) {
     if (err.response && err.response.data) {
+      console.log(err.response.data)
+      const error = err.response.data.message || err.response.data[0].defaultMessage;
       MySwal.fire({
         icon: 'error',
         title: 'Lỗi',
-        text: `${err.response.data.message}`
+        text: `${error}`
       })
     } else {
       MySwal.fire({

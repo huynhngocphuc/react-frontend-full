@@ -2,11 +2,13 @@ import { combineReducers } from 'redux';
 import products from './products';
 import categories from './categories';
 import product from './product';
-// import cart from './cart';
+import cart from './cart';
 import auth from './auth';
 // import productsNew from './productsNew';
 // import productsLaptop from './productsLaptop';
-// import productsOffice from './productsOffice';
+import productsOffice from './productsOffice';
+import productsTopDiscount from './productsTopDiscount'
+import bill from './bill'
 // import productsOther from './productsOther';
 // import productRatings from './productRatings';
 // import favorites from './favorites';
@@ -18,7 +20,11 @@ const appReducers = combineReducers({
     auth,
     loading,
     products,
-    product
+    product,
+    productsOffice,
+    productsTopDiscount,
+    cart,
+    bill
 });
 
 export default appReducers;

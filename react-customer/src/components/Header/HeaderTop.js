@@ -9,6 +9,7 @@ import { startLoading, doneLoading } from '../../utils/loading'
 class HeaderTop extends Component {
   logOut = async () => {
     localStorage.removeItem('_auth');
+    localStorage.removeItem('_id');
     const token = null;
     startLoading();
     await this.props.setTokenRedux(token);

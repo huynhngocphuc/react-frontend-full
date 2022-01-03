@@ -22,7 +22,7 @@ export default async function callApi(endpoint, method = 'GET', body, token) {
       return data;
     } else {
       console.log("vào chổ không token")
-      console.log("lúc gửi data đi 5555",body,endpoint)
+      console.log("lúc gửi data đi ",body,endpoint)
       data = await axios({
         method: method,
         url: `${Config.API_URL}/${endpoint}`,

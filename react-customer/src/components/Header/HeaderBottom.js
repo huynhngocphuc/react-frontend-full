@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { actFetchCategoriesRequest } from '../../redux/actions/category';
+import { actGetProductOfCategoryRequest } from '../../redux/actions/products';
 import { startLoading, doneLoading } from '../../utils/loading'
 
 
@@ -14,6 +15,12 @@ class HeaderBottom extends Component {
 
   loaddingPage = () => {
     startLoading();
+    doneLoading();
+  }
+  getCategory = async (name) => {
+    startLoading();
+    console.log("tên gửi đi",name)
+    await this.props.getAllProductOfCategory(name);
     doneLoading();
   }
   
@@ -40,7 +47,7 @@ class HeaderBottom extends Component {
                         <Link className="nav-link dropdown-toggle" to="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Loại sản phẩm</Link>
                         <div className="dropdown-menu" aria-labelledby="dropdownId">
                         {categories.map((category, index) => 
-                            <Link key={index} className="dropdown-item" to={`/categories/${category.categoryName}`}>{category.categoryName}</Link>
+                            <Link key={index} className="dropdown-item" onClick={() => this.getCategory(category.categoryName)} to={`/categories/${category.categoryName}`}>{category.categoryName}</Link>
                         )}
                         </div>
                       </li>
@@ -74,7 +81,11 @@ const mapDispatchToProps = (dispatch, props) => {
   return {
     fetchAllcategories: () => {
       dispatch(actFetchCategoriesRequest());
+    },
+    getAllProductOfCategory: (name) => {
+      dispatch(actGetProductOfCategoryRequest(name));
     }
+
   }
 }
 

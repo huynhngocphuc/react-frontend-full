@@ -1,14 +1,18 @@
 import React, { Component } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { connect } from "react-redux";
+import { actGetProductRequest } from "../../redux/actions/products";
+import { actAddCartRequest } from "../../redux/actions/cart";
+import callApi from "../../utils/apiCaller";
 
 import "./style.css";
 toast.configure();
 
 let token;
+let id;
 const customStyles = {
   content: {
     top: "50%",
@@ -25,17 +29,34 @@ class ProductViewDetail extends Component {
     super(props);
     this.state = {
       quantity: 1,
+      redirectYourLogin:false
     };
-
   }
 
   async componentDidMount() {
-    // token = localStorage.getItem("_auth");
-    // const { id } = this.props;
-    // const res = await callApi(`view/product/${id}`, "GET");
-    // if (res && res.status === 200) {
-
-    // }
+    token = localStorage.getItem("_auth");
+    const { id } = this.props;
+    const res = await callApi(`view/product/${id}`, "GET");
+    if (res && res.status === 200) {
+      this.props.get_product(id);
+    }
+  }
+  upItem = (quantity) => {
+    if (quantity >= 5) {
+      toast.error('Tối đa 5 sản phẩm')
+      return
+    }
+    this.setState({
+      quantity: quantity + 1
+    })
+  }
+  downItem = (quantity) => {
+    if (quantity <= 1) {
+      return
+    }
+    this.setState({
+      quantity: quantity - 1
+    })
   }
   handleChange = event => {
     let name = event.target.name;
@@ -45,17 +66,31 @@ class ProductViewDetail extends Component {
     });
   };
 
-
-
-
   addItemToCart = product => {
-    const { quantity } = this.state;
-    this.props.addCart(product, quantity);
+    const { quantity} = this.state;
+    
+    token = localStorage.getItem("_auth");
+    id = parseInt(localStorage.getItem("_id"));
+    if(!token){
+      this.setState({
+        redirectYourLogin: true
+      }) 
+    }
+    else {
+      this.setState({
+        redirectYourLogin: false
+      })
+      this.props.addCart(id,product, quantity);
+    }
+    
   };
   render() {
-    const { product } = this.props;
-    const { quantity } = this.state;
-    console.log("thông tin sản phẩm", product)
+    const { product,user } = this.props;
+    const { quantity,redirectYourLogin } = this.state;
+    console.log("thông tin sản phẩm", quantity,user)
+    if (redirectYourLogin) {
+      return <Redirect to="/login-register"></Redirect>
+    }
     return (
       <div className="content-wraper">
         <div className="container">
@@ -98,10 +133,10 @@ class ProductViewDetail extends Component {
                             value={quantity ? quantity : 1}
                             type="text"
                           />
-                          <div onClick={() => this.downItem()} className="dec qtybutton">
+                          <div onClick={() => this.downItem(quantity)} className="dec qtybutton">
                             <i className="fa fa-angle-down" />
                           </div>
-                          <div onClick={() => this.upItem()} className="inc qtybutton">
+                          <div onClick={() => this.upItem(quantity)} className="inc qtybutton">
                             <i className="fa fa-angle-up" />
                           </div>
                         </div>
@@ -112,7 +147,7 @@ class ProductViewDetail extends Component {
                           to="#"
                           className="add-to-cart"
                         >
-                          Add to cart
+                          Thêm vào giỏ
                         </Link>
                       </div>
                     </form>
@@ -128,11 +163,18 @@ class ProductViewDetail extends Component {
 }
 const mapStateToProps = state => {
   return {
-    product: state.product
+    product: state.product,
+    user:state.auth
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
+    get_product: productId => {
+      dispatch(actGetProductRequest(productId));
+    },
+    addCart: (idCustomer,product,quantity) => {
+      dispatch(actAddCartRequest(idCustomer,product,quantity));
+    }
 
   }
 };

@@ -94,6 +94,7 @@ a:hover {
 	max-width: 100%;
 	transition: all 0.3s ease-out 0s;
 }
+
 .img-full {
 		width: 100%;
 		overflow: hidden;
@@ -3810,7 +3811,7 @@ thead {
 	color: #515151;
 }
 .order-button-payment input {
-	background: #ec0a0aba none repeat scroll 0 0;
+	background: #eb3f3fba none repeat scroll 0 0;
 	color: #fff;
 	font-size: 17px;
 	font-weight: 600;
@@ -3826,7 +3827,7 @@ thead {
 }
 
 .order-button-payment input:hover {
-	background: #fed700 none repeat scroll 0 0;
+	background: #f50f0f none repeat scroll 0 0;
 }
 /*----------------------------------------*/
 /* 6.5 Li's Login Register

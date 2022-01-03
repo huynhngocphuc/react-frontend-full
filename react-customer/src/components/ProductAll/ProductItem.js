@@ -3,13 +3,14 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import { actGetProductRequest} from '../../redux/actions/products';
+import { actAddCartRequest } from "../../redux/actions/cart";
 import { startLoading, doneLoading } from '../../utils/loading'
 import { connect } from 'react-redux'
 import 'react-toastify/dist/ReactToastify.css';
 import BeautyStars from 'beauty-stars';
 import './style.css'
 toast.configure()
-let token;
+let token,id;
 class ProductItem extends Component {
 
   constructor(props) {
@@ -31,6 +32,24 @@ class ProductItem extends Component {
     console.log("vào đây để lấy thông tin san phẩm",id)
     this.props.getInfoProduct(id);
   }
+  addItemToCart = product => {
+    const { quantity} = this.state;
+    
+    token = localStorage.getItem("_auth");
+    id = parseInt(localStorage.getItem("_id"));
+    if(!token){
+      this.setState({
+        redirectYourLogin: true
+      }) 
+    }
+    else {
+      this.setState({
+        redirectYourLogin: false
+      })
+      this.props.addCart(id,product, quantity);
+    }
+    
+  };
 
   render() {
     const { product} = this.props;
@@ -55,7 +74,7 @@ class ProductItem extends Component {
             </div>
             <div className="add-actions">
               <ul className="add-actions-link">
-                <li className="add-cart active"><Link to="#" onClick={() => this.addItemToCart(product)} >Add to cart</Link></li>
+                <li className="add-cart active"><Link to="#" onClick={() => this.addItemToCart(product)} >Thêm vào giỏ</Link></li>
                 <li><Link onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`} title="quick view" className="quick-view-btn" data-toggle="modal" data-target="#exampleModalCenter"><i className="fa fa-eye" /></Link></li>
                 <li><Link onClick={(id) => this.addItemToFavorite(product.productId)} className="links-details" to="#" title="favorite" ><i className="fa fa-heart-o" /></Link></li>
               </ul>
@@ -81,6 +100,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getInfoProduct: (id) => {
       dispatch(actGetProductRequest(id))
+    },
+    addCart: (idCustomer,product,quantity) => {
+      dispatch(actAddCartRequest(idCustomer,product,quantity));
     }
   }
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { actGetProductOfCategoryRequest } from '../../redux/actions/products';
+import { actGetProductOfKeyRequest } from '../../redux/actions/products';
 import Paginator from 'react-js-paginator';
 import ProductItem from "./../ProductAll/ProductItem";
 
@@ -21,8 +21,8 @@ class ShopCategory extends Component {
   }
 
   fetch_reload_data() {
-
-    this.props.fetch_products(this.props.name).then(res => {
+    console.log("đây là từ khóa,this.props.key",this.props.key)
+    this.props.fetch_products(this.props.key).then(res => {
       this.setState({
         total: res.totalPage
       });
@@ -35,8 +35,9 @@ class ShopCategory extends Component {
 
   pageChange(content) {
     const page = content;
-    const name = this.props.name
-    this.props.fetch_products(name,page);
+    const key = this.props.key
+    console.log("khóa tìm kiếm",key)
+    this.props.fetch_products(key,page);
     this.setState({
       currentPage: content
     })
@@ -46,8 +47,6 @@ class ShopCategory extends Component {
   render() {
     let { products } = this.props;
     const { total } = this.state;
-  
-    
     return (
       <div className="content-wraper pt-60 pb-60">
         <div className="container">
@@ -164,8 +163,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetch_products: (name, page) => {
-      return dispatch(actGetProductOfCategoryRequest(name, page));
+    fetch_products: (key, page) => {
+      return dispatch(actGetProductOfKeyRequest(key, page));
     }
   }
 }
