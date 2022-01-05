@@ -13,7 +13,10 @@ import bill from './bill'
 // import productRatings from './productRatings';
 // import favorites from './favorites';
 // import producers from './producers';
+import productsTopBestProduct from './productsTopBestProduct'
+import orders from './orders';
 import loading from './loading';
+import search from './search'
 
 const appReducers = combineReducers({
     categories,
@@ -23,8 +26,11 @@ const appReducers = combineReducers({
     product,
     productsOffice,
     productsTopDiscount,
+    productsTopBestProduct,
     cart,
-    bill
+    bill,
+    orders,
+    search
 });
 
 export default appReducers;

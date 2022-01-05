@@ -62,8 +62,12 @@ export const actGetProductOfKeyRequest = (key, page) => {
             callApi(`view/product/search?keyword=${newKey}&page=${newPage}`, 'GET')
                 .then(res => {
                     if (res && res.status === 200) {
-                        console.log("trả về rồi",res.data.listProduct)
+                        localStorage.setItem("_keyword",newKey)
+                        console.log("trả về rồi lala",res.data)
+                        const newKeyPage = {key:newKey,totalPage: res.data.totalPage}
                         dispatch(actFetchProducts(res.data.listProduct));
+                        dispatch(actFetchKeySearch(newKeyPage));
+                        console.log("lưu search",newKeyPage)
                         resolve(res.data);
                         setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
                     }
@@ -76,7 +80,6 @@ export const actGetProductOfKeyRequest = (key, page) => {
         });
     };
 }
-//lấy sản phẩm theo loại 
 
 export const actGetProductOfCategoryRequest = (name, page) => {
     const newPage = page === null || page === undefined ? 1 : page
@@ -88,8 +91,9 @@ export const actGetProductOfCategoryRequest = (name, page) => {
             callApi(`view/product/search?category=${newCategory}&page=${newPage}`, 'GET')
                 .then(res => {
                     if (res && res.status === 200) {
-                        
+                        const newKeyPage = {key:newCategory,totalPage: res.data.totalPage}
                         dispatch(actFetchProducts(res.data.listProduct));
+                        dispatch(actFetchKeySearch(newKeyPage));
                         resolve(res.data);
                         setTimeout(function () { dispatch(actHiddenLoading()) }, 200);
                     }
@@ -109,6 +113,13 @@ export const actFetchProducts = (products) => {
         products
     }
 }
+//lưu tên search
+export const actFetchKeySearch = (newKeyPage) => {
+    return {
+        type: Types.FETCH_KEYSEARCH,
+        newKeyPage
+    }
+}
 // lấy 10 sản phẩm giảm giá
 
 export const actFetchProductsDiscountRequest = (page) => {
@@ -124,6 +135,24 @@ export const actFetchProductsDiscountRequest = (page) => {
 export const actFetchProductsDiscount = (products) => {
     return {
         type: Types.FETCH_PRODUCTS_DISCOUNT,
+        products
+    }
+}
+// lấy 10 sản phẩm bán chạy
+
+export const actFetchProductsBestRequest = (page) => {
+    const newOffset = page === null || page === undefined ? 1 : page
+    return async dispatch => {
+        const res = await callApi(`view/product/10bestproduct`, 'GET', null);
+        if (res && res.status === 200) {
+            dispatch(actFetchProductsBest(res.data.map));
+        }
+    };
+}
+
+export const actFetchProductsBest = (products) => {
+    return {
+        type: Types.FETCH_PRODUCTS_BEST,
         products
     }
 }

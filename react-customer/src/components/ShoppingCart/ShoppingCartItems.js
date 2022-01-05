@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 // import { formatNumber } from '../../config/TYPE'
-// import { actRemoveCartRequest, actUpdateCartRequest } from '../../redux/actions/cart';
+import { actRemoveCartRequest,actUpdateCartRequest} from '../../redux/actions/cart';
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import'./style.css'
+import './style.css'
 toast.configure()
 
 class ShoppingCartItems extends Component {
@@ -27,31 +27,57 @@ class ShoppingCartItems extends Component {
   //   newItem.quantity--;
   //   this.props.changQuantityItem(newItem);
   // }
+  upItem = (item) => {
+    if (item.quantity >= 5) {
+      toast.error('Tối đa 5 sản phẩm')
+      return
+    }
+    let newItem = item;
+    newItem.quantity++;
+    this.props.changQuantityItem(newItem);
+    window.location.reload()
+  }
+  downItem = (item) => {
+    if (item.quantity <=1) {
+      toast.error('Tối đa 1 sản phẩm')
+      return
+    }
+    let newItem = item;
+    newItem.quantity--;
+    this.props.changQuantityItem(newItem);
+    window.location.reload()
+  }
 
-  // removeItem = (item) => {
-  //   this.props.removeItem(item);
-  //   toast.success('Delete product is successful')
-  // }
+  removeItem = (item) => {
+    this.props.removeItem(item);
+    console.log("sản phẩm xóa",item)
+    toast.success('Xóa thành công')
+    window.location.reload()
+  }
 
   render() {
     const { item } = this.props;
     return (
       <tr>
-        <td className="li-product-remove"><Link to="#"><i style={{fontSize: 20}} className="far fa-trash-alt" /></Link></td>
+        <td className="li-product-remove">
+          <Link to="#"><i style={{ fontSize: 20 }}
+            onClick={() => this.removeItem(item)}
+            className="far fa-trash-alt" /></Link>
+        </td>
         <td className="li-product-thumbnail d-flex justify-content-center"><a href="/">
-          <div className="fix-cart"> <img className="fix-img" src={item.productImage ?  item.productImage : null} alt="Li's Product" /></div>
+          <div className="fix-cart"> <img className="fix-img" src={item.productImage ? item.productImage : null} alt="Li's Product" /></div>
         </a></td>
         <td className="li-product-name"><a className="text-dark" href="/">{item.nameProduct}</a></td>
-        <td className="product-subtotal"><span className="amount">{item.unitPrice.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})}</span></td>
+        <td className="product-subtotal"><span className="amount">{item.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span></td>
         <td className="quantity">
           <div className="cart-plus-minus">
             <input onChange={() => { }} className="cart-plus-minus-box" value={this.props.item.quantity || 0} />
-            <div className="dec qtybutton"><i className="fa fa-angle-down" />
+            <div className="dec qtybutton" onClick={() => this.downItem(item)}><i className="fa fa-angle-down" />
             </div>
-            <div className="inc qtybutton"><i className="fa fa-angle-up" /></div>
+            <div className="inc qtybutton" onClick={() => this.upItem(item)}><i className="fa fa-angle-up" /></div>
           </div>
         </td>
-        <td className="product-subtotal"><span className="amount">{(item.unitPrice * item.quantity).toLocaleString('it-IT', {style : 'currency', currency : 'VND'})}</span></td>
+        <td className="product-subtotal"><span className="amount">{(item.unitPrice * item.quantity).toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span></td>
       </tr>
     )
   }
@@ -59,12 +85,12 @@ class ShoppingCartItems extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // removeItem: (item) => {
-    //   dispatch(actRemoveCartRequest(item))
-    // },
-    // changQuantityItem: (item) => {
-    //   dispatch(actUpdateCartRequest(item))
-    // }
+    removeItem: (item) => {
+      dispatch(actRemoveCartRequest(item))
+    },
+    changQuantityItem: (item) => {
+      dispatch(actUpdateCartRequest(item))
+    }
   }
 }
 

@@ -95,6 +95,7 @@ class OrderStatus2 extends Component {
           'Giao hàng thành công.',
           'success'
         )
+       
       }
     })
   }

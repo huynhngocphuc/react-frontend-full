@@ -48,3 +48,41 @@ export const actFetchCart = (items) => {
     }
 
 }
+
+// xóa giỏ hàng
+export const actRemoveCartRequest = (item) => {
+    let id = parseInt(localStorage.getItem("_id"))
+    const dataguidi = {customerId:id,productId:item.productId,quantity:item.quantity}
+    console.log("dữ liệu chuẩn bị gửi đi", dataguidi)
+    return async dispatch => {
+        const res = await callApi(`cart`, 'DELETE',dataguidi);
+        if (res && res.status === 200) {
+            console.log("giỏ hang của tôi",res.data)
+        };
+    };
+}
+
+export const actRemoveCart = (item) => {
+    return {
+        type: Types.REMOVE_CART,
+        item
+    }
+}
+
+// sửa giỏ hàng
+export const actUpdateCartRequest = (item) => {
+    let id = parseInt(localStorage.getItem("_id"))
+    const dataguidi = {customerId:id,productId:item.productId,quantity:item.quantity}
+    console.log("dữ liệu chuẩn bị gửi đi", dataguidi)
+    return async dispatch => {
+        const res = await callApi(`cart`, 'PUT',dataguidi);
+      
+    };
+}
+
+export const actUpdateCart = (item) => {
+    return {
+        type: Types.UPDATE_CART,
+        item
+    }
+}

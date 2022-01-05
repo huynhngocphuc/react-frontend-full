@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { connect } from 'react-redux'
 
 import { startLoading, doneLoading } from '../../utils/loading'
-import {actGetProductOfKeyRequest} from '../../redux/actions/products'
+import { actGetProductOfKeyRequest } from '../../redux/actions/products'
 
 
 
@@ -28,17 +28,21 @@ class HeaderMiddle extends Component {
     if (textSearch === '' || textSearch === null) {
       return toast.error('Vui lòng nhập sản phẩm cần tìm ...');
     }
-    startLoading();
-    console.log("text search",textSearch)
-    await this.props.searchProduct(textSearch);
-    this.setState({
-      textSearch: null
-    })
-    doneLoading();
+    else {
+      startLoading();
+      await this.props.searchProduct(textSearch);
+      this.setState({
+        textSearch: ''
+      })
+      doneLoading();
+    }
+
   }
 
   render() {
     const { textSearch } = this.state;
+    const { countCart } = this.props;
+   console.log("danh sách cart",countCart)
     return (
       <div className="header-middle pl-sm-0 pr-sm-0 pl-xs-0 pr-xs-0">
         <div className="container">
@@ -72,7 +76,7 @@ class HeaderMiddle extends Component {
                 {/* <button className="li-btn" type="submit"></button> */}
                 <Link
                   onClick={this.handleClick}
-                  to={`/products/search/${textSearch}`}>
+                  to={`/search/${textSearch}`}>
                   <button className="li-btn" type="submit"><i className="fa fa-search" /></button>
                 </Link>
               </form>
@@ -94,7 +98,7 @@ class HeaderMiddle extends Component {
                       <div className="hm-minicart-trigger">
                         <i className="item-icon fab fa-opencart"></i>
                         <span className="item-text">
-                          <span className="cart-item-count"></span>
+                          <span className="cart-item-count">{countCart ? countCart.length : 0}</span>
                         </span>
                       </div>
                     </Link>
@@ -110,6 +114,12 @@ class HeaderMiddle extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    countCart: state.cart
+  }
+}
+
 const mapDispatchToProps = (dispatch) => {
   return {
     searchProduct: (key) => {
@@ -119,4 +129,4 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
-export default connect(null, mapDispatchToProps)(HeaderMiddle)
+export default connect(mapStateToProps, mapDispatchToProps)(HeaderMiddle)

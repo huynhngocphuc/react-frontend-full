@@ -56,7 +56,7 @@ class HeaderTop extends Component {
                             Setting
                           </Link>
                           <div className="fix-text-item dropdown-menu ht-setting-list " aria-labelledby="dropdownMenuLink">
-                            <Link className="fix-text-item dropdown-item" to="/profile">Thông tin cá nhân</Link>
+                            <Link className="fix-text-item dropdown-item" to="/order/status1">Đơn mua</Link>
                             <Link onClick={this.logOut} to="/login-register" className="fix-text-item dropdown-item" href="/">Đăng xuất</Link>
                           </div>
                         </div>)

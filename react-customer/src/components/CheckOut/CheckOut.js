@@ -8,6 +8,7 @@ import YourOrder from "./YourOrder";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { startLoading, doneLoading } from "../../utils/loading";
+import { actFetchCartRequest } from '../../redux/actions/cart';
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import "./style.css";
@@ -106,15 +107,16 @@ class CheckOut extends Component {
       startLoading();
       const resData = await callApi("orders", "POST", newOder);
       if (resData && resData.status == 200) {
+        // fetch lại giỏ hàng
+        // await this.props.fetch_cart(id)
         toast.success("Tạo đơn hàng thành công")
         this.setState({
           checkout: true,
           result: true,
         });
       }
-      doneLoading();
-
-
+     await doneLoading();
+      window.location.reload();
     }
 
 
@@ -266,6 +268,13 @@ const mapStateToProps = (state) => {
     cartStore: state.cart,
   };
 };
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetch_cart: (id) => {
+      dispatch(actFetchCartRequest(id))
+    }
+  }
+}
 
 
-export default connect(mapStateToProps, null)(CheckOut);
+export default connect(mapStateToProps, mapDispatchToProps)(CheckOut);

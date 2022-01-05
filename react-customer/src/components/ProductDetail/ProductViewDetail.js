@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import { actGetProductRequest } from "../../redux/actions/products";
 import { actAddCartRequest } from "../../redux/actions/cart";
 import callApi from "../../utils/apiCaller";
+import BeautyStars from "beauty-stars";
 
 import "./style.css";
 toast.configure();
@@ -28,8 +29,8 @@ class ProductViewDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      quantity: 1,
-      redirectYourLogin:false
+      quantity: 0,
+      redirectYourLogin: false
     };
   }
 
@@ -67,27 +68,27 @@ class ProductViewDetail extends Component {
   };
 
   addItemToCart = product => {
-    const { quantity} = this.state;
-    
+    const { quantity } = this.state;
+
     token = localStorage.getItem("_auth");
     id = parseInt(localStorage.getItem("_id"));
-    if(!token){
+    if (!token) {
       this.setState({
         redirectYourLogin: true
-      }) 
+      })
     }
     else {
       this.setState({
         redirectYourLogin: false
       })
-      this.props.addCart(id,product, quantity);
+      this.props.addCart(id, product, quantity);
     }
-    
+
   };
   render() {
-    const { product,user } = this.props;
-    const { quantity,redirectYourLogin } = this.state;
-    console.log("thông tin sản phẩm", quantity,user)
+    const { product, user } = this.props;
+    const { quantity, redirectYourLogin } = this.state;
+    console.log("thông tin sản phẩm", product)
     if (redirectYourLogin) {
       return <Redirect to="/login-register"></Redirect>
     }
@@ -114,7 +115,7 @@ class ProductViewDetail extends Component {
 
                   <div className="price-box pt-20">
                     <span className="new-price new-price-2">
-                      {product && product.unitPrice? product.unitPrice.toLocaleString('it-IT', {style : 'currency', currency : 'VND'}):null}
+                      {product && product.unitPrice ? product.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : null}
                     </span>
                   </div>
                   <div className="product-desc">
@@ -156,7 +157,80 @@ class ProductViewDetail extends Component {
               </div>
             </div>
           </div>
+          <div className="li-product-tab">
+            <ul className="nav li-product-menu">
+              <li>
+                <a className="active" data-toggle="tab" href="#description">
+                  <span>Thông tin sản phẩm</span>
+                </a>
+              </li>
+            </ul>
+
+          </div>
+
+          <div className="tab-content">
+            <div
+              id="description"
+              className="tab-pane active show"
+              role="tabpanel"
+            >
+              <div className="product-description">
+                <span dangerouslySetInnerHTML={{ __html: product.descriptionProduct }}></span>
+                {
+                  product.listReviews ? (
+
+                    product.listReviews.length > 0 ?
+                      (
+                        <div className="comment-list">
+                          <h5 className="text-muted mt-40">
+                            <span className="badge badge-success">{product.listReviews.length}</span>{" "}
+                            Comment
+                          </h5>
+                          {
+                            product.listReviews.map((cmt, index) => {
+                              return (
+                                <div key={index} class="comment-item media border p-3">
+                                  <div className="media-body">
+                                    <h5>
+                                      <small>
+                                        {cmt.customerName}
+                                      </small>
+                                      <div className="mt-10">
+                                        <BeautyStars
+                                          size={10}
+                                          activeColor={"#ed8a19"}
+                                          inactiveColor={"#c1c1c1"}
+                                          value={cmt.rating}
+                                        />
+                                      </div>
+                                    </h5>
+                                    <p> {cmt.comments}</p>
+                                  </div>
+                                </div>
+                              )
+                            })
+                          }
+                        </div>
+                      ) : (
+
+                        <div className="comment-list">
+                          <h5 className="text-muted mt-40">
+                            <span className="badge badge-success">0</span>
+                            Comment
+                          </h5>
+                        </div>
+                      )
+                  ) :
+                    (
+                      <h1>không có sản phẩm</h1>
+                    )
+                }
+
+              </div>
+            </div>
+          </div>
         </div>
+
       </div>
     );
   }
@@ -164,7 +238,7 @@ class ProductViewDetail extends Component {
 const mapStateToProps = state => {
   return {
     product: state.product,
-    user:state.auth
+    user: state.auth
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -172,8 +246,8 @@ const mapDispatchToProps = dispatch => {
     get_product: productId => {
       dispatch(actGetProductRequest(productId));
     },
-    addCart: (idCustomer,product,quantity) => {
-      dispatch(actAddCartRequest(idCustomer,product,quantity));
+    addCart: (idCustomer, product, quantity) => {
+      dispatch(actAddCartRequest(idCustomer, product, quantity));
     }
 
   }

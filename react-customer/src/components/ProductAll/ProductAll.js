@@ -78,13 +78,13 @@ class ProductAll extends Component {
                     {/* shop-item-filter-list end */}
                   </div>
                   <div className="toolbar-amount">
-                    <span>Showing 1 to 12</span>
+                    <span>xem 1 dến 12 sản phẩm</span>
                   </div>
                 </div>
                 {/* product-select-box start */}
-                <div className="product-select-box">
+                {/* <div className="product-select-box">
                   <div className="product-short">
-                    <p>Sort By:</p>
+                    <p>:</p>
                     <select
                       className="nice-select"
                       onChange={this.handleChangeSelectSort}
@@ -96,7 +96,7 @@ class ProductAll extends Component {
                       <option value="-price">Price (High &gt; Low)</option>
                     </select>
                   </div>
-                </div>
+                </div> */}
                 {/* product-select-box end */}
               </div>
               {/* shop-top-bar end */}

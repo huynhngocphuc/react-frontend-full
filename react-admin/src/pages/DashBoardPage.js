@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import Dashboad from '../components/Content/DashBoard/Dashboad'
+import Dashboard from '../components/Content/DashBoard/Dashboard'
 
 export default class DashBoardPage extends Component {
     render() {
         return (
-            <Dashboad></Dashboad>
+            <Dashboard></Dashboard>
         )
     }
 }

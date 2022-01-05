@@ -8,7 +8,7 @@ export default class CheckOutPage extends Component {
     return (
       <div>
         <LinkHere url={url}></LinkHere>
-        <h1>checkout</h1>
+        
         <CheckOut></CheckOut>
       </div>
     )

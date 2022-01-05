@@ -134,7 +134,8 @@ class Order extends Component {
                   </div>
                   <form
                     onSubmit={(event) => this.handleSubmit(event)}
-                    className="form-inline md-form form-sm mt-0" style={{ justifyContent: 'flex-end', paddingTop: 5, paddingRight: 20 }}>
+                    className="form-inline md-form form-sm mt-0" 
+                    style={{ justifyContent: 'flex-end', paddingTop: 5, paddingRight: 20 }}>
                     <div>
                       <button style={{ border: 0, background: 'white' }}><i className="fa fa-search" aria-hidden="true"></i></button>
                       <input

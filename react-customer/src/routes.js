@@ -9,11 +9,13 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import ResetPasswordPage from './pages/ResetPasswordPage'
 import ShopCategoryPage from './pages/ShopCategoryPage';
-import ProductSearch from './components/ProductAll/ProductSearch';
+import ProductSearchPage from './pages/ProductSearchPage';
 import ShoppingCartPage from './pages/ShoppingCartPage';
 import CheckOutPage from './pages/CheckOutPage';
 import PaypalPage from './pages/PaypalPage';
-
+import Order1Page from './pages/OrderStatus1Page';
+import Order2Page from './pages/OrderStatus2Page';
+import Order3Page from './pages/OrderStatus3Page';
 import ProductPage from './pages/ProductPage';
 const routes = [
   {
@@ -62,14 +64,29 @@ const routes = [
     main: (match) => <ShopCategoryPage match={match} />
   },
   {
-    path: '/products/search/:key',
+    path: '/search',
     exact: false,
-    main: (match) => <ProductSearch match={match} />
+    main: (match) => <ProductSearchPage match={match} />
   },
   {
     path: '/cart',
     exact: false,
     main: (match) => < ShoppingCartPage match={match} />
+  },
+  {
+    path: '/order/status1',
+    exact: false,
+    main: (match) => < Order1Page match={match} />
+  },
+  {
+    path: '/order/status2',
+    exact: false,
+    main: (match) => < Order2Page match={match} />
+  },
+  {
+    path: '/order/status3',
+    exact: false,
+    main: (match) => < Order3Page match={match} />
   },
   {
     path: '/checkout',

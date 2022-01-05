@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
-import TrenddingProductItems from './TrenddingProductItems'
+import TopTreddingProductItems from './TopTreddingProductItems';
 import { connect } from 'react-redux'
-import { actFetchProductsOfficeRequest } from '../../../../redux/actions/products';
+import { actFetchProductsBestRequest } from '../../../../redux/actions/products';
 import Slider from "react-slick";
 import './style.css'
 
-class TrenddingProduct extends Component {
+class TopTreddingProduct extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      page: 0
+      page: 1
     }
   }
 
@@ -20,6 +20,7 @@ class TrenddingProduct extends Component {
 
   render() {
     const { products } = this.props;
+    console.log("sản phẩm bán chạy",products)
     const settings = {
       infinite: true,
       speed: 500,
@@ -34,7 +35,7 @@ class TrenddingProduct extends Component {
             <div className="col-lg-12">
               <div className="li-product-tab li-trending-product-tab">
                 <h2>
-                  <span>Trendding Products</span>
+                  <span>Sản phẩm bán chạy</span>
                 </h2>
                 <ul className="nav li-product-menu li-trending-product-menu">
                   {/* <li><a className="active" data-toggle="tab" href="#home1"><span>Sanai</span></a></li>
@@ -50,7 +51,7 @@ class TrenddingProduct extends Component {
                     {products && products.length ? products.map((product, index) => {
                       return (
                         <div key={index} className="col-sm-9 fix-ml pt-3">
-                          <TrenddingProductItems product={product} ></TrenddingProductItems>
+                          <TopTreddingProductItems product={product} ></TopTreddingProductItems>
                         </div>
                       )
                     }) : null
@@ -71,16 +72,16 @@ class TrenddingProduct extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    products: state.productsOffice
+    products: state.productsTopBestProduct
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     fetch_products_new: (page) => {
-      dispatch(actFetchProductsOfficeRequest(page))
+      dispatch(actFetchProductsBestRequest(page))
     }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TrenddingProduct)
+export default connect(mapStateToProps, mapDispatchToProps)(TopTreddingProduct)

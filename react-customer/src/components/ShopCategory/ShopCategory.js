@@ -44,9 +44,9 @@ class ShopCategory extends Component {
   }
 
   render() {
-    let { products } = this.props;
+    let { products,search } = this.props;
     const { total } = this.state;
-  
+    console.log("props của category",this.props)
     
     return (
       <div className="content-wraper pt-60 pb-60">
@@ -140,7 +140,7 @@ class ShopCategory extends Component {
                       <ul className="pagination-box">
                       <Paginator
                         pageSize={1}
-                        totalElements={total}
+                        totalElements={search.totalPage}
                         onPageChangeCallback={(e) => {this.pageChange(e)}}
                       />
                       </ul>
@@ -158,7 +158,8 @@ class ShopCategory extends Component {
 }
 const mapStateToProps = (state) => {
   return {
-    products: state.products
+    products: state.products,
+    search : state.search
   }
 }
 

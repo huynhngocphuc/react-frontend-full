@@ -41,7 +41,7 @@ class SumTotal extends Component {
     const { sumTotal } = this.props;
     console.log("tổng tiền",sumTotal)
     let amount = 0;
-    let shippingTotal = 15000;
+    let shippingTotal = 0;
     if (sumTotal.length > 0) {
       amount = sumTotal.reduce((sum, item) => {
         return sum += item.quantity * item.unitPrice

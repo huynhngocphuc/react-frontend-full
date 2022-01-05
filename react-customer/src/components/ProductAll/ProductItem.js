@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 
-import { Link } from 'react-router-dom'
+import { Link,Redirect } from 'react-router-dom'
 import { toast } from 'react-toastify';
-import { actGetProductRequest} from '../../redux/actions/products';
+import { actGetProductRequest } from '../../redux/actions/products';
 import { actAddCartRequest } from "../../redux/actions/cart";
 import { startLoading, doneLoading } from '../../utils/loading'
 import { connect } from 'react-redux'
@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import BeautyStars from 'beauty-stars';
 import './style.css'
 toast.configure()
-let token,id;
+let token, id;
 class ProductItem extends Component {
 
   constructor(props) {
@@ -20,7 +20,7 @@ class ProductItem extends Component {
       quantity: 1
     }
   }
-  
+
   handleChange = event => {
     const name = event.target.name;
     const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
@@ -29,32 +29,34 @@ class ProductItem extends Component {
     });
   }
   getInfoProduct = (id) => {
-    console.log("vào đây để lấy thông tin san phẩm",id)
+    console.log("vào đây để lấy thông tin san phẩm", id)
     this.props.getInfoProduct(id);
   }
   addItemToCart = product => {
-    const { quantity} = this.state;
-    
+    const { quantity } = this.state;
+
     token = localStorage.getItem("_auth");
     id = parseInt(localStorage.getItem("_id"));
-    if(!token){
+    if (!token) {
       this.setState({
         redirectYourLogin: true
-      }) 
+      })
     }
     else {
       this.setState({
         redirectYourLogin: false
       })
-      this.props.addCart(id,product, quantity);
+      this.props.addCart(id, product, quantity);
     }
-    
+
   };
 
   render() {
-    const { product} = this.props;
-    const { quantity } = this.state;
-   
+    const { product } = this.props;
+    const { quantity, redirectYourLogin } = this.state;
+    if (redirectYourLogin) {
+      return <Redirect to ='/login-register'></Redirect>
+    }
     return (
       <div className="col-lg-3 col-md-4 col-sm-6 mt-40">
         {/* single-product-wrap start */}
@@ -66,10 +68,10 @@ class ProductItem extends Component {
           </div>
           <div className="product_desc">
             <div className="product_desc_info">
-              
+
               <h4><Link className="product_name text-truncate" onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`}>{product.productName}</Link></h4>
               <div className="price-box">
-                <span className="new-price" style={{color: 'red'}}>{product.unitPrice.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})}</span>
+                <span className="new-price" style={{ color: 'red' }}>{product.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
               </div>
             </div>
             <div className="add-actions">
@@ -83,7 +85,7 @@ class ProductItem extends Component {
         </div>
 
         {/*// QUICK VIEW */}
-        
+
         {/* single-product-wrap end */}
       </div>
     )
@@ -101,8 +103,8 @@ const mapDispatchToProps = (dispatch) => {
     getInfoProduct: (id) => {
       dispatch(actGetProductRequest(id))
     },
-    addCart: (idCustomer,product,quantity) => {
-      dispatch(actAddCartRequest(idCustomer,product,quantity));
+    addCart: (idCustomer, product, quantity) => {
+      dispatch(actAddCartRequest(idCustomer, product, quantity));
     }
   }
 }

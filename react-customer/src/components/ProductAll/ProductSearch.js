@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { actGetProductOfKeyRequest } from '../../redux/actions/products';
 import Paginator from 'react-js-paginator';
 import ProductItem from "./../ProductAll/ProductItem";
+import { constant } from 'lodash';
 
 let categoryId;
 class ShopCategory extends Component {
@@ -14,29 +15,15 @@ class ShopCategory extends Component {
       total: 0
     };
   }
-
-
-   componentDidMount() {
-    this.fetch_reload_data();
+  componentDidMount(){
+    const {totalPage} = this.props.search 
+    this.setState({total:totalPage})
   }
-
-  fetch_reload_data() {
-    console.log("đây là từ khóa,this.props.key",this.props.key)
-    this.props.fetch_products(this.props.key).then(res => {
-      this.setState({
-        total: res.totalPage
-      });
-    }).catch(err => {
-      console.log(err);
-    })
-  }
-
-
 
   pageChange(content) {
     const page = content;
-    const key = this.props.key
-    console.log("khóa tìm kiếm",key)
+    const {key} = this.props.search
+    console.log("khóa tìm kiếm chage",key)
     this.props.fetch_products(key,page);
     this.setState({
       currentPage: content
@@ -45,8 +32,9 @@ class ShopCategory extends Component {
   }
 
   render() {
-    let { products } = this.props;
+    let { products,search } = this.props;
     const { total } = this.state;
+    console.log("sản phẩm search và trang",products,search)
     return (
       <div className="content-wraper pt-60 pb-60">
         <div className="container">
@@ -139,7 +127,7 @@ class ShopCategory extends Component {
                       <ul className="pagination-box">
                       <Paginator
                         pageSize={1}
-                        totalElements={total}
+                        totalElements={search.totalPage}
                         onPageChangeCallback={(e) => {this.pageChange(e)}}
                       />
                       </ul>
@@ -157,7 +145,8 @@ class ShopCategory extends Component {
 }
 const mapStateToProps = (state) => {
   return {
-    products: state.products
+    products: state.products,
+    search:state.search
   }
 }
 
@@ -168,6 +157,7 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
 }
+
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShopCategory)

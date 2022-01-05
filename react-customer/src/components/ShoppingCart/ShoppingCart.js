@@ -10,7 +10,7 @@ class ShoppingCart extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      redirectYourLogin:false
+      redirectYourLogin: false
     }
   }
 
@@ -19,14 +19,14 @@ class ShoppingCart extends Component {
   componentDidMount() {
     token = localStorage.getItem("_auth");
     id = localStorage.getItem("_id");
-    if(!token){
-      this.setState({redirectYourLogin :true})
+    if (!token) {
+      this.setState({ redirectYourLogin: true })
     }
-    else{
+    else {
       this.props.fetch_items(id);
     }
-    
-    
+
+
   }
 
   showItem(items) {
@@ -43,11 +43,11 @@ class ShoppingCart extends Component {
 
   render() {
     const { items } = this.props;
-    const {redirectYourLogin} = this.state
-    if(redirectYourLogin)
-    {
-      return(
-         <Redirect to="/login-register"></Redirect>
+    const { redirectYourLogin } = this.state
+    console.log("giở hàng trống", items)
+    if (redirectYourLogin) {
+      return (
+        <Redirect to="/login-register"></Redirect>
       )
     }
     return (
@@ -57,23 +57,34 @@ class ShoppingCart extends Component {
             <div className="col-sm-8 col-xs-12">
               <form>
                 <div className="table-content table-responsive">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th className="li-product-remove">Xóa</th>
-                        <th className="li-product-thumbnail">Ảnh</th>
-                        <th className="cart-product-name">Tên sản phẩm</th>
-                        <th className="li-product-price">Giá</th>
-                        <th className="li-product-quantity">Số lượng</th>
-                        <th className="li-product-subtotal">Tổng</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {
-                        this.showItem(items)
-                      }
-                    </tbody>
-                  </table>
+                  {
+                    items.length > 0 ?
+                      (
+                        <table className="table">
+                          <thead>
+                            <tr>
+                              <th className="li-product-remove">Xóa</th>
+                              <th className="li-product-thumbnail">Ảnh</th>
+                              <th className="cart-product-name">Tên sản phẩm</th>
+                              <th className="li-product-price">Giá</th>
+                              <th className="li-product-quantity">Số lượng</th>
+                              <th className="li-product-subtotal">Tổng</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {
+
+                              this.showItem(items)
+                            }
+                          </tbody>
+                        </table>
+                      ):
+                      (
+                        <img src='./images/cartnull.png' class="rounded mx-auto d-block"></img>
+                      )
+                  }
+                  
+
                 </div>
               </form>
             </div>

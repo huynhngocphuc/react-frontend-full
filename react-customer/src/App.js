@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import routes from "./routes";
 import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
 import { connect } from "react-redux";
 import { actTokenRequest } from "./redux/actions/auth";
 import { css } from '@emotion/core';
@@ -43,7 +44,7 @@ class App extends Component {
                 </div>
                 <Header></Header>
                 {this.showContentMenus(routes)}
-
+                <Footer></Footer>
               </div>
             ) :
             (
@@ -59,6 +60,7 @@ class App extends Component {
                 </div>
                 <Header></Header>
                 {this.showContentMenus(routes)}
+                <Footer></Footer>
               </div>
 
             )
