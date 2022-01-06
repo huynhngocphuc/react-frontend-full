@@ -1,6 +1,7 @@
 import * as Types from '../../constants/ActionType';
 import callApi from '../../utils/apiCaller';
 import { toast } from 'react-toastify';
+import { startLoading, doneLoading } from '../../utils/loading';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const actLoginRequest = (user) => {
@@ -50,22 +51,26 @@ export const actToken = (token) => {
 
 export const actForgotPasswordRequest = (email) => {
     return async () => {
+        startLoading()
         const res = await callApi('auth/forgot', 'POST', email);
         if (res && res.status === 200) {
             const mes = res.data.message ? res.data.message:"Vui lòng xác nhận email để đổi mật khẩu";
             localStorage.setItem('_mailreset', email.email);
             toast.success(mes)
+            doneLoading()
         }
     };
 }
 
 export const actPasswordRequest = (user) => {
     return async () => {
+        startLoading()
         const res = await callApi('auth/reset', 'POST', user);
         if (res && res.status === 200) {
             const mes = res.data.message ? res.data.message:"Đổi mật khẩu thành công";
             localStorage.removeItem("_mailreset");
             toast.success(mes)
+            doneLoading()
         }
     };
 }

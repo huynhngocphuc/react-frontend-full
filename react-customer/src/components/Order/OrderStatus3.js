@@ -277,7 +277,7 @@ class OrderStatus3 extends Component {
                                                     )
                                                     :
                                                     (
-                                                        <img src='https://firebasestorage.googleapis.com/v0/b/react-uploadimage-5d9bf.appspot.com/o/ordernull.png?alt=media&token=1029348f-1f9e-4022-b4bd-0c9a81513a95' class="rounded mx-auto d-block"></img>
+                                                        <img src='https://firebasestorage.googleapis.com/v0/b/react-uploadimage-5d9bf.appspot.com/o/ordernull.png?alt=media&token=1029348f-1f9e-4022-b4bd-0c9a81513a95' className="rounded mx-auto d-block"></img>
 
                                                     )
                                             }

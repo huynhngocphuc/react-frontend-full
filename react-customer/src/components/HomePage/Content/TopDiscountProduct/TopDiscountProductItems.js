@@ -60,16 +60,18 @@ class TopDiscountProductItems extends Component {
 
 
       <div className="single-product-wrap" >
-        <div className="fix-img-div product-image">
+        <div className="fix-img-div-new product-image">
           <Link onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`}>
             <img className="fix-img" src={product.productImage} alt="Li's Product " />
           </Link>
+          <span className="sticker">{product.discount}%</span>
         </div>
         <div className="product_desc">
           <div className="product_desc_info">
             <h4><Link className="product_name text-truncate" onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`}>{product.productName}</Link></h4>
             <div className="price-box">
-              <span className="new-price" style={{ color: 'red' }}>{product.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
+              <span className="new-price" style={{ color: 'red' }}>{product.priceAfterDiscount.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
+              <span className="new-price" style={{ color: 'black', textDecoration: "line-through" }}>{product.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
             </div>
           </div>
           <div className="add-actions">

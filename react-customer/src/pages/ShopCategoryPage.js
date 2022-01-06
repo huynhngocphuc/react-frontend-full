@@ -9,7 +9,7 @@ export default class ShopCategoryPage extends Component {
     const {name} = this.props.match.match.params
     return (
       <div>
-        {/* <LinkHere url={url}></LinkHere> */}
+        <LinkHere url={`/ Loại sản phẩm / ${name}`}></LinkHere>
         <ShopCategory name={name}></ShopCategory>
       </div>
     )

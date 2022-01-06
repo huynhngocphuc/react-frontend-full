@@ -2,6 +2,9 @@ import * as Types from '../../constants/ActionType';
 import { toast } from 'react-toastify';
 import callApi from '../../utils/apiCaller';
 import 'react-toastify/dist/ReactToastify.css';
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
 
 
 export const actAddCartRequest = (customerId, product, quantity) => {
@@ -15,8 +18,15 @@ export const actAddCartRequest = (customerId, product, quantity) => {
         }
         console.log("dữ liệu chuẩn bị gửi đi", dataguidi)
         const res = await callApi('cart', 'POST', dataguidi);
-        if (res && res.status === 201) {
-            toast.success("thêm sản phẩm thành công");
+        console.log("dữ liệu chuẩn bị gửi về", res)
+        if (res && res.status === 200) {
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Đã thêm vào giỏ',
+                showConfirmButton: false,
+                timer: 1000
+              })
         };
     }
 }
@@ -76,6 +86,10 @@ export const actUpdateCartRequest = (item) => {
     console.log("dữ liệu chuẩn bị gửi đi", dataguidi)
     return async dispatch => {
         const res = await callApi(`cart`, 'PUT',dataguidi);
+        if (res && res.status === 200) {
+            dispatch(actUpdateCart(res.data.cartEntities));
+            console.log("giỏ hàng trả về",res.data.cartEntities)
+        };
       
     };
 }

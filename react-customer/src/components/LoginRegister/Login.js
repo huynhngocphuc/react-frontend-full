@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Recaptcha from 'react-recaptcha'
 import { startLoading, doneLoading } from '../../utils/loading'
 import { Link } from 'react-router-dom'
 toast.configure()
@@ -13,11 +12,11 @@ class Login extends Component {
 
   constructor(props) {
     super(props);
-    
+
     this.state = {
       username: "",
       password: "",
-      
+
     }
   }
 
@@ -34,26 +33,25 @@ class Login extends Component {
   handleSubmit = async event => {
     event.preventDefault();
     const { username, password } = this.state;
-      if (password.length < 6 || password.length > 32) {
-        return toast.error('Mật khẩu từ 6-24 ký tự');
-      }
-      const user = {
-        username,
-        password
-      }
-      console.log(user)
-      startLoading();
-      await this.props.loginRequest(user);
-      doneLoading();
-     
+    if (password.length < 6 || password.length > 32) {
+      return toast.error('Mật khẩu từ 6-24 ký tự');
+    }
+    const user = {
+      username,
+      password
+    }
+    console.log(user)
+    startLoading();
+    await this.props.loginRequest(user);
+    doneLoading();
+
   }
 
 
   render() {
     const { username, password } = this.state;
     const { user } = this.props;
-    if(user !== null)
-    {
+    if (user !== null) {
       return <Redirect to="/"></Redirect>
     }
     return (
@@ -87,8 +85,8 @@ class Login extends Component {
               </div>
               <div className="col-md-8">
                 <div className="check-box d-inline-block ml-0 ml-md-2 mt-10">
-                  <input type="checkbox" id="remember_me" />
-                  <label htmlFor="remember_me">Nhớ tài khoản</label>
+                  <Link to="/register"> Đăng ký</Link>
+
                 </div>
               </div>
               <div className="col-md-4 mt-10 mb-20 text-left text-md-right">
@@ -97,7 +95,7 @@ class Login extends Component {
               <div className="col-md-4">
                 <button className="register-button mt-0 mb-3">Đăng nhập</button>
               </div>
-             
+
             </div>
           </div>
         </form>

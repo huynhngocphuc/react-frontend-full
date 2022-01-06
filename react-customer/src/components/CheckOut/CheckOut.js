@@ -56,7 +56,7 @@ class CheckOut extends Component {
         }
       })
       count = items.reduce((sum, item) => {
-        return (sum += item.quantity * item.unitPrice);
+        return (sum += item.quantity * item.priceAfterDiscount);
       }, 0);
     }
     if (list) {
@@ -92,7 +92,7 @@ class CheckOut extends Component {
         }
       })
       count = items.reduce((sum, item) => {
-        return (sum += item.quantity * item.unitPrice);
+        return (sum += item.quantity * item.priceAfterDiscount);
       }, 0);
     }
     if (list) {
@@ -116,7 +116,7 @@ class CheckOut extends Component {
         });
       }
      await doneLoading();
-      window.location.reload();
+     window.location.reload('/cart');
     }
 
 
@@ -136,7 +136,7 @@ class CheckOut extends Component {
         }
       })
       count = items.reduce((sum, item) => {
-        return (sum += item.quantity * item.unitPrice);
+        return (sum += item.quantity * item.priceAfterDiscount);
       }, 0);
     }
     if (list) {

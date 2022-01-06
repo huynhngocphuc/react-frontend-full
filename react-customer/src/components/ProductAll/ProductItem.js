@@ -55,7 +55,7 @@ class ProductItem extends Component {
     const { product } = this.props;
     const { quantity, redirectYourLogin } = this.state;
     if (redirectYourLogin) {
-      return <Redirect to ='/login-register'></Redirect>
+      return <Redirect to ='/login'></Redirect>
     }
     return (
       <div className="col-lg-3 col-md-4 col-sm-6 mt-40">
@@ -65,13 +65,25 @@ class ProductItem extends Component {
             <Link onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`}>
               <img className="fix-img" src={product.productImage} alt="Li's Product " />
             </Link>
+            {
+              product.discount > 0 ? (
+                <span className="sticker">{product.discount}%</span>
+              ):
+              null
+            }
           </div>
           <div className="product_desc">
             <div className="product_desc_info">
-
               <h4><Link className="product_name text-truncate" onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`}>{product.productName}</Link></h4>
               <div className="price-box">
-                <span className="new-price" style={{ color: 'red' }}>{product.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
+                <span className="new-price" style={{ color: 'red' }}>{product.priceAfterDiscount.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
+                {
+                   product.discount > 0 ?
+                   (
+                    <span className="new-price" style={{ color: 'black', textDecoration: "line-through" }}>{product.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
+                   ):
+                   null
+                }
               </div>
             </div>
             <div className="add-actions">

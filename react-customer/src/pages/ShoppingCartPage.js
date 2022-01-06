@@ -7,7 +7,7 @@ export default class ShoppingCartPage extends Component {
     const url = this.props.match.match.url;
     return (
       <div>
-        <LinkHere url={url}></LinkHere>
+        <LinkHere url='/Giỏ hàng'></LinkHere>
         <ShoppingCart></ShoppingCart>
       </div>
     )

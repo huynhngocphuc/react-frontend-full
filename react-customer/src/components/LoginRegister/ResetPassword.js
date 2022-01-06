@@ -14,7 +14,7 @@ class ResetPassword extends Component {
             email: '',
             password: '',
             repassword: '',
-            isActive: false
+            isActive: true
         }
     }
 
@@ -51,7 +51,8 @@ class ResetPassword extends Component {
 
 
     render() {
-        const { password, repassword } = this.state;
+        const { password, repassword} = this.state;
+        
         return (
             <div className="container">
                 <div className="row">

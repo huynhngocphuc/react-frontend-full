@@ -5,7 +5,7 @@ import FooterMiddle from './FooterMiddle'
 export default class Footer extends Component {
   render() {
     return (
-      <div className="footer" style={{ marginTop: -30 }}>
+      <div className="footer" style={{ marginTop: 10 }}>
         {/* Begin Footer Static Top Area */}
         <FooterTop></FooterTop>
         {/* Footer Static Top Area End Here */}

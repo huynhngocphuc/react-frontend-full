@@ -15,8 +15,7 @@ const products = (state = initialState, action) => {
             state.push(action.item);
             return [...state];
         case Types.UPDATE_CART:
-            index = findIndexs(action.item.id, state);
-            state[index] = { ...action.item };
+            index = action.items
             return [...state];
         case Types.REMOVE_CART:
             index = findIndexs(action.item.id, state);

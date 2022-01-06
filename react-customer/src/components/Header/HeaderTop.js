@@ -50,14 +50,14 @@ class HeaderTop extends Component {
                   <li>
                     {
                       (!user)
-                        ? (<Link onClick={() => this.loadingPage()} to="/login-register" className="fix-link-color language-selector-wrapper"> Login </Link>)
+                        ? (<Link onClick={() => this.loadingPage()} to="/login" className="fix-link-color language-selector-wrapper"> Login </Link>)
                         : (<div className="dropdown show">
                           <Link to="#" className=" fix-link-color dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Setting
                           </Link>
                           <div className="fix-text-item dropdown-menu ht-setting-list " aria-labelledby="dropdownMenuLink">
                             <Link className="fix-text-item dropdown-item" to="/order/status1">Đơn mua</Link>
-                            <Link onClick={this.logOut} to="/login-register" className="fix-text-item dropdown-item" href="/">Đăng xuất</Link>
+                            <Link onClick={this.logOut} to="/login" className="fix-text-item dropdown-item" href="/">Đăng xuất</Link>
                           </div>
                         </div>)
                     }

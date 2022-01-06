@@ -4,7 +4,7 @@ export default class FooterTop extends Component {
   render() {
     return (
       <div className="footer-static-top">
-        <div className="container">
+        <div className="container mt-10">
           {/* Begin Footer Shipping Area */}
           <div className="footer-shipping pt-60 pb-55 pb-xs-25">
             <div className="row">

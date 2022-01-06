@@ -57,30 +57,40 @@ class TopTreddingProductItems extends Component {
     const { quantity } = this.state;
 
     return (
-
-
-      <div className="single-product-wrap" >
-        <div className="fix-img-div product-image">
-          <Link onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`}>
-            <img className="fix-img" src={product.productImage} alt="Li's Product " />
-          </Link>
-        </div>
-        <div className="product_desc">
-          <div className="product_desc_info">
-            <h4><Link className="product_name text-truncate" onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`}>{product.productName}</Link></h4>
-            <div className="price-box">
-              <span className="new-price" style={{ color: 'red' }}>{product.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
-            </div>
-          </div>
-          <div className="add-actions">
-            <ul className="add-actions-link">
-              <li className="add-cart active"><Link to="#" onClick={() => this.addItemToCart(product)} >Thêm vào giỏ</Link></li>
-              <li><Link onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`} title="quick view" className="quick-view-btn" data-toggle="modal" data-target="#exampleModalCenter"><i className="fa fa-eye" /></Link></li>
-              <li><Link onClick={(id) => this.addItemToFavorite(product.productId)} className="links-details" to="#" title="favorite" ><i className="fa fa-heart-o" /></Link></li>
-            </ul>
-          </div>
-        </div>
-      </div >
+       <div className="single-product-wrap" >
+       <div className="fix-img-div-new product-image">
+         <Link onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`}>
+           <img className="fix-img" src={product.productImage} alt="Li's Product " />
+         </Link>
+         {
+              product.discount > 0 ? (
+                <span className="sticker">{product.discount}%</span>
+              ):
+              null
+            }
+       </div>
+       <div className="product_desc">
+         <div className="product_desc_info">
+           <h4><Link className="product_name text-truncate" onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`}>{product.productName}</Link></h4>
+           <div className="price-box">
+             <span className="new-price" style={{ color: 'red' }}>{product.priceAfterDiscount.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
+             {
+                   product.discount > 0 ?
+                   (
+                    <span className="new-price" style={{ color: 'black', textDecoration: "line-through" }}>{product.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
+                   ):
+                   null
+                }           </div>
+         </div>
+         <div className="add-actions">
+           <ul className="add-actions-link">
+             <li className="add-cart active"><Link to="#" onClick={() => this.addItemToCart(product)} >Thêm vào giỏ</Link></li>
+             <li><Link onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`} title="quick view" className="quick-view-btn" data-toggle="modal" data-target="#exampleModalCenter"><i className="fa fa-eye" /></Link></li>
+             <li><Link onClick={(id) => this.addItemToFavorite(product.productId)} className="links-details" to="#" title="favorite" ><i className="fa fa-heart-o" /></Link></li>
+           </ul>
+         </div>
+       </div>
+     </div >
 
 
 

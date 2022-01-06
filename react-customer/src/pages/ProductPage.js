@@ -6,7 +6,7 @@ export default class ProductPage extends Component {
     const url = this.props.match.match.url;
     return (
       <div>
-        <LinkHere url={url}></LinkHere>
+        <LinkHere url='/ Sản phẩm'></LinkHere>
         <ProductAll></ProductAll>
       </div>
     )

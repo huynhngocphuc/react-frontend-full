@@ -25,6 +25,7 @@ class ShoppingCart extends Component {
     else {
       this.props.fetch_items(id);
     }
+   
 
 
   }
@@ -47,19 +48,19 @@ class ShoppingCart extends Component {
     console.log("giở hàng trống", items)
     if (redirectYourLogin) {
       return (
-        <Redirect to="/login-register"></Redirect>
+        <Redirect to="/login"></Redirect>
       )
     }
     return (
       <div className="Shopping-cart-area pt-30 pb-30">
         <div className="container">
-          <div className="row">
-            <div className="col-sm-8 col-xs-12">
-              <form>
-                <div className="table-content table-responsive">
-                  {
-                    items.length > 0 ?
-                      (
+          {
+            items.length > 0 ?
+              (
+                <div className="row">
+                  <div className="col-sm-8 col-xs-12">
+                    <form>
+                      <div className="table-content table-responsive">
                         <table className="table">
                           <thead>
                             <tr>
@@ -73,25 +74,28 @@ class ShoppingCart extends Component {
                           </thead>
                           <tbody>
                             {
-
                               this.showItem(items)
                             }
                           </tbody>
                         </table>
-                      ):
-                      (
-                        <img src='./images/cartnull.png' class="rounded mx-auto d-block"></img>
-                      )
-                  }
-                  
-
+                      </div>
+                    </form>
+                  </div>
+                  <div className="col-sm-4 col-xs-12">
+                    <SumTotal></SumTotal>
+                  </div>
                 </div>
-              </form>
-            </div>
-            <div className="col-sm-4 col-xs-12">
-              <SumTotal></SumTotal>
-            </div>
-          </div>
+              )
+              :
+              (
+                <div className="row">
+                  <div className="col-sm-12 col-xs-12">
+                    <img src='./images/cartnull.png' className="rounded mx-auto d-block"></img>
+                  </div>
+                </div>
+              )
+          }
+
         </div>
       </div>
     )

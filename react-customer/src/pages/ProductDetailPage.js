@@ -9,7 +9,7 @@ export default class ProductDetailPage extends Component {
     window.scrollTo(0, 0);
     return (
       <div>
-        <LinkHere url={url}></LinkHere>
+        <LinkHere url='/ Chi tiết sản phẩm'></LinkHere>
         <ProductViewDetail id={id}></ProductViewDetail>
       </div>
     )

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-// import { formatNumber } from '../../config/TYPE'
-import { actRemoveCartRequest,actUpdateCartRequest} from '../../redux/actions/cart';
+import { formatNumber } from '../../config/TYPE'
+import { actRemoveCartRequest, actUpdateCartRequest } from '../../redux/actions/cart';
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { toast } from 'react-toastify';
@@ -10,23 +10,7 @@ toast.configure()
 
 class ShoppingCartItems extends Component {
 
-  // upItem = (item) => {
-  //   if (item.quantity >= 5) {
-  //     toast.error('You can only purchase up to 5 products')
-  //     return
-  //   }
-  //   let newItem = item;
-  //   newItem.quantity++;
-  //   this.props.changQuantityItem(newItem);
-  // }
-  // downItem = (item) => {
-  //   if (item.quantity <= 1) {
-  //     return
-  //   }
-  //   let newItem = item;
-  //   newItem.quantity--;
-  //   this.props.changQuantityItem(newItem);
-  // }
+
   upItem = (item) => {
     if (item.quantity >= 5) {
       toast.error('Tối đa 5 sản phẩm')
@@ -36,9 +20,10 @@ class ShoppingCartItems extends Component {
     newItem.quantity++;
     this.props.changQuantityItem(newItem);
     window.location.reload()
+
   }
   downItem = (item) => {
-    if (item.quantity <=1) {
+    if (item.quantity <= 1) {
       toast.error('Tối đa 1 sản phẩm')
       return
     }
@@ -46,11 +31,12 @@ class ShoppingCartItems extends Component {
     newItem.quantity--;
     this.props.changQuantityItem(newItem);
     window.location.reload()
+
   }
 
   removeItem = (item) => {
     this.props.removeItem(item);
-    console.log("sản phẩm xóa",item)
+    console.log("sản phẩm xóa", item)
     toast.success('Xóa thành công')
     window.location.reload()
   }
@@ -64,11 +50,15 @@ class ShoppingCartItems extends Component {
             onClick={() => this.removeItem(item)}
             className="far fa-trash-alt" /></Link>
         </td>
-        <td className="li-product-thumbnail d-flex justify-content-center"><a href="/">
-          <div className="fix-cart"> <img className="fix-img" src={item.productImage ? item.productImage : null} alt="Li's Product" /></div>
-        </a></td>
-        <td className="li-product-name"><a className="text-dark" href="/">{item.nameProduct}</a></td>
-        <td className="product-subtotal"><span className="amount">{item.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span></td>
+        <td className="li-product-thumbnail d-flex justify-content-center">
+          <Link to={`/products/${item.productId}`} >
+            <div className="fix-cart"> <img className="fix-img" src={item.productImage ? item.productImage : null} alt="Li's Product" /></div>
+          </Link></td>
+        <td className="li-product-name"><Link className="text-dark" to={`/products/${item.productId}`}>{item.nameProduct}</Link></td>
+        <td className="product-subtotal">
+          <span className="amount">{formatNumber(item.priceAfterDiscount)}</span>
+          <span className="amount"style={{ color: 'black', textDecoration: "line-through"}}>{formatNumber(item.unitPrice)}</span>
+        </td>
         <td className="quantity">
           <div className="cart-plus-minus">
             <input onChange={() => { }} className="cart-plus-minus-box" value={this.props.item.quantity || 0} />
@@ -77,7 +67,7 @@ class ShoppingCartItems extends Component {
             <div className="inc qtybutton" onClick={() => this.upItem(item)}><i className="fa fa-angle-up" /></div>
           </div>
         </td>
-        <td className="product-subtotal"><span className="amount">{(item.unitPrice * item.quantity).toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span></td>
+        <td className="product-subtotal"><span className="amount">{formatNumber((item.priceAfterDiscount * item.quantity))}</span></td>
       </tr>
     )
   }

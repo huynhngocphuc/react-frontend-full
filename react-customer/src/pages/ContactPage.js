@@ -7,7 +7,7 @@ export default class ContactPage extends Component {
     const url = this.props.match.match.url;
     return (
      <div>
-       <LinkHere url={url}></LinkHere>
+       <LinkHere url='/ Liên hệ'></LinkHere>
        <Contact></Contact>
      </div>
     )

@@ -1,6 +1,7 @@
 import React from 'react';
 import HomePage from './pages/HomPage';
-import LoginRegisterPage from './pages/LoginRegisterPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import ActivePage from './pages/ActivePage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage'
@@ -39,9 +40,14 @@ const routes = [
     main: (match) => < PaypalPage  match={match} />
   },
   {
-    path: '/login-register',
+    path: '/login',
     exact: false,
-    main: (match) => < LoginRegisterPage match={match} />
+    main: (match) => < LoginPage match={match} />
+  },
+  {
+    path: '/register',
+    exact: false,
+    main: (match) => < RegisterPage match={match} />
   },
   {
     path: '/forgot-password',

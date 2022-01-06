@@ -9,7 +9,7 @@ export default class AboutPage extends Component {
       <div className="breadcrumb-content">
         <ul>
           <li><a href="index.html">Trang chủ</a></li>
-          <li className="active">/Về chúng tôi</li>
+          <li className="active">/   Về chúng tôi</li>
         </ul>
       </div>
     </div>

@@ -34,3 +34,19 @@
   width: 80% !important;
   object-fit: contain;
 }
+
+.fix-img-div-new {
+  height: 250px !important;
+  width: auto;
+  overflow: hidden;
+  text-align: center;
+}
+.fix-img-new {
+  height: 90%;
+  width: 80% !important;
+  object-fit: contain;
+}
+.sticker {
+  font-size: 30px;
+  font-weight: 700;
+}

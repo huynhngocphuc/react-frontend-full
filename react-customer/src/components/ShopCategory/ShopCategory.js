@@ -85,11 +85,11 @@ class ShopCategory extends Component {
                     {/* shop-item-filter-list end */}
                   </div>
                   <div className="toolbar-amount">
-                    <span>Showing 1 to 12</span>
+                    <span>Xem từ 1-12 sản phẩm</span>
                   </div>
                 </div>
                 {/* product-select-box start */}
-                <div className="product-select-box">
+                {/* <div className="product-select-box">
                   <div className="product-short">
                     <p>Sort By:</p>
                     <select
@@ -103,7 +103,7 @@ class ShopCategory extends Component {
                       <option value="-price">Price (High &gt; Low)</option>
                     </select>
                   </div>
-                </div>
+                </div> */}
                 {/* product-select-box end */}
               </div>
               {/* shop-top-bar end */}
@@ -134,7 +134,7 @@ class ShopCategory extends Component {
                 <div className="paginatoin-area">
                   <div className="row">
                     <div className="col-lg-6 col-md-6">
-                      <p>Showing 1-12 items</p>
+                      <p>Xem từ 1-12 sản phẩm</p>
                     </div>
                     <div className="col-lg-6 col-md-6">
                       <ul className="pagination-box">

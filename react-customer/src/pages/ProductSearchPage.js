@@ -7,7 +7,7 @@ export default class ProductSearchPage extends Component {
     
     return (
       <div>
-        <LinkHere url={url}></LinkHere>
+        <LinkHere url='/ Tìm kiếm'></LinkHere>
         <ProductSearch></ProductSearch>
       </div>
     )

@@ -114,9 +114,20 @@ class ProductViewDetail extends Component {
                   <h2>{product.productName}</h2>
 
                   <div className="price-box pt-20">
-                    <span className="new-price new-price-2">
-                      {product && product.unitPrice ? product.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : null}
+                    <span className="new-price new-price-2 mr-30">
+                      {product && product.unitPrice ? product.priceAfterDiscount.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : null}
                     </span>
+                    {
+                      product.discount > 0 ?
+                        (
+                          <span className="new-price new-price-2" style={{ color: 'black', textDecoration: "line-through" }}>
+                            {product && product.unitPrice ? product.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : null}
+                          </span>
+                        ) :
+                        null
+
+                    }
+
                   </div>
                   <div className="product-desc">
                     <p>

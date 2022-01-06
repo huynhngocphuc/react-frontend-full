@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './style.css'
 import { toast } from 'react-toastify';
 import { actForgotPasswordRequest } from '../../redux/actions/auth';
+import { startLoading,doneLoading } from '../../utils/loading';
 import 'react-toastify/dist/ReactToastify.css';
 
 class ForgotPassword extends Component {
@@ -35,7 +36,7 @@ class ForgotPassword extends Component {
         const dataEmail = {
             email
         }
-        this.props.resetMyPassword(dataEmail)
+        await this.props.resetMyPassword(dataEmail)
         this.setState({
             email: ''
         })

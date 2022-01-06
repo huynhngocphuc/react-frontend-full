@@ -7,7 +7,7 @@ export default class ForgotPasswordPage extends Component {
         const url = this.props.match.match.url;
         return (
             <div>
-                <LinkHere url={url}></LinkHere>
+                <LinkHere url='/ quên mật khẩu'></LinkHere>
                 <ForgotPassword></ForgotPassword>
             </div>
         )

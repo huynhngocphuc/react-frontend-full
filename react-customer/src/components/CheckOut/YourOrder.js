@@ -61,7 +61,7 @@ class YourOrder extends Component {
                           </td>
                           <td className="cart-product-total">
                             <span className="amount">
-                              {formatNumber.format(item.quantity * item.unitPrice)}
+                              {formatNumber(item.quantity * item.priceAfterDiscount)}
                             </span>
                           </td>
                         </tr>
@@ -74,7 +74,7 @@ class YourOrder extends Component {
                   <th>Tổng tiền sản phẩm</th>
                   <td>
                     <span className="amount">
-                      {count ? formatNumber.format(count) : 0}
+                      {count ? formatNumber(count) : 0}
                     </span>
                   </td>
                 </tr>
@@ -82,7 +82,7 @@ class YourOrder extends Component {
                   <th>Tiền ship</th>
                   <td>
                     <span className="amount">
-                      {shippingTotal ? formatNumber.format(shippingTotal) : 0}
+                      {shippingTotal ? formatNumber(shippingTotal) : 0}
                     </span>
                   </td>
                 </tr>
@@ -91,7 +91,7 @@ class YourOrder extends Component {
                   <td>
                     <strong>
                       <span className="amount" style={{ color: "red" }}>
-                        {count ? formatNumber.format(count + shippingTotal) : 0}
+                        {count ? formatNumber(count + shippingTotal) : 0}
                       </span>
                     </strong>
                   </td>

@@ -145,7 +145,9 @@ export const actFetchProductsBestRequest = (page) => {
     return async dispatch => {
         const res = await callApi(`view/product/10bestproduct`, 'GET', null);
         if (res && res.status === 200) {
-            dispatch(actFetchProductsBest(res.data.map));
+            const array = Object.values(res.data.map)
+            console.log("chuyển thành mãng",array)
+            dispatch(actFetchProductsBest(array));
         }
     };
 }

@@ -127,7 +127,7 @@ class ProductAll extends Component {
                 <div className="paginatoin-area">
                   <div className="row">
                     <div className="col-lg-6 col-md-6">
-                      <p>Showing 1-12 items</p>
+                      <p>Xem từ 1-12 sản phẩm</p>
                     </div>
                     <div className="col-lg-6 col-md-6">
                       <ul className="pagination-box">

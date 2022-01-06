@@ -9,7 +9,8 @@ class ActiveRegister extends Component {
         super(props);
         this.state = {
             code: this.props.code,
-            isActive: false
+            isActive: false,
+            isSuccess:false
         }
     }
     handleChange = (event) => {
