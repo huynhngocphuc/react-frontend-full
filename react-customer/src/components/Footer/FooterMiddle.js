@@ -59,23 +59,23 @@ export default class FooterMiddle extends Component {
                   <ul className="social-link">
                     <li className="twitter">
                       <a href="https://twitter.com" data-toggle="tooltip" title="Twitter">
-                        <i class="fab fa-twitter"></i>
+                        <i className="fab fa-twitter"></i>
                       </a>
                     </li>
 
                     <li className="google-plus">
                       <a href="https://www.plus.google.com" data-toggle="tooltip" title="Google Plus">
-                        <i class="fab fa-google-plus-g"></i>
+                        <i className="fab fa-google-plus-g"></i>
                       </a>
                     </li>
                     <li className="facebook">
                       <a href="https://www.facebook.com/" data-toggle="tooltip" title="Facebook">
-                        <i class="fab fa-facebook-f"></i>
+                        <i className="fab fa-facebook-f"></i>
                       </a>
                     </li>
                     <li className="youtube">
                       <a href="https://www.youtube.com/" data-toggle="tooltip" title="Youtube">
-                        <i class="fab fa-youtube"></i>
+                        <i className="fab fa-youtube"></i>
                       </a>
                     </li>
                     

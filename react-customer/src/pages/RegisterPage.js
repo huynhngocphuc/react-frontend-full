@@ -7,7 +7,7 @@ export default class RegisterPage extends Component {
     const url = this.props.match.match.url;
     return (
       <div>
-        <LinkHere url={url}></LinkHere>
+        <LinkHere url= "/ Đăng ký"></LinkHere>
         <div className="page-section mb-60">
         <div className="container">
           <div className="row justify-content-center">

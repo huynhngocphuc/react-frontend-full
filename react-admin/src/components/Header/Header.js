@@ -46,10 +46,10 @@ class Header extends Component {
 
                             <ul className="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
 
-                                <li className="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" className="nav-link language dropdown-toggle"><img src="https://i.ibb.co/QrtCN5s/GB.png" alt="English" /><span className="d-none d-sm-inline-block">English</span></a>
+                                {/* <li className="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" className="nav-link language dropdown-toggle"><img src="https://i.ibb.co/QrtCN5s/GB.png" alt="English" /><span className="d-none d-sm-inline-block">English</span></a>
                                     <ul aria-labelledby="languages" className="dropdown-menu">
                                     </ul>
-                                </li>
+                                </li> */}
                                 <li className="nav-item">
                                     <Link onClick={this.logOut}
                                         to="/login"

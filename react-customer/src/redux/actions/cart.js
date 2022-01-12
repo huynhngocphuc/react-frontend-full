@@ -12,14 +12,16 @@ export const actAddCartRequest = (customerId, product, quantity) => {
     console.log("chuẩn bị call api", customerId, product, quantity)
     const newQuantity = quantity ? quantity : 1;
         const dataguidi = { customerId, productId: product.productId, quantity: newQuantity }
-    return async () => {
+    return async dispatch => {
         if (quantity > product.quantity) {
             return toast.error(`Sản phẩm của chúng tôi hiện còn có ${product.quantity} sản phẩm`)
         }
         console.log("dữ liệu chuẩn bị gửi đi", dataguidi)
         const res = await callApi('cart', 'POST', dataguidi);
         console.log("dữ liệu chuẩn bị gửi về", res)
+        
         if (res && res.status === 200) {
+            dispatch(actFetchCart(res.data.cartEntities));
             Swal.fire({
                 position: 'center',
                 icon: 'success',

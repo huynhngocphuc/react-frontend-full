@@ -3,7 +3,7 @@ import './style.css'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'react-moment';
-import { actFetchOrdersRequest, actDeliveredOrderRequest,actDeleteOrderRequest } from '../../../redux/actions/order';
+import { actFetchOrdersRequest, actDeliveredOrderRequest, actDeleteOrderRequest } from '../../../redux/actions/order';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Paginator from 'react-js-paginator';
@@ -32,7 +32,7 @@ class OrderStatus2 extends Component {
 
   }
   componentDidMount() {
-    const { statusPage} = this.state
+    const { statusPage } = this.state
     this.fetch_reload_data(statusPage);
   }
 
@@ -51,7 +51,7 @@ class OrderStatus2 extends Component {
     const { statusPage } = this.state
     this.props.fetch_orders(statusPage, page);
     if (content <= 0) {
-      
+
       this.setState({
         currentPage: 1
       })
@@ -76,28 +76,11 @@ class OrderStatus2 extends Component {
   }
   handleBrowse = (event) => {
     const id = event.target.value;
-    
-    MySwal.fire({
-      title: 'Giao hàng?',
-      text: `Bạn chắc chắn đơn ${id} đã được giao!`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Đã giao',
-      cancelButtonText:'Vẫn chưa giao'
-    }).then(async (result) => {
-      if (result.value) {
-        const {statusPage,currentPage} = this.state
-        await this.props.deliveredOrder(id,statusPage,currentPage);
-        Swal.fire(
-          'Xong!',
-          'Giao hàng thành công.',
-          'success'
-        )
-       
-      }
-    })
+
+
+    const { statusPage, currentPage } = this.state
+    this.props.deliveredOrder(id, statusPage, currentPage);
+
   }
   handleRemove = (id) => {
     MySwal.fire({
@@ -154,7 +137,7 @@ class OrderStatus2 extends Component {
                     {/* <button onClick={()=>this.downloadExcel()} style={{ border: 0, background: "white" }}> <i className="fa fa-file-excel-o"
                         style={{fontSize: 18, color: '#1d7044'}}> Excel</i></button> */}
                   </div>
-                  <form
+                  {/* <form
                     onSubmit={(event) => this.handleSubmit(event)}
                     className="form-inline md-form form-sm mt-0" style={{ justifyContent: 'flex-end', paddingTop: 5, paddingRight: 20 }}>
                     <div>
@@ -166,8 +149,8 @@ class OrderStatus2 extends Component {
                         className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
                         aria-label="Search" />
                     </div>
-                    
-                  </form>
+
+                  </form> */}
                   <div className="card-body">
                     <div className="table-responsive">
                       <table className="table table-hover">
@@ -254,8 +237,8 @@ const mapDispatchToProps = (dispatch) => {
     fetch_orders: (status, offset) => {
       return dispatch(actFetchOrdersRequest(status, offset))
     },
-    deliveredOrder: (id,status,page) => {
-      return dispatch(actDeliveredOrderRequest(id,status,page))
+    deliveredOrder: (id, status, page) => {
+      return dispatch(actDeliveredOrderRequest(id, status, page))
     },
     delete_order: (id) => {
       dispatch(actDeleteOrderRequest(id))

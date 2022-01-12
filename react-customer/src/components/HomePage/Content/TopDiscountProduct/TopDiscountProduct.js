@@ -20,7 +20,7 @@ class TopDiscountProduct extends Component {
 
   render() {
     const { products } = this.props;
-    console.log("sản phẩm bán chạy",products)
+ 
     const settings = {
       infinite: true,
       speed: 500,

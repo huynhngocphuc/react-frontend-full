@@ -91,8 +91,8 @@ class Login extends Component {
                                                     className="input-material" placeholder="Password" />
                                                 
                                             </div>
-                                            <button className="btn btn-primary">Login</button>
-                                        </form><Link to="#" className="forgot-pass" style={{ marginTop: 15 }}>Forgot Password?</Link>
+                                            <button className="btn btn-primary">Đăng nhập</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>

@@ -23,7 +23,7 @@ export default class AboutPage extends Component {
         <div className="col-lg-6 order-last order-lg-first">
           <div className="about-text-wrap">
             <h2><span>Cung cấp </span>Sản phẩm tốt nhất cho bạn</h2>
-            <p>nội dung về sản phẩm</p>
+            <p>Mặc dù đã cố gắng rất nhiều, nhưng bài tiểu luận không tránh khỏi những thiếu sót, nhóm thực hiện để tài rất mong nhận được sự thông cảm, chỉ dẫn, giúp đỡ và đóng góp ý kiến , của quý thầy cô, các cán bộ quản lý và các bạn.</p>
           </div>
         </div>
         {/* About Text End */}
@@ -43,44 +43,33 @@ export default class AboutPage extends Component {
       <div className="row">
         <div className="col-12">
           <div className="li-section-title capitalize mb-25">
-            <h2><span>Team</span></h2>
+            <h2><span>Thành viên</span></h2>
           </div>
         </div>
       </div> {/* section title end */}
       <div className="row flex justify-content-center">
         <div className="col-lg-3 col-md-6 col-sm-6">
           <div className="team-member mb-60 mb-sm-30 mb-xs-30">
-            <div className="team-thumb">
+            {/* <div className="team-thumb">
               <img src="https://i.ibb.co/MNQpYyz/1.png" alt="Our Team Member" />
-            </div>
+            </div> */}
             <div className="team-content text-center">
               <h3>Huỳnh Ngọc Phúc</h3>
-              <p>Web Designer</p>
+              <p>Front End</p>
               <a href="/">huynhphuc@example.com</a>
-              <div className="team-social">
-                <a href="/"><i className="fa fa-facebook" /></a>
-                <a href="/"><i className="fa fa-twitter" /></a>
-                <a href="/"><i className="fa fa-linkedin" /></a>
-                <a href="/"><i className="fa fa-google-plus" /></a>
-              </div>
+             
             </div>
           </div>
         </div> {/* end single team member */}
         <div className="col-lg-3 col-md-6 col-sm-6">
           <div className="team-member mb-60 mb-sm-30 mb-xs-30">
-            <div className="team-thumb">
+            {/* <div className="team-thumb">
               <img src="https://i.ibb.co/7YqMhw3/2.png" alt="Our Team Member" />
-            </div>
+            </div> */}
             <div className="team-content text-center">
               <h3>Nguyễn Thanh Tú</h3>
-              <p>Web Designer</p>
+              <p>Back End</p>
               <a href="/">thanhtu@gmail.com</a>
-              <div className="team-social">
-                <a href="/"><i className="fa fa-facebook" /></a>
-                <a href="/"><i className="fa fa-twitter" /></a>
-                <a href="/"><i className="fa fa-linkedin" /></a>
-                <a href="/"><i className="fa fa-google-plus" /></a>
-              </div>
             </div>
           </div>
         </div> {/* end single team member */}

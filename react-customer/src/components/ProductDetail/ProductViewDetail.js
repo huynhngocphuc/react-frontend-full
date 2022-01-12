@@ -153,7 +153,7 @@ class ProductViewDetail extends Component {
                           </div>
                         </div>
                       </div>
-                      <div style={{ paddingTop: 13 }}>
+                      <div>
                         <Link
                           onClick={() => this.addItemToCart(product)}
                           to="#"

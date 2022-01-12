@@ -99,7 +99,8 @@ class OrderStatus3 extends Component {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes'
+      confirmButtonText: 'OK',
+      cancelButtonText: 'Không'
     }).then(async (result) => {
       if (result.value) {
         await this.props.delete_order(id);
@@ -142,7 +143,7 @@ class OrderStatus3 extends Component {
                     {/* <button onClick={()=>this.downloadExcel()} style={{ border: 0, background: "white" }}> <i className="fa fa-file-excel-o"
                         style={{fontSize: 18, color: '#1d7044'}}> Excel</i></button> */}
                   </div>
-                  <form
+                  {/* <form
                     onSubmit={(event) => this.handleSubmit(event)}
                     className="form-inline md-form form-sm mt-0" style={{ justifyContent: 'flex-end', paddingTop: 5, paddingRight: 20 }}>
                     <div>
@@ -155,7 +156,8 @@ class OrderStatus3 extends Component {
                         aria-label="Search" />
                     </div>
                     
-                  </form>    <div className="card-body">
+                  </form>     */}
+                  <div className="card-body">
                     <div className="table-responsive">
                       <table className="table table-hover">
                         <thead>

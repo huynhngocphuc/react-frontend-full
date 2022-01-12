@@ -23,10 +23,11 @@ class YourOrder extends Component {
     const { items,order} = this.props;
     console.log("đơn hàng",order)
     const shippingTotal = 0;
+    console.log("tongtien",items)
     let count = 0;
     if (items.length > 0) {
       count = items.reduce((sum, item) => {
-        return (sum += item.quantity * item.unitPrice);
+        return (sum += item.quantity * item.priceAfterDiscount);
       }, 0);
     }
     return (
@@ -82,7 +83,7 @@ class YourOrder extends Component {
                   <th>Tiền ship</th>
                   <td>
                     <span className="amount">
-                      {shippingTotal ? formatNumber(shippingTotal) : 0}
+                      Miễn phí
                     </span>
                   </td>
                 </tr>
@@ -107,6 +108,7 @@ class YourOrder extends Component {
               <input type="submit" value="Thanh toán khi nhận hàng" />
             </div>
           </div>
+          
           <div className="payment-accordion">
             <div
               onClick={this.props.submitOrderPaypal}

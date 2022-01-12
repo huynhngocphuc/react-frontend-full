@@ -3,13 +3,15 @@ import MyFooter from '../../MyFooter/MyFooter'
 import { actFetchDashboardRequest, actFetchRevenueRequest, actFetchBestSellingProductRequest } from '../../../redux/actions/dashboard'
 import { connect } from 'react-redux'
 import { formatNumber } from '../../../config/TYPE'
-
+import { toast } from "react-toastify";
 import Paginator from 'react-js-paginator';
 import DateTimePicker from 'react-datetime-picker';
 import "react-datepicker/dist/react-datepicker.css";
-
-
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 import './style.css'
+const MySwal = withReactContent(Swal)
+
 
 class Dashboard extends Component {
   constructor(props) {
@@ -42,7 +44,7 @@ class Dashboard extends Component {
     const from = startDateRevenue.getFullYear() + "-" + (startDateRevenue.getMonth() + 1) + "-" + startDateRevenue.getDate() + " " + "00:00:00";
     const to = endDateRevenue.getFullYear() + "-" + (endDateRevenue.getMonth() + 1) + "-" + endDateRevenue.getDate() + " " + "00:00:00";
     const dataSend = { from, to }
-    this.props.fetch_bestselling(dataSend,page);
+    this.props.fetch_bestselling(dataSend, page);
     this.setState({
       currentPage: content
     })
@@ -53,9 +55,31 @@ class Dashboard extends Component {
 
   async onFormSubmit(e) {
     e.preventDefault();
+
     const { startDateRevenue, endDateRevenue } = this.state
+    const dateNow = new Date();
+ 
+    
+
     const from = startDateRevenue.getFullYear() + "-" + (startDateRevenue.getMonth() + 1) + "-" + startDateRevenue.getDate() + " " + "00:00:00";
     const to = endDateRevenue.getFullYear() + "-" + (endDateRevenue.getMonth() + 1) + "-" + endDateRevenue.getDate() + " " + "00:00:00";
+    const dateCurent = dateNow.getFullYear() + "-" + (dateNow.getMonth() + 1) + "-" + dateNow.getDate() + " " + "00:00:00";
+   if((new Date(from).getTime()) >= (new Date(to).getTime()))
+   {
+     toast.error('Ngày bắt đầu nhỏ hơn ngày kết thúc')
+     return;
+   }
+   if((new Date(from).getTime()) >= (new Date(dateCurent).getTime()))
+   {
+     toast.error('Ngày bắt đầu nhỏ hơn ngày hôm nay')
+     return;
+   }
+   if((new Date(from).getTime()) >= (new Date(dateCurent).getTime()))
+   {
+     toast.error('Ngày bắt đầu nhỏ hơn ngày hôm nay')
+     return;
+   }
+   
     const dataSend = { from, to }
     await this.props.fetch_revenue(dataSend)
     this.props.fetch_bestselling(dataSend).then(
@@ -65,7 +89,7 @@ class Dashboard extends Component {
         });
       }
     )
-  
+
     // const res = await callApi('statistic/revenue','POST',dataSend)
     // if(res && res.status===200){
     //   this.setState({valueRevenue:res.data })
@@ -78,7 +102,7 @@ class Dashboard extends Component {
 
 
     const { dashboard, revenueSearch, productSelling } = this.props
-    const { startDateRevenue, endDateRevenue,total,monthNow } = this.state
+    const { startDateRevenue, endDateRevenue, total, monthNow } = this.state
     console.log("tổng", revenueSearch, productSelling)
     return (
       <div className="content-inner">
@@ -135,7 +159,7 @@ class Dashboard extends Component {
               <div className="col col-sm-6">
                 <div className="item d-flex align-items-center">
                   <div className="icon bg-orange"><i className="icon-check" /></div>
-                  <div className="title"><span>Tổng <br />doanh thu tháng {monthNow.getMonth()+1}</span>
+                  <div className="title"><span>Tổng <br />doanh thu tháng {monthNow.getMonth() + 1}</span>
                     <div className="progress">
                       <div role="progressbar" style={{ width: '100%', height: '4px' }} className="progress-bar bg-orange fix-processbar" />
                     </div>
@@ -231,14 +255,14 @@ class Dashboard extends Component {
               </div>
             </div>
             <nav aria-label="Page navigation example" style={{ float: "right" }}>
-                  <ul className="pagination">
-                    <Paginator
-                      pageSize={1}
-                      totalElements={total}
-                      onPageChangeCallback={(e) => { this.pageChange(e) }}
-                    />
-                  </ul>
-                </nav>
+              <ul className="pagination">
+                <Paginator
+                  pageSize={1}
+                  totalElements={total}
+                  onPageChangeCallback={(e) => { this.pageChange(e) }}
+                />
+              </ul>
+            </nav>
           </div>
         </section>
         <MyFooter></MyFooter>
@@ -262,9 +286,9 @@ const mapDispatchToProps = (dispatch) => {
     fetch_revenue: (data) => {
       dispatch(actFetchRevenueRequest(data))
     },
-    fetch_bestselling: (data,page) => {
+    fetch_bestselling: (data, page) => {
 
-      return dispatch(actFetchBestSellingProductRequest(data,page))
+      return dispatch(actFetchBestSellingProductRequest(data, page))
     }
 
   }

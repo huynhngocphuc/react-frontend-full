@@ -23,6 +23,7 @@ class HeaderTop extends Component {
 
   render() {
     const { user } = this.props;
+
     return (
       <div className="header-top">
         <div className="container">
@@ -37,23 +38,14 @@ class HeaderTop extends Component {
             <div className="col-lg-9 col-md-8">
               <div className="header-top-right">
                 <ul className="ht-menu">
-                  <li>
-                    <span className="currency-selector-wrapper"> Tiền tệ:</span>
-                    <div className="ht-currency-trigger"><span>VNĐ đ</span></div>
-                    <div className="currency ht-currency">
-                      <ul className="ht-setting-list">
-                        <li><a href="/">EUR €</a></li>
-                        <li className="active"><a href="/">USD $</a></li>
-                      </ul>
-                    </div>
-                  </li>
+             
                   <li>
                     {
                       (!user)
                         ? (<Link onClick={() => this.loadingPage()} to="/login" className="fix-link-color language-selector-wrapper"> Login </Link>)
                         : (<div className="dropdown show">
                           <Link to="#" className=" fix-link-color dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Setting
+                            {user.username}
                           </Link>
                           <div className="fix-text-item dropdown-menu ht-setting-list " aria-labelledby="dropdownMenuLink">
                             <Link className="fix-text-item dropdown-item" to="/order/status1">Đơn mua</Link>

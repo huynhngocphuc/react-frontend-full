@@ -2,13 +2,13 @@ import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import { connect } from 'react-redux'
-
+import { actFetchCartRequest } from '../../redux/actions/cart';
 import { startLoading, doneLoading } from '../../utils/loading'
 import { actGetProductOfKeyRequest } from '../../redux/actions/products'
 
 
 
-let token;
+let token,id;
 class HeaderMiddle extends Component {
   constructor(props) {
     super(props);
@@ -16,6 +16,16 @@ class HeaderMiddle extends Component {
       textSearch: ''
     }
   }
+  componentDidMount() {
+    token = localStorage.getItem("_auth");
+    id = localStorage.getItem("_id");
+    if(token){
+      this.props.fetch_items(id);
+    }
+      
+  }
+
+  
   handleChange = event => {
     const name = event.target.name;
     const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
@@ -42,7 +52,10 @@ class HeaderMiddle extends Component {
   render() {
     const { textSearch } = this.state;
     const { countCart } = this.props;
-   console.log("danh sách cart",countCart)
+    let count = 0;
+    if (countCart.length > 0) {
+      count = countCart.length;
+    }
     return (
       <div className="header-middle pl-sm-0 pr-sm-0 pl-xs-0 pr-xs-0">
         <div className="container">
@@ -85,12 +98,12 @@ class HeaderMiddle extends Component {
               <div className="header-middle-right">
                 <ul className="hm-menu">
                   {/* Begin Header Middle Wishlist Area */}
-                  <li className="hm-wishlist">
+                  {/* <li className="hm-wishlist">
                     <Link to="/product-favorites">
                       <span className="cart-item-count wishlist-item-count"></span>
                       <i className="far fa-heart" />
                     </Link>
-                  </li>
+                  </li> */}
                   {/* Header Middle Wishlist Area End Here */}
                   {/* Begin Header Mini Cart Area */}
                   <li className="hm-minicart">
@@ -98,7 +111,7 @@ class HeaderMiddle extends Component {
                       <div className="hm-minicart-trigger">
                         <i className="item-icon fab fa-opencart"></i>
                         <span className="item-text">
-                          <span className="cart-item-count">{countCart ? countCart.length : 0}</span>
+                          <span className="cart-item-count">{count}</span>
                         </span>
                       </div>
                     </Link>
@@ -124,6 +137,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     searchProduct: (key) => {
       dispatch(actGetProductOfKeyRequest(key))
+    },
+    fetch_items: (id) => {
+      dispatch(actFetchCartRequest(id))
     }
   }
 }

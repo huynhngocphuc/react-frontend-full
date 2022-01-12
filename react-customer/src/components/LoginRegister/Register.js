@@ -54,7 +54,7 @@ class Register extends Component {
     }
     
     console.log(user);
-    startLoading();
+  
     await this.props.registerRequest(user);
     this.setState ({
       fullname: '',
@@ -64,7 +64,7 @@ class Register extends Component {
       phonenumber:'',
       address:''
     } ) 
-    doneLoading();
+  
   }
 
   render() {

@@ -10,10 +10,11 @@ export const actLoginRequest = (user) => {
         if (res && res.data.token) {
             console.log(res.data)
             const token = res.data.token
+            const data = res.data
             const id = res.data.id
             localStorage.setItem('_auth', token);
             localStorage.setItem('_id', id);
-            dispatch(actLogin(token));
+            dispatch(actLogin(data));
         }
     };
 }
@@ -28,10 +29,12 @@ export const actLogin = (token) => {
 export const actRegisterRequest = (user) => {
     console.log(user)
     return async () => {
+        startLoading();
         const res = await callApi('registration', 'POST', user);
         if (res && res.status === 200) {
             console.log(res)
             toast.success(res.data)
+            doneLoading()
         }
     };
 }

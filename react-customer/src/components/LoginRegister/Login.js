@@ -59,7 +59,7 @@ class Login extends Component {
         {/* Login Form s*/}
         <form onSubmit={(event) => this.handleSubmit(event)}>
           <div className="login-form">
-            <h4 className="login-title">Login</h4>
+            <h4 className="login-title">Đăng nhập</h4>
             <div className="row">
               <div className="col-md-12 col-12 mb-20">
                 <label>Gmail *</label>
