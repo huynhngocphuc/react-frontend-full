@@ -57,7 +57,12 @@ class ShoppingCartItems extends Component {
         <td className="li-product-name"><Link className="text-dark" to={`/products/${item.productId}`}>{item.nameProduct}</Link></td>
         <td className="product-subtotal">
           <span className="amount">{formatNumber(item.priceAfterDiscount)}</span>
-          <span className="amount"style={{ color: 'black', textDecoration: "line-through"}}>{formatNumber(item.unitPrice)}</span>
+          {
+            item.discount > 0 ? (
+              <span className="amount"style={{ color: 'black', textDecoration: "line-through"}}>{formatNumber(item.unitPrice)}</span>
+            )
+            :null
+          }
         </td>
         <td className="quantity">
           <div className="cart-plus-minus">

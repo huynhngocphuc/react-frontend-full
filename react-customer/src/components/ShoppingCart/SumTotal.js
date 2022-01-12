@@ -59,7 +59,7 @@ class SumTotal extends Component {
           <h2>Tổng thanh toán</h2>
           <ul>
             <li>Sản phẩm <span>{amount ? formatNumber(amount) : 0}</span></li>
-            <li>Shipping <span>{formatNumber(amount ? shippingTotal : 0)}</span></li>
+            <li>Shipping <span>Miễn phí</span></li>
             <li style={{ color: 'red' }}>Tổng <span>{amount ? formatNumber(amount + shippingTotal) : 0}</span></li>
           </ul>
           <button  className="fix-text-checkout" onClick={() => this.checkAuthenticate()}>Mua ngay</button>

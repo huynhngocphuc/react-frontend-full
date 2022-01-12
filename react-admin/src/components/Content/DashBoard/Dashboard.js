@@ -1,22 +1,85 @@
 import React, { Component } from 'react'
 import MyFooter from '../../MyFooter/MyFooter'
-import { actFetchDashboardRequest } from '../../../redux/actions/dashboard'
+import { actFetchDashboardRequest, actFetchRevenueRequest, actFetchBestSellingProductRequest } from '../../../redux/actions/dashboard'
 import { connect } from 'react-redux'
+import { formatNumber } from '../../../config/TYPE'
+
+import Paginator from 'react-js-paginator';
+import DateTimePicker from 'react-datetime-picker';
+import "react-datepicker/dist/react-datepicker.css";
+
 
 import './style.css'
 
 class Dashboard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      startDate: new Date(),
+      startDateRevenue: new Date(),
+      endDateRevenue: new Date(),
+      monthNow: new Date(),
+      valueRevenue: 0,
+      total: 0,
+      currentPage: 1
+    }
+    this.handleChangeDate = this.handleChangeDate.bind(this);
+    this.onFormSubmit = this.onFormSubmit.bind(this);
+  }
 
   componentDidMount() {
     this.props.fetch_dashboard();
+  }
+  handleChangeDate(date, name) {
+    console.log(date, name)
+    this.setState({
+      [name]: date
+    })
+  }
+  pageChange(content) {
+    const { startDateRevenue, endDateRevenue } = this.state
+    const page = content;
+    const from = startDateRevenue.getFullYear() + "-" + (startDateRevenue.getMonth() + 1) + "-" + startDateRevenue.getDate() + " " + "00:00:00";
+    const to = endDateRevenue.getFullYear() + "-" + (endDateRevenue.getMonth() + 1) + "-" + endDateRevenue.getDate() + " " + "00:00:00";
+    const dataSend = { from, to }
+    this.props.fetch_bestselling(dataSend,page);
+    this.setState({
+      currentPage: content
+    })
+    window.scrollTo(0, 700);
+
+  }
+
+
+  async onFormSubmit(e) {
+    e.preventDefault();
+    const { startDateRevenue, endDateRevenue } = this.state
+    const from = startDateRevenue.getFullYear() + "-" + (startDateRevenue.getMonth() + 1) + "-" + startDateRevenue.getDate() + " " + "00:00:00";
+    const to = endDateRevenue.getFullYear() + "-" + (endDateRevenue.getMonth() + 1) + "-" + endDateRevenue.getDate() + " " + "00:00:00";
+    const dataSend = { from, to }
+    await this.props.fetch_revenue(dataSend)
+    this.props.fetch_bestselling(dataSend).then(
+      res => {
+        this.setState({
+          total: res.totalPage
+        });
+      }
+    )
+  
+    // const res = await callApi('statistic/revenue','POST',dataSend)
+    // if(res && res.status===200){
+    //   this.setState({valueRevenue:res.data })
+    // }
+
   }
 
 
   render() {
 
 
-    const { dashboard } = this.props
-    console.log("dữ liệu trang chủ", dashboard)
+    const { dashboard, revenueSearch, productSelling } = this.props
+    const { startDateRevenue, endDateRevenue,total,monthNow } = this.state
+    console.log("tổng", revenueSearch, productSelling)
     return (
       <div className="content-inner">
         {/* Page Header*/}
@@ -72,35 +135,110 @@ class Dashboard extends Component {
               <div className="col col-sm-6">
                 <div className="item d-flex align-items-center">
                   <div className="icon bg-orange"><i className="icon-check" /></div>
-                  <div className="title"><span>Tổng <br />doanh thu</span>
+                  <div className="title"><span>Tổng <br />doanh thu tháng {monthNow.getMonth()+1}</span>
                     <div className="progress">
                       <div role="progressbar" style={{ width: '100%', height: '4px' }} className="progress-bar bg-orange fix-processbar" />
                     </div>
                   </div>
                   {/* {1000.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})} */}
                   <div className="number"><strong>
-                    {dashboard && dashboard.revenue 
-                    ? dashboard.revenue.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })
-                    :0}</strong></div>
+                    {dashboard && dashboard.revenue
+                      ? dashboard.revenue.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })
+                      : 0}</strong></div>
                 </div>
               </div>
             </div>
-            <h3 style={{ paddingTop: 20 }}>Sơ đồ doanh thu</h3>
-            {/* <Pie 
-              width={100}
-              height={25} data={dataPie} />
-            <br />
-            <br />
-            <h3>Report Total Income</h3>
-            <HorizontalBar 
-            width={100}
-            height={30} data={dataHozi} />
-             <br />
-             <br />
-             <h3>Report Contact</h3>
-             <Line  width={100}
-            height={15}
-              data={dataLine} /> */}
+
+            <h3 style={{ paddingTop: 20 }}>Doanh thu theo thời gian</h3>
+            <div className="row bg-white has-shadow">
+              <div className="col col-sm-6">
+
+                <form onSubmit={this.onFormSubmit}>
+                  <div className='row'>
+                    <div className="col-6">
+                      <strong className='mr-2'>Từ</strong>
+                      <DateTimePicker
+                        onChange={(date) => this.handleChangeDate(date, 'startDateRevenue')}
+                        value={startDateRevenue}
+                        name='startDateRevenue'
+                        format="dd/MM/y"
+                      />
+                    </div>
+                    <div className="col-6">
+                      <strong className='mr-2' >Đến</strong>
+                      <DateTimePicker
+                        onChange={(date) => this.handleChangeDate(date, 'endDateRevenue')}
+                        value={endDateRevenue}
+                        name='endDateRevenue'
+                        format="dd/MM/y"
+                      />
+                    </div>
+
+                  </div>
+                  <div className='row justify-content-center'>
+                    <button type='submit' className="btn btn-primary">Xem doanh thu</button>
+                  </div>
+
+                </form>
+              </div>
+              <div className="col col-sm-6">
+                <div className="item d-flex align-items-center">
+                  <div className="icon bg-orange"><i className="icon icon-bill"></i></div>
+                  <div className="title"><span>Tổng <br />doanh thu</span>
+                    <div className="progress">
+                      <div role="progressbar" style={{ width: '100%', height: '4px' }} className="progress-bar bg-orange fix-processbar" />
+                    </div>
+                  </div>
+                  {/* {1000.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})} */}
+                  <div className="number">
+
+                    <strong>
+                      {formatNumber(revenueSearch.revenue)}
+                    </strong>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <h3 style={{ paddingTop: 20 }}>Sản phẩm bán trong thời gian</h3>
+            <div className="card-body">
+              <div className="table-responsive">
+                <table className="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Tên sản phẩm</th>
+                      <th>Số lượng đã bán</th>
+                      {/* <th>Address</th> */}
+                      <th>Ảnh</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {productSelling && productSelling.products ? productSelling.products.map((item, index) => {
+                      return (
+                        <tr key={index}>
+                          <td>{item.productName}</td>
+                          <td>{item.quantity}</td>
+                          <td style={{ textAlign: "center" }}>
+                            <div className="fix-cart">
+                              <img src={item && item.productImage ? item.productImage : null} className="fix-img" alt="not found" />
+                            </div>
+                          </td>
+                        </tr>
+                      )
+                    }) : null}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <nav aria-label="Page navigation example" style={{ float: "right" }}>
+                  <ul className="pagination">
+                    <Paginator
+                      pageSize={1}
+                      totalElements={total}
+                      onPageChangeCallback={(e) => { this.pageChange(e) }}
+                    />
+                  </ul>
+                </nav>
           </div>
         </section>
         <MyFooter></MyFooter>
@@ -111,14 +249,24 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    dashboard: state.dashboard
+    dashboard: state.dashboard,
+    revenueSearch: state.revenue,
+    productSelling: state.productsbestselling
   }
 }
 const mapDispatchToProps = (dispatch) => {
   return {
     fetch_dashboard: () => {
       dispatch(actFetchDashboardRequest())
+    },
+    fetch_revenue: (data) => {
+      dispatch(actFetchRevenueRequest(data))
+    },
+    fetch_bestselling: (data,page) => {
+
+      return dispatch(actFetchBestSellingProductRequest(data,page))
     }
+
   }
 }
 

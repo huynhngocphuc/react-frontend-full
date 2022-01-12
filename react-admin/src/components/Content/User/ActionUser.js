@@ -152,8 +152,8 @@ class ActionUser extends Component {
                                             <div className="line" />
                                             <div className="form-group row">
                                                 <div className="col-sm-4 offset-sm-3">
-                                                    <button type="reset" className="btn btn-secondary" style={{ marginRight: 2 }}>Cancel</button>
-                                                    <button type="submit" className="btn btn-primary">Save changes</button>
+                                                    <Link to='/customers' type="reset" className="btn btn-secondary" style={{ marginRight: 2 }}>Thoát</Link>
+                                                    <button type="submit" className="btn btn-primary">Lưu</button>
                                                 </div>
                                             </div>
                                         </form>

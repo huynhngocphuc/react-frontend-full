@@ -88,12 +88,12 @@ class Category extends Component {
                 <div className="card">
                   <div className="card-header d-flex align-items-center">
                     <h3 className="h4">Dữ liệu loại sản phẩm</h3>
-                    <button  style={{ border: 0, background: "white" }}> <i className="fa fa-file-excel-o"
-                        style={{fontSize: 18, color: '#1d7044'}}> Excel</i></button>
+                    {/* <button  style={{ border: 0, background: "white" }}> <i className="fa fa-file-excel-o"
+                        style={{fontSize: 18, color: '#1d7044'}}> Excel</i></button> */}
                   </div>
                   <form 
                     className="form-inline md-form form-sm mt-0" style={{ justifyContent: 'flex-end', paddingTop: 5, paddingRight: 20 }}>
-                    <div>
+                    {/* <div>
                       <i className="fa fa-search" aria-hidden="true"></i>
                       <input
                         name="searchText"
@@ -101,7 +101,7 @@ class Category extends Component {
                         value={searchText}
                         className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
                         aria-label="Search" />
-                    </div>
+                    </div> */}
                     <Link to="/categories/add" className="btn btn-primary" > Thêm mới</Link>
                   </form>
                   <div className="card-body">

@@ -8,6 +8,8 @@ import products from './products';
 import categories from './categories';
 import producers from './producers';
 import orders from './orders';
+import revenue from './revenue';
+import productsbestselling from './productsbestselling'
 
 const appReducers = combineReducers({
     auth,
@@ -18,8 +20,9 @@ const appReducers = combineReducers({
     products,
     categories,
     producers,
-    orders
-    
+    orders,
+    revenue,
+    productsbestselling
 })
 
 export default appReducers;

@@ -3,7 +3,7 @@ import './style.css'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'react-moment';
-import { actFetchOrdersRequest, actDeliveredOrderRequest } from '../../../redux/actions/order';
+import { actFetchOrdersRequest, actDeliveredOrderRequest,actDeleteOrderRequest } from '../../../redux/actions/order';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Paginator from 'react-js-paginator';
@@ -91,6 +91,26 @@ class OrderStatus3 extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
   }
+  handleRemove = (id) => {
+    MySwal.fire({
+      title: 'Xóa đơn hàng?',
+      text: `Bạn chắc chắn xóa đơn hàng ${id}!`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes'
+    }).then(async (result) => {
+      if (result.value) {
+        await this.props.delete_order(id);
+        Swal.fire(
+          'Xóa!',
+          'Đơn hàng của bạn đã được xóa.!',
+          'success'
+        )
+      }
+    })
+  }
 
   render() {
     const { orders } = this.props;
@@ -135,8 +155,7 @@ class OrderStatus3 extends Component {
                         aria-label="Search" />
                     </div>
                     
-                  </form>
-                  <div className="card-body">
+                  </form>    <div className="card-body">
                     <div className="table-responsive">
                       <table className="table table-hover">
                         <thead>
@@ -176,7 +195,7 @@ class OrderStatus3 extends Component {
                                   <div>
                                     <span title='Edit' className="fix-action"><Link to={`/orders/edit/${item.orderId}`}> <i className="fa fa-edit"></i></Link></span>
 
-                                    <span title='Delete' onClick={() => this.handleRemove(item.id)} className="fix-action"><Link to="#"> <i className="fa fa-trash" style={{ color: '#ff00008f' }}></i></Link></span>
+                                    <span title='Delete' onClick={() => this.handleRemove(item.orderId)} className="fix-action"><Link to="#"> <i className="fa fa-trash" style={{ color: '#ff00008f' }}></i></Link></span>
                                   </div>
                                 </td>
                                 {/* <td>
@@ -189,6 +208,7 @@ class OrderStatus3 extends Component {
                       </table>
                     </div>
                   </div>
+              
                 </div>
                 <nav aria-label="Page navigation example" style={{ float: "right" }}>
                   <ul className="pagination">
@@ -223,6 +243,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     deliveredOrder: (id) => {
       return dispatch(actDeliveredOrderRequest(id))
+    },
+    delete_order: (id) => {
+      dispatch(actDeleteOrderRequest(id))
     }
   }
 }

@@ -14,7 +14,8 @@ class ResetPassword extends Component {
             email: '',
             password: '',
             repassword: '',
-            isActive: true
+            isActive: false,
+            isSuccess: false
         }
     }
 
@@ -47,11 +48,19 @@ class ResetPassword extends Component {
             repassword
         }
         this.props.resetPassword(data)
+        this.setState({
+            password: '',
+            repassword: '',
+            isSuccess: true
+        })
     }
 
 
     render() {
-        const { password, repassword} = this.state;
+        const { password, repassword,isSuccess} = this.state;
+        if(isSuccess){
+            return <Redirect to ='/login'></Redirect>
+        }
         
         return (
             <div className="container">
