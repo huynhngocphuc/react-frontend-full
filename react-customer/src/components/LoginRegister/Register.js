@@ -10,7 +10,8 @@ class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fullname: '',
+      firstname:'',
+      lastname:'',
       gmail: '',
       password: '',
       repassword: '',
@@ -29,10 +30,10 @@ class Register extends Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
-    const { fullname, gmail, password, repassword,phonenumber,address } = this.state;
+    const { firstname,lastname, gmail, password, repassword,phonenumber,address } = this.state;
     const user = {
-      
-      fullname,
+      firstname,
+      lastname,
       gmail,
       password,
       repassword,
@@ -57,7 +58,8 @@ class Register extends Component {
   
     await this.props.registerRequest(user);
     this.setState ({
-      fullname: '',
+      firstname:'',
+      lastname:'',
       gmail: '',
       password: '',
       repassword: '',
@@ -68,21 +70,31 @@ class Register extends Component {
   }
 
   render() {
-    const { fullname, gmail, phonenumber,address,password,repassword } = this.state;
+    const { firstname,lastname, gmail, phonenumber,address,password,repassword } = this.state;
     return (
       <div className="col-sm-12 col-md-12 col-lg-6 col-xs-12">
         <form onSubmit={(event) => this.handleSubmit(event)} >
           <div className="login-form">
             <h4 className="login-title">Đăng ký</h4>
             <div className="row">
-              <div className="col-md-12 mb-20">
-                <label>Họ và tên</label>
+              <div className="col-md-6 mb-20">
+                <label>Họ và tên đệm</label>
                 <input
-                  value={fullname}
+                  value={lastname}
                   onChange={this.handleChange}
                   className="mb-0"
                   type="text"
-                  name="fullname"
+                  name="lastname"
+                  placeholder="Họ và tên đệm" />
+              </div>
+              <div className="col-md-6 mb-20">
+                <label>Tên</label>
+                <input
+                  value={firstname}
+                  onChange={this.handleChange}
+                  className="mb-0"
+                  type="text"
+                  name="firstname"
                   placeholder="Họ tên" />
               </div>
               <div className="col-md-12 mb-20">

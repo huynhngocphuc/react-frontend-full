@@ -68,9 +68,16 @@ export const actRemoveCartRequest = (item) => {
     console.log("dữ liệu chuẩn bị gửi đi", dataguidi)
     return async dispatch => {
         const res = await callApi(`cart`, 'DELETE',dataguidi);
+        console.log(res.status)
         if (res && res.status === 200) {
-            console.log("giỏ hang của tôi",res.data)
+            console.log("xem thong tin ")
+            console.log(res.data.cartEntities)
+            dispatch(actRemoveCart(res.data.cartEntities))
         };
+        if(res && res.status === 204)
+        {
+            dispatch(actRemoveCart([]))
+        }
     };
 }
 
@@ -84,11 +91,13 @@ export const actRemoveCart = (item) => {
 // sửa giỏ hàng
 export const actUpdateCartRequest = (item) => {
     let id = parseInt(localStorage.getItem("_id"))
+    
     const dataguidi = {customerId:id,productId:item.productId,quantity:item.quantity}
     console.log("dữ liệu chuẩn bị gửi đi", dataguidi)
     return async dispatch => {
         const res = await callApi(`cart`, 'PUT',dataguidi);
         if (res && res.status === 200) {
+           
             dispatch(actUpdateCart(res.data.cartEntities));
             console.log("giỏ hàng trả về",res.data.cartEntities)
         };
@@ -97,8 +106,21 @@ export const actUpdateCartRequest = (item) => {
 }
 
 export const actUpdateCart = (item) => {
+    // console.log(item)
     return {
         type: Types.UPDATE_CART,
         item
+    }
+}
+
+export const actClearRequest = () => {
+    return async dispatch => {
+        localStorage.setItem('_cart', JSON.stringify([]) );
+        dispatch(actClearCart());
+    };
+}
+export const actClearCart = (clear) => {
+    return {
+        type: Types.CLEAR_CART
     }
 }

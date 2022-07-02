@@ -19,18 +19,18 @@ class ShoppingCartItems extends Component {
     let newItem = item;
     newItem.quantity++;
     this.props.changQuantityItem(newItem);
-    window.location.reload()
+    // window.location.reload()
 
   }
   downItem = (item) => {
     if (item.quantity <= 1) {
-      toast.error('Tối đa 1 sản phẩm')
+      toast.error('Tối thiểu 1 sản phẩm')
       return
     }
     let newItem = item;
     newItem.quantity--;
     this.props.changQuantityItem(newItem);
-    window.location.reload()
+    // window.location.reload()
 
   }
 
@@ -38,11 +38,12 @@ class ShoppingCartItems extends Component {
     this.props.removeItem(item);
     console.log("sản phẩm xóa", item)
     toast.success('Xóa thành công')
-    window.location.reload()
+    // window.location.reload()
   }
 
   render() {
     const { item } = this.props;
+   
     return (
       <tr>
         <td className="li-product-remove">
@@ -52,9 +53,10 @@ class ShoppingCartItems extends Component {
         </td>
         <td className="li-product-thumbnail d-flex justify-content-center">
           <Link to={`/products/${item.productId}`} >
-            <div className="fix-cart"> <img className="fix-img" src={item.productImage ? item.productImage : null} alt="Li's Product" /></div>
+            <div className="fix-cart"> <img className="fix-img" src={item.productImageDtoSet ? item.productImageDtoSet[0].image : null} alt="Li's Product" /></div>
           </Link></td>
-        <td className="li-product-name"><Link className="text-dark" to={`/products/${item.productId}`}>{item.nameProduct}</Link></td>
+        <td className="li-product-name">
+          <Link className="text-dark" to={`/products/${item.productId}`}>{item.nameProduct}</Link></td>
         <td className="product-subtotal">
           <span className="amount">{formatNumber(item.priceAfterDiscount)}</span>
           {

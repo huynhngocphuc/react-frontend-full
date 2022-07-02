@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Paypal from '../components/Paypal/Paypal';
+import Paypal from '../components/Payment/Paypal';
 
 
 export default class PaypalPage extends Component {

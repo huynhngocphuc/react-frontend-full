@@ -10,12 +10,30 @@ export const actLoginRequest = (user) => {
         if (res && res.data.token) {
             console.log(res.data)
             const token = res.data.token
-            const data = res.data
-            const id = res.data.id
+            const id = res.data.customerId
+            const idAccount = res.data.id
             localStorage.setItem('_auth', token);
             localStorage.setItem('_id', id);
-            dispatch(actLogin(data));
+            localStorage.setItem('_idaccount', idAccount)
+            localStorage.setItem('_username', res.data.username);
+            dispatch(actLogin(token));
         }
+    };
+}
+export const actLoginGoogleRequest = (token, customerId, id) => {
+    return async dispatch => {
+        const res = await callApi(`auth/oauth/google?id=${id}&customerId=${customerId}`, 'GET');
+
+        console.log(`duw lieu xem co ten khong${res.data}`)
+        // const token = res.data.token
+        // const id = res.data.customerId
+        // const idAccount = res.data.id
+        localStorage.setItem('_auth', token);
+        localStorage.setItem('_id', customerId);
+        localStorage.setItem('_idaccount',id)
+        localStorage.setItem('_username', "CUSTOMER");
+        dispatch(actLogin(token));
+
     };
 }
 
@@ -57,7 +75,7 @@ export const actForgotPasswordRequest = (email) => {
         startLoading()
         const res = await callApi('auth/forgot', 'POST', email);
         if (res && res.status === 200) {
-            const mes = res.data.message ? res.data.message:"Vui lòng xác nhận email để đổi mật khẩu";
+            const mes = res.data.message ? res.data.message : "Vui lòng xác nhận email để đổi mật khẩu";
             localStorage.setItem('_mailreset', email.email);
             toast.success(mes)
             doneLoading()
@@ -70,7 +88,7 @@ export const actPasswordRequest = (user) => {
         startLoading()
         const res = await callApi('auth/reset', 'POST', user);
         if (res && res.status === 200) {
-            const mes = res.data.message ? res.data.message:"Đổi mật khẩu thành công";
+            const mes = res.data.message ? res.data.message : "Đổi mật khẩu thành công";
             localStorage.removeItem("_mailreset");
             toast.success(mes)
             doneLoading()

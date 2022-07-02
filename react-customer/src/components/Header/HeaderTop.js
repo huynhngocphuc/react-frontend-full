@@ -10,6 +10,7 @@ class HeaderTop extends Component {
   logOut = async () => {
     localStorage.removeItem('_auth');
     localStorage.removeItem('_id');
+    localStorage.removeItem('_username');
     const token = null;
     startLoading();
     await this.props.setTokenRedux(token);
@@ -23,6 +24,7 @@ class HeaderTop extends Component {
 
   render() {
     const { user } = this.props;
+    const username = localStorage.getItem('_username')
 
     return (
       <div className="header-top">
@@ -45,7 +47,7 @@ class HeaderTop extends Component {
                         ? (<Link onClick={() => this.loadingPage()} to="/login" className="fix-link-color language-selector-wrapper"> Login </Link>)
                         : (<div className="dropdown show">
                           <Link to="#" className=" fix-link-color dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {user.username}
+                            {username}
                           </Link>
                           <div className="fix-text-item dropdown-menu ht-setting-list " aria-labelledby="dropdownMenuLink">
                             <Link className="fix-text-item dropdown-item" to="/order/status1">Đơn mua</Link>

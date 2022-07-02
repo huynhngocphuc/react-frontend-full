@@ -8,8 +8,10 @@ import { actGetProductRequest } from "../../redux/actions/products";
 import { actAddCartRequest } from "../../redux/actions/cart";
 import callApi from "../../utils/apiCaller";
 import BeautyStars from "beauty-stars";
-
+import RatingView from "./RatingView"
 import "./style.css";
+import { is_empty } from "../../utils/validations";
+import Slider from "react-slick";
 toast.configure();
 
 let token;
@@ -85,12 +87,27 @@ class ProductViewDetail extends Component {
     }
 
   };
+
   render() {
+    const settings = {
+      customPaging: function(i) {
+        return (
+          <Link to="#">
+            <img style={{ height: 70, width: "auto" }} src={product.productImageList[i].image} alt="not found" />
+          </Link>
+        );
+      },
+      dots: true,
+      dotsClass: "slick-dots slick-thumb",
+      infinite: true,
+      speed: 500,
+      slidesToShow: 1,
+      slidesToScroll: 1
+    };
     const { product, user } = this.props;
     const { quantity, redirectYourLogin } = this.state;
-    console.log("thông tin sản phẩm", product)
     if (redirectYourLogin) {
-      return <Redirect to="/login-register"></Redirect>
+      return <Redirect to="/login"></Redirect>
     }
     return (
       <div className="content-wraper">
@@ -102,8 +119,19 @@ class ProductViewDetail extends Component {
                 <div className="product-details-images slider-navigation-1">
                   {/* <div className="lg-image"> */}
                   <div className="fix-width-slick">
+                    <Slider  {...settings}>
+                      {product.productImageList && product.productImageList.length
+                        ? product.productImageList.map((item, index) => {
+                          return (
+                            <div key={index} className="fix-img-div-slick">
+                              <img className="fix-img-slick" src={item.image} alt="not found" />
+                            </div>
+                          );
+                        })
+                        : null}
+                    </Slider>
 
-                    <img className="fix-img" src={product.productImage} alt="Li's Product " />
+                    {/* <img className="fix-img" src={product.productImage} alt="Li's Product " /> */}
                   </div>
                 </div>
               </div>
@@ -157,9 +185,10 @@ class ProductViewDetail extends Component {
                         <Link
                           onClick={() => this.addItemToCart(product)}
                           to="#"
-                          className="add-to-cart"
+                          className="add-to-cart button-hover-addcart button"
                         >
                           Thêm vào giỏ
+                          <i class="fa fa-shopping-cart"></i>
                         </Link>
                       </div>
                     </form>
@@ -168,7 +197,7 @@ class ProductViewDetail extends Component {
               </div>
             </div>
           </div>
-          <div className="li-product-tab">
+          <div className="li-product-tab pt-30">
             <ul className="nav li-product-menu">
               <li>
                 <a className="active" data-toggle="tab" href="#description">
@@ -179,6 +208,7 @@ class ProductViewDetail extends Component {
 
           </div>
 
+
           <div className="tab-content">
             <div
               id="description"
@@ -187,6 +217,8 @@ class ProductViewDetail extends Component {
             >
               <div className="product-description">
                 <span dangerouslySetInnerHTML={{ __html: product.descriptionProduct }}></span>
+              
+                <RatingView rating ={product.rating} listReviews = {product.listReviews}></RatingView>
                 {
                   product.listReviews ? (
 
@@ -240,6 +272,8 @@ class ProductViewDetail extends Component {
               </div>
             </div>
           </div>
+
+
         </div>
 
       </div>

@@ -60,7 +60,7 @@ class TopTreddingProductItems extends Component {
        <div className="single-product-wrap" >
        <div className="fix-img-div-new product-image">
          <Link onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`}>
-           <img className="fix-img" src={product.productImage} alt="Li's Product " />
+           <img className="fix-img" src={product.productImageSet[0].image} alt="Li's Product " />
          </Link>
          {
               product.discount > 0 ? (

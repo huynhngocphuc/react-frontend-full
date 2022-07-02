@@ -126,6 +126,7 @@ class OrderStatus3 extends Component {
     render() {
         const { orders } = this.props
         const { idOrderReview, idProductReview, ratingPoint, textRating } = this.state
+        console.log(orders)
         return (
             <div className="content-inner">
                 <section className="tables pt-3">

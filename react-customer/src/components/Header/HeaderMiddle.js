@@ -53,8 +53,12 @@ class HeaderMiddle extends Component {
     const { textSearch } = this.state;
     const { countCart } = this.props;
     let count = 0;
+    console.log(countCart)
+
     if (countCart.length > 0) {
-      count = countCart.length;
+      countCart.forEach(item => {
+       count+=item.quantity
+      });    
     }
     return (
       <div className="header-middle pl-sm-0 pr-sm-0 pl-xs-0 pr-xs-0">

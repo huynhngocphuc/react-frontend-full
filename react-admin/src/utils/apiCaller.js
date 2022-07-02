@@ -19,6 +19,7 @@ export default async function callApi(endpoint, method = 'GET', body, token) {
         headers: { Authorization: `${token}` },
         data: body
       });
+      console.log(`dữ liệu trả về ${data.data}`)
       return data;
     } else {
       console.log("vào chổ không token")
@@ -28,6 +29,7 @@ export default async function callApi(endpoint, method = 'GET', body, token) {
         url: `${Config.API_URL}/${endpoint}`,
         data: body
       });
+      console.log(`dữ liệu trả về ${data.data}`)
       return data;
     }
   }

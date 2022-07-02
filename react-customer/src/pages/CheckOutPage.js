@@ -7,7 +7,7 @@ export default class CheckOutPage extends Component {
     const url = this.props.match.match.url;
     return (
       <div>
-        <LinkHere url={url}></LinkHere>
+        <LinkHere url='/ Thanh toán'></LinkHere>
         
         <CheckOut></CheckOut>
       </div>

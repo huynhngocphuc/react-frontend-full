@@ -14,10 +14,14 @@ import ProductSearchPage from './pages/ProductSearchPage';
 import ShoppingCartPage from './pages/ShoppingCartPage';
 import CheckOutPage from './pages/CheckOutPage';
 import PaypalPage from './pages/PaypalPage';
+import MoMoPage from './pages/MoMoPage ';
+import VnPayPage from './pages/VnPayPage';
 import Order1Page from './pages/OrderStatus1Page';
 import Order2Page from './pages/OrderStatus2Page';
 import Order3Page from './pages/OrderStatus3Page';
 import ProductPage from './pages/ProductPage';
+import AfterCheckoutPage from './pages/AfterCheckoutPage';
+import LoginGooglePage from './pages/LoginGooglePage';
 const routes = [
   {
     path: '/',
@@ -35,9 +39,24 @@ const routes = [
     main: (match) => < ProductDetailPage match={match} />
   },
   {
-    path: '/payment/success/:orderid',
+    path: '/payment/paypal/success/:orderid',
     exact: false,
     main: (match) => < PaypalPage  match={match} />
+  },
+  {
+    path: '/oauth2/redirect',
+    exact: false,
+    main: (match) => < LoginGooglePage  match={match} />
+  },
+  {
+    path: '/payment/momo/:orderid',
+    exact: false,
+    main: (match) => < MoMoPage  match={match} />
+  },
+  {
+    path: '/payment/vnpay/:orderid',
+    exact: false,
+    main: (match) => < VnPayPage  match={match} />
   },
   {
     path: '/login',
@@ -98,6 +117,11 @@ const routes = [
     path: '/checkout',
     exact: false,
     main: (match) => < CheckOutPage match={match}/>
+  },
+  {
+    path: '/after-checkout',
+    exact: false,
+    main: (match) => < AfterCheckoutPage match={match}/>
   },
   {
     path: '/about',

@@ -6,6 +6,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { startLoading, doneLoading } from '../../utils/loading'
 import { Link } from 'react-router-dom'
+import { GoogleLogin } from 'react-google-login'
+import "./style.css";
 toast.configure()
 
 class Login extends Component {
@@ -28,10 +30,15 @@ class Login extends Component {
     });
   }
 
-
+  handleLoginGoogle = async event =>{
+    event.preventDefault();
+    window.location.replace("http://localhost:8080/oauth2/authorize/google");
+  }
 
   handleSubmit = async event => {
     event.preventDefault();
+    
+    console.log(event)
     const { username, password } = this.state;
     if (password.length < 6 || password.length > 32) {
       return toast.error('Mật khẩu từ 6-24 ký tự');
@@ -54,10 +61,11 @@ class Login extends Component {
     if (user !== null) {
       return <Redirect to="/"></Redirect>
     }
+    
     return (
       <div className="col-sm-12 col-md-12 col-xs-12 col-lg-6 mb-30">
         {/* Login Form s*/}
-        <form onSubmit={(event) => this.handleSubmit(event)}>
+        <form >
           <div className="login-form">
             <h4 className="login-title">Đăng nhập</h4>
             <div className="row">
@@ -93,12 +101,26 @@ class Login extends Component {
                 <Link to="/forgot-password"> Quên mật khẩu</Link>
               </div>
               <div className="col-md-4">
-                <button className="register-button mt-0 mb-3">Đăng nhập</button>
+                <button onClick={(event) => this.handleSubmit(event)} className="register-button mt-0 mb-3" value="Login">Đăng nhập</button>
               </div>
+              <div className="col-md-8">
+                <button onClick={(event) => this.handleLoginGoogle(event)} className="loginBtn loginBtn--google" value="LoginGoogle" ref="googleLoginBtn">
+                  Login with Google
+                </button>
+              </div>
+              {/* <div className="col-8">
+                <GoogleLogin 
+                buttonText='Đăng nhập với google'
+                style={{marginTop: "100px"}}
+                // onSuccess={onSuccess}
+                isSignedIn = {true}
+                />
+              </div> */}
 
             </div>
           </div>
         </form>
+        
       </div>
     )
   }

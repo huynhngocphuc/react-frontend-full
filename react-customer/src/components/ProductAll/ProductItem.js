@@ -57,13 +57,14 @@ class ProductItem extends Component {
     if (redirectYourLogin) {
       return <Redirect to ='/login'></Redirect>
     }
+    
     return (
       <div className="col-lg-3 col-md-4 col-sm-6 mt-40">
         {/* single-product-wrap start */}
         <div className="single-product-wrap">
           <div className="fix-img-div product-image">
             <Link onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`}>
-              <img className="fix-img" src={product.productImage} alt="Li's Product " />
+              <img className="fix-img" src={product.productImageSet[0].image} alt="Li's Product " />
             </Link>
             {
               product.discount > 0 ? (

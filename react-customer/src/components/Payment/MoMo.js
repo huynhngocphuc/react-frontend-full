@@ -7,7 +7,7 @@ import withReactContent from "sweetalert2-react-content";
 import { startLoading, doneLoading } from '../../utils/loading'
 const MySwal = withReactContent(Swal);
 
-export default class Paypal extends Component {
+export default class MoMoPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -16,12 +16,11 @@ export default class Paypal extends Component {
         }
       }
       
-
     async componentDidMount(){
-        const {orderid,paymentId,PayerID} = this.props
-        console.log("đây là param sau khi chạy",orderid,paymentId,PayerID)
+        const {orderid,errorCode} = this.props
+        console.log(`đây là orderid ${orderid} ---- ${errorCode}`)
         startLoading();
-        const resData = await callApi(`payment/success/${orderid}?paymentId=${paymentId}&PayerID=${PayerID}`, 'GET')
+        const resData = await callApi(`payment/momo/${orderid}?errorCode=${errorCode}`, 'GET')
         console.log("dữ liệu trả về",resData)
         if(resData &&resData.status === 200)
         {
@@ -33,7 +32,16 @@ export default class Paypal extends Component {
                 showConfirmButton: false,
                 timer: 1500
               })
+        }else{
+            Swal.fire({
+                position: 'center',
+                icon: 'console.error();',
+                title: 'Thanh toán thất chuyển sang thanh khi nhận hàng',
+                showConfirmButton: false,
+                timer: 1500
+              })
         }
+
         doneLoading();
     }
 
@@ -44,7 +52,7 @@ export default class Paypal extends Component {
         }
         return (
             <div>
-                <h1></h1>
+                <h1>Thanh toán thất bại chuyển sang trang thái thanh toán khi nhận hàng</h1>
             </div>
         )
     }

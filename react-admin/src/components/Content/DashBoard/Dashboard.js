@@ -74,9 +74,9 @@ class Dashboard extends Component {
      toast.error('Ngày bắt đầu nhỏ hơn ngày hôm nay')
      return;
    }
-   if((new Date(from).getTime()) >= (new Date(dateCurent).getTime()))
+   if((new Date(to).getTime()) > (new Date(dateCurent).getTime()))
    {
-     toast.error('Ngày bắt đầu nhỏ hơn ngày hôm nay')
+     toast.error('Ngày kết thúc nhỏ hơn hoặc bằng hiện tại')
      return;
    }
    
@@ -103,7 +103,7 @@ class Dashboard extends Component {
 
     const { dashboard, revenueSearch, productSelling } = this.props
     const { startDateRevenue, endDateRevenue, total, monthNow } = this.state
-    console.log("tổng", revenueSearch, productSelling)
+    console.log("tổng", revenueSearch, productSelling.products)
     return (
       <div className="content-inner">
         {/* Page Header*/}
@@ -237,7 +237,9 @@ class Dashboard extends Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {productSelling && productSelling.products ? productSelling.products.map((item, index) => {
+                    {productSelling && productSelling.products ? 
+                    
+                    productSelling.products.map((item, index) => {
                       return (
                         <tr key={index}>
                           <td>{item.productName}</td>
@@ -249,7 +251,13 @@ class Dashboard extends Component {
                           </td>
                         </tr>
                       )
-                    }) : null}
+                    }) 
+                    : <tr>
+                        <td></td>
+                        <td><p style={{fontSize:"1.2rem"}}>Không có sản phẩm</p></td>
+                        <td></td>
+                        
+                      </tr>}
                   </tbody>
                 </table>
               </div>

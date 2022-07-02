@@ -8,7 +8,7 @@ import YourOrder from "./YourOrder";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { startLoading, doneLoading } from "../../utils/loading";
-import { actFetchCartRequest } from '../../redux/actions/cart';
+import { actFetchCartRequest,actClearRequest } from '../../redux/actions/cart';
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import "./style.css";
@@ -26,8 +26,9 @@ class CheckOut extends Component {
       shippingAddress: false,
       checkout: false,
       result: false,
-      linkPaypal:'',
-      redirectTo :false
+      linkPaypal: '',
+      chooseCheckout: 'COD',
+      redirectTo: false
     };
     this.billing = React.createRef();
   }
@@ -69,94 +70,111 @@ class CheckOut extends Component {
       }
       resultOrder = newOder;
     }
-    
+
     this.setState({
       toggleCheckout: !toggleCheckout,
       shippingAddress: !shippingAddress,
     });
-    
+
   };
+
+
 
   submitOrder = async (state) => {
-    let id = localStorage.getItem("_id");
+    let customerId = parseInt(localStorage.getItem("_id"));
+    let id = parseInt(localStorage.getItem("_idaccount"));
     const items = this.props.cartStore
-    let list = [];
+    let cartItemList = [];
     let count = 0;
+    let resData;
     let shippingTotal = 0;
-
+    const { chooseCheckout } = this.state
+    console.log(chooseCheckout);
     if (items.length > 0) {
-      list = items.map((item) => {
-        return {
-          productId: item.productId,
-          quantity: item.quantity
-        }
+      cartItemList = items.map((item) => {
+        return item.cartId
       })
       count = items.reduce((sum, item) => {
         return (sum += item.quantity * item.priceAfterDiscount);
       }, 0);
     }
-    if (list) {
+    if (cartItemList) {
       const newOder = {
         address: res.address,
         phoneNumber: res.phoneNumber,
         total: count + shippingTotal,
-        list,
-        customerId: parseInt(id)
+        cartItemList,
+        id,
+        customerId
+      }
 
+
+      console.log(newOder)
+      switch (chooseCheckout) {
+        case "VNPAY":
+          startLoading();
+          resData = await callApi("payment/vnpay", "POST", newOder);
+          if (resData && resData.status == 200) {
+            this.setState({ linkPaypal: resData.data, redirectTo: true })
+          }
+       
+          doneLoading();
+          break;
+        case "MOMO":
+          startLoading();
+          resData = await callApi("payment/momo", "POST", newOder);
+          if (resData && resData.status == 200) {
+            this.setState({ linkPaypal: resData.data.payUrl, redirectTo: true })
+          }
+          doneLoading();
+          break;
+        case "PAYPAL":
+          startLoading();
+          resData = await callApi("payment/paypal", "POST", newOder);
+          if (resData && resData.status == 200) {
+            this.setState({ linkPaypal: resData.data.link, redirectTo: true })
+          }
+          doneLoading();
+          break
+        default:
+          startLoading();
+          resData = await callApi("orders", "POST", newOder);
+          if (resData && resData.status == 200) {
+            // fetch lại giỏ hàng
+            await this.props.reset_cart()
+            toast.success("Tạo đơn hàng thành công")
+            this.setState({
+              checkout: true,
+              result: true,
+              redirectTo:false
+              
+            });
+          }
+         doneLoading();
+        // setTimeout(window.location.reload('/'),3000);
       }
-      startLoading();
-      const resData = await callApi("orders", "POST", newOder);
-      if (resData && resData.status == 200) {
-        // fetch lại giỏ hàng
-        // await this.props.fetch_cart(id)
-        toast.success("Tạo đơn hàng thành công")
-        this.setState({
-          checkout: true,
-          result: true,
-        });
-      }
-     await doneLoading();
-     window.location.reload('/cart');
+
+
+      //   startLoading();
+      //   const resData = await callApi("orders", "POST", newOder);
+      //   if (resData && resData.status == 200) {
+      //     // fetch lại giỏ hàng
+      //     // await this.props.fetch_cart(id)
+      //     toast.success("Tạo đơn hàng thành công")
+      //     this.setState({
+      //       checkout: true,
+      //       result: true,
+      //     });
+      //   }
+      //  await doneLoading();
+      //  window.location.reload('/cart');
     }
-
-
-
   };
-  submitOrderPaypal = async (state) => {
-    let id = localStorage.getItem("_id");
-    const items = this.props.cartStore
-    let list = [];
-    let count = 0;
-    let shippingTotal = 0;
-    if (items.length > 0) {
-      list = items.map((item) => {
-        return {
-          productId: item.productId,
-          quantity: item.quantity
-        }
-      })
-      count = items.reduce((sum, item) => {
-        return (sum += item.quantity * item.priceAfterDiscount);
-      }, 0);
-    }
-    if (list) {
-      const newOder = {
-        address: res.address,
-        phoneNumber: res.phoneNumber,
-        total: count + shippingTotal,
-        list,
-        customerId: parseInt(id)
-      }
-      console.log("dữ liệu gửi đi",newOder)
-      startLoading();
-      const resData = await callApi("payment/paypal", "POST", newOder);
-      if (resData && resData.status == 200) {
-        this.setState({linkPaypal:resData.data.link, redirectTo:true})
-      }
-      doneLoading();
-    }
 
-  };
+  onchangePayment(e) {
+    console.log(e.target.value)
+    this.setState({ chooseCheckout: e.target.value })
+  }
 
   render() {
     const {
@@ -165,9 +183,10 @@ class CheckOut extends Component {
       shippingAddress,
       checkout,
       result,
-      linkPaypal
+      linkPaypal,
+      chooseCheckout
     } = this.state;
-    if(redirectTo){
+    if (redirectTo) {
       return window.location.replace(linkPaypal)
     }
     return (
@@ -207,11 +226,13 @@ class CheckOut extends Component {
                   <div className="col-lg-12">
                     <div className="error-wrapper text-center ptb-50 pt-xs-20">
                       <div>
-                        <img
+                      <i class="fa-solid fa-cart-circle-check"></i>
+
+                        {/* <img
                           src="https://i.ibb.co/pvDhxPj/checked-ok-yes-icon-1320196391133448530.png"
                           alt="checked"
                           height="70px"
-                        />
+                        /> */}
                         <h1>Cảm ơn.</h1>
                       </div>
                       <div>
@@ -222,7 +243,7 @@ class CheckOut extends Component {
                           <i>
                             Vui lòng xem email để xem chi tiết.
                           </i>
-                          <Link to = '/' className="ml-3">Tiếp tục mua hàng</Link>
+                          <Link to='/' className="ml-3">Tiếp tục mua hàng</Link>
                         </p>
                       </div>
                     </div>
@@ -238,6 +259,7 @@ class CheckOut extends Component {
                         order={resultOrder}
                         submitOrder={() => this.submitOrder()}
                         submitOrderPaypal={() => this.submitOrderPaypal()}
+                        chooseCheckout={(e) => this.onchangePayment(e)}
                       ></YourOrder>
                     ) : (
                       <BillDetail ref={this.billing}></BillDetail>
@@ -247,7 +269,7 @@ class CheckOut extends Component {
                     {!toggleCheckout ? (
                       <button
                         onClick={() => this.toggleCheckout()}
-                        className="btn btn-primary"
+                        className="btn btn-primary "
                         style={{ marginTop: -25, marginBottom: 10 }}
                       >
                         Bước tiếp theo
@@ -270,8 +292,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetch_cart: (id) => {
-      dispatch(actFetchCartRequest(id))
+    reset_cart: () => {
+      dispatch(actClearRequest())
     }
   }
 }
