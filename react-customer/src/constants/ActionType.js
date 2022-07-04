@@ -12,6 +12,9 @@ export const FETCH_PRODUCT = 'FETCH_PRODUCT';
 export const SEARCH_PRODUCTS = 'SEARCH_PRODUCTS';
 
 export const FETCH_KEYSEARCH = 'FETCH_KEYSEARCH';
+export const FETCH_USER = 'FETCH_USER';
+export const FETCH_UPDATE = 'FETCH_UPDATE';
+
 
 
 export const FETCH_CATEGORIES = 'FETCH_CATEGORIES';
@@ -58,3 +61,9 @@ export const FIND_ORDERS = 'FIND_ORDERS';
 export const EDIT_ORDER = 'EDIT_ORDER';
 export const ADD_ORDER = 'ADD_ORDER';
 export const REMOVE_ORDER = 'REMOVE_ORDER';
+
+export const FETCH_ADDRESS = 'FETCH_ADDRESS';
+export const FIND_ADDRESS = 'FIND_ADDRESS';
+export const UPDATE_ADDRESS = 'UPDATE_ADDRESS';
+export const ADD_ADDRESS = 'ADD_ADDRESS';
+export const REMOVE_ADDRESS = 'REMOVE_ADDRESS';

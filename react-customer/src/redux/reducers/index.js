@@ -4,6 +4,7 @@ import categories from './categories';
 import product from './product';
 import cart from './cart';
 import auth from './auth';
+import user from './user'
 // import productsNew from './productsNew';
 // import productsLaptop from './productsLaptop';
 import productsOffice from './productsOffice';
@@ -17,6 +18,7 @@ import productsTopBestProduct from './productsTopBestProduct'
 import orders from './orders';
 import loading from './loading';
 import search from './search'
+import addresses from './address';
 
 const appReducers = combineReducers({
     categories,
@@ -30,7 +32,9 @@ const appReducers = combineReducers({
     cart,
     bill,
     orders,
-    search
+    search,
+    addresses,
+    user
 });
 
 export default appReducers;

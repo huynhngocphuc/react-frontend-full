@@ -11,7 +11,9 @@ export default class LoginGooglePage extends Component {
     const token = params.get('token'); // bar
     const customerId = params.get('customerId'); // bar
     const id = params.get('id'); // bar
+    localStorage.setItem('_username', params.get('username'));// bar
     window.scrollTo(0, 0);
+    console.log(params)
     return (
       <div>
         <LoginGoogle token = {token} customerId={customerId} id={id} ></LoginGoogle>

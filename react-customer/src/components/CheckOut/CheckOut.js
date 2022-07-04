@@ -8,7 +8,7 @@ import YourOrder from "./YourOrder";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { startLoading, doneLoading } from "../../utils/loading";
-import { actFetchCartRequest,actClearRequest } from '../../redux/actions/cart';
+import { actFetchCartRequest, actClearRequest } from '../../redux/actions/cart';
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import "./style.css";
@@ -28,6 +28,7 @@ class CheckOut extends Component {
       result: false,
       linkPaypal: '',
       chooseCheckout: 'COD',
+      chooseAddress: -1,
       redirectTo: false
     };
     this.billing = React.createRef();
@@ -36,18 +37,21 @@ class CheckOut extends Component {
   componentDidMount() {
     token = localStorage.getItem("_auth");
   }
-  toggleCheckout = async () => {
+  toggleCheckout = async (e) => {
+    e.preventDefault();
     let id = localStorage.getItem("_id");
     const items = this.props.cartStore
+    const addresses = this.props.addresses
     let list = [];
     let count = 0;
     let shippingTotal = 0;
-    const { toggleCheckout, shippingAddress } = this.state;
-    res = this.billing.current.getBillingState()
+    const { toggleCheckout, shippingAddress,chooseAddress } = this.state;
+    res = addresses.find(e=>e.deliveryAddressId == chooseAddress)
 
-    if (res.phoneNumber === "" || res.address === "") {
-      return toast.error("vui lòng điền đủ thông tin");
+    if ( chooseAddress === -1) {
+      return toast.error("vui lòng chọn địa chỉ");
     }
+
     // lấy danh sách cart để gửi đi
     if (items.length > 0) {
       list = items.map((item) => {
@@ -60,14 +64,16 @@ class CheckOut extends Component {
         return (sum += item.quantity * item.priceAfterDiscount);
       }, 0);
     }
+    
     if (list) {
       const newOder = {
-        address: res.address,
+        address: res.deliveryAddress,
         phoneNumber: res.phoneNumber,
         total: count + shippingTotal,
         list,
         customerId: parseInt(id)
       }
+      console.log(newOder)
       resultOrder = newOder;
     }
 
@@ -100,7 +106,7 @@ class CheckOut extends Component {
     }
     if (cartItemList) {
       const newOder = {
-        address: res.address,
+        address: res.deliveryAddress,
         phoneNumber: res.phoneNumber,
         total: count + shippingTotal,
         cartItemList,
@@ -117,7 +123,7 @@ class CheckOut extends Component {
           if (resData && resData.status == 200) {
             this.setState({ linkPaypal: resData.data, redirectTo: true })
           }
-       
+
           doneLoading();
           break;
         case "MOMO":
@@ -146,34 +152,26 @@ class CheckOut extends Component {
             this.setState({
               checkout: true,
               result: true,
-              redirectTo:false
-              
+              redirectTo: false
+
             });
           }
-         doneLoading();
-        // setTimeout(window.location.reload('/'),3000);
+          doneLoading();
+
       }
 
 
-      //   startLoading();
-      //   const resData = await callApi("orders", "POST", newOder);
-      //   if (resData && resData.status == 200) {
-      //     // fetch lại giỏ hàng
-      //     // await this.props.fetch_cart(id)
-      //     toast.success("Tạo đơn hàng thành công")
-      //     this.setState({
-      //       checkout: true,
-      //       result: true,
-      //     });
-      //   }
-      //  await doneLoading();
-      //  window.location.reload('/cart');
+
     }
   };
 
   onchangePayment(e) {
     console.log(e.target.value)
     this.setState({ chooseCheckout: e.target.value })
+  }
+  onChageAddress(e){
+    console.log(e.target.value)
+    this.setState({ chooseAddress: e.target.value})
   }
 
   render() {
@@ -184,8 +182,11 @@ class CheckOut extends Component {
       checkout,
       result,
       linkPaypal,
-      chooseCheckout
+      chooseCheckout,
+      chooseAddress
     } = this.state;
+    const { addresses } = this.props
+
     if (redirectTo) {
       return window.location.replace(linkPaypal)
     }
@@ -226,7 +227,7 @@ class CheckOut extends Component {
                   <div className="col-lg-12">
                     <div className="error-wrapper text-center ptb-50 pt-xs-20">
                       <div>
-                      <i class="fa-solid fa-cart-circle-check"></i>
+                        <i class="fa-solid fa-cart-circle-check"></i>
 
                         {/* <img
                           src="https://i.ibb.co/pvDhxPj/checked-ok-yes-icon-1320196391133448530.png"
@@ -262,10 +263,17 @@ class CheckOut extends Component {
                         chooseCheckout={(e) => this.onchangePayment(e)}
                       ></YourOrder>
                     ) : (
-                      <BillDetail ref={this.billing}></BillDetail>
+                      <BillDetail
+                        ref={this.billing}
+                        addresses={addresses} 
+                        toggleCheckout = {(e) => this.toggleCheckout(e) }
+                        chooseAddress = {(e) => this.onChageAddress(e)}
+                        >
+
+                      </BillDetail>
                     )
                   }
-                  <div className="col-12" style={{ textAlign: "center" }}>
+                  {/* <div className="col-12" style={{ textAlign: "center" }}>
                     {!toggleCheckout ? (
                       <button
                         onClick={() => this.toggleCheckout()}
@@ -275,7 +283,7 @@ class CheckOut extends Component {
                         Bước tiếp theo
                       </button>
                     ) : null}
-                  </div>
+                  </div> */}
 
                 </div>
               )
@@ -288,6 +296,7 @@ class CheckOut extends Component {
 const mapStateToProps = (state) => {
   return {
     cartStore: state.cart,
+    addresses: state.addresses
   };
 };
 const mapDispatchToProps = (dispatch) => {

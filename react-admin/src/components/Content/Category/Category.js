@@ -130,6 +130,7 @@ class Category extends Component {
                                   <div>
                                     <span title='Edit' className="fix-action"><Link to={`categories/edit/${item.categoryId}`}> <i className="fa fa-edit"></i></Link></span>
                                     <span title='Delete' onClick={() => this.handleRemove(item.categoryId,item.categoryName)} className="fix-action"><Link to="#"> <i className="fa fa-trash" style={{ color: '#ff00008f' }}></i></Link></span>
+                                 
                                   </div>
                                 </td>
                               </tr>

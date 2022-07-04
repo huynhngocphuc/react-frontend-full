@@ -22,6 +22,7 @@ import Order3Page from './pages/OrderStatus3Page';
 import ProductPage from './pages/ProductPage';
 import AfterCheckoutPage from './pages/AfterCheckoutPage';
 import LoginGooglePage from './pages/LoginGooglePage';
+import ProfilePage from './pages/ProfilePage'
 const routes = [
   {
     path: '/',
@@ -98,6 +99,12 @@ const routes = [
     exact: false,
     main: (match) => < ShoppingCartPage match={match} />
   },
+  {
+    path: '/profile',
+    exact: false,
+    main: (match) => < ProfilePage match={match} />
+  },
+
   {
     path: '/order/status1',
     exact: false,

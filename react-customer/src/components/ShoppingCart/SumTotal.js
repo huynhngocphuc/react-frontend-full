@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { formatNumber } from '../../config/TYPE'
 import { Redirect } from 'react-router-dom'
 import { toast } from 'react-toastify';
+import { actFetchAddressRequest } from '../../redux/actions/address';
 import 'react-toastify/dist/ReactToastify.css';
 toast.configure()
 
@@ -18,13 +19,14 @@ class SumTotal extends Component {
   }
 
 
-  checkAuthenticate = () => {
+  checkAuthenticate = async () => {
     id = localStorage.getItem("_id");
     const {sumTotal } = this.props;
     if (!sumTotal.length) {
       return toast.error('Vui lòng chọn sản phẩm để mua');
     }
     if (id) {
+      await this.props.fetch_address(id);
       this.setState({
         redirectYourOrder: true
       })
@@ -74,7 +76,16 @@ class SumTotal extends Component {
 const mapStateToProps = (state) => {
   return {
     sumTotal: state.cart,
-    // user: state.auth
+    //  address: state.address
   }
 }
-export default connect(mapStateToProps, null)(SumTotal)
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetch_address: (id) => {
+      dispatch(actFetchAddressRequest(id))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SumTotal)

@@ -23,11 +23,9 @@ class ShoppingCart extends Component {
       this.setState({ redirectYourLogin: true })
     }
     else {
-      // this.props.fetch_items(id);
-      // console.log("đã fetch items")
     }
     this.props.fetch_items(id);
-    console.log("đã fetch items")
+  
 
 
   }

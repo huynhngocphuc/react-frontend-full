@@ -17,9 +17,11 @@ export const actLoginRequest = (user) => {
             localStorage.setItem('_idaccount', idAccount)
             localStorage.setItem('_username', res.data.username);
             dispatch(actLogin(token));
+            dispatch(actFetchUser(res.data));
         }
     };
 }
+
 export const actLoginGoogleRequest = (token, customerId, id) => {
     return async dispatch => {
         const res = await callApi(`auth/oauth/google?id=${id}&customerId=${customerId}`, 'GET');
@@ -31,8 +33,10 @@ export const actLoginGoogleRequest = (token, customerId, id) => {
         localStorage.setItem('_auth', token);
         localStorage.setItem('_id', customerId);
         localStorage.setItem('_idaccount',id)
-        localStorage.setItem('_username', "CUSTOMER");
+        
         dispatch(actLogin(token));
+        dispatch(actFetchUser(res.data));
+
 
     };
 }
@@ -43,6 +47,7 @@ export const actLogin = (token) => {
         token
     }
 }
+
 
 export const actRegisterRequest = (user) => {
     console.log(user)
@@ -108,21 +113,36 @@ export const actPasswordRequest = (user) => {
 // }
 
 
-// export const actUpdateMeRequset = (data, token) => {
-//     return async dispatch => {
-//         const res = await callApi('users/me', 'PUT', data, token);
-//         if (res && res.status === 200) {
-//             toast.success('Update user is success')
-//         }
-//     };
-// }
+export const actUpdateMeRequset = (data) => {
+    return async dispatch => {
+        const res = await callApi('account/profile', 'PUT', data);
+        if (res && res.status === 200) {
+            console.log(res.data)
+            dispatch(actUpdateUser(res.data));
+            toast.success('Cập nhập tài khoản thành công')
+        }
+    };
+}
 
-// export const actChangePasswordMeRequset = (data, token) => {
-//     return async dispatch => {
-//         const res = await callApi('users/me/changePassword', 'PUT', data, token);
-//         if (res && res.status === 200) {
-//             toast.success('Change password is success')
-//         }
-//     };
-// }
+export const actChangePasswordMeRequset = (data) => {
+    return async dispatch => {
+        const res = await callApi('account/password', 'PUT', data);
+        if (res && res.status === 200) {
+            toast.success('Thay đổi mật khẩu thành công')
+        }
+    };
+}
+
+export const actFetchUser = (user) => {
+    return {
+        type: Types.FETCH_USER,
+        user
+    }
+}
+export const actUpdateUser = (user) => {
+    return {
+        type: Types.FETCH_UPDATE,
+        user
+    }
+}
 

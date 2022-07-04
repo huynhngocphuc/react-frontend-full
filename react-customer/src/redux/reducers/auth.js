@@ -1,7 +1,7 @@
 import * as Types from './../../constants/ActionType';
 let initialState = [];
 
-const user = (state = initialState, action) => {
+const auth = (state = initialState, action) => {
     switch (action.type) {
         case Types.LOGIN:
             state = action.token;
@@ -13,4 +13,4 @@ const user = (state = initialState, action) => {
     }
 };
 
-export default user;
+export default auth;

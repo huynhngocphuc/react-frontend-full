@@ -46,7 +46,7 @@ class OrderStatus1 extends Component {
                     'Đơn hàng của bạn đã được xóa.!',
                     'success'
                 )
-                window.location.reload();
+                // window.location.reload();
             }
         })
     }

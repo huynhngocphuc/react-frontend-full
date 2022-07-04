@@ -95,11 +95,24 @@ body {
   padding: 0;
 
 }
+.grid-2 {
+  display: grid;
+  grid-gap: var(--card-padding);
+  margin: 0 auto;
+  max-width: 60em;
+  padding: 0;
+
+}
 @media (min-width: 42em) {
   .grid {
     grid-template-columns: repeat(3, 1fr);
   }
+  .grid-2{
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
+
+
 
 .card {
   background-color: #fff;
@@ -202,6 +215,11 @@ body {
   font-weight: bold;
   line-height: 1em;
 }
+.plan-cost {
+  font-size: 0.9rem;
+  font-weight: bold;
+  padding: 0.5rem 0;
+}
 
 .hidden-visually {
   border: 0;
@@ -213,4 +231,20 @@ body {
   position: absolute;
   white-space: nowrap;
   width: 1px;
+}
+
+.address-page-controll{
+  padding-top: 0px;
+    background-color: #dbe4d70d;
+    padding: 20px;
+    border-radius: 4px;
+    border: 1px solid #0000001f;
+    display: flex;
+    justify-content: space-between;
+}
+.btn-next{
+  font-family: sans-serif;
+  background-color: #ec0a0aba;
+  color: #fff;
+  font-weight: bold;
 }
