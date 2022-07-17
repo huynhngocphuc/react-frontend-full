@@ -10,6 +10,7 @@ import { ToastContainer } from 'react-toastify';
 import 'nprogress/nprogress.css'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import MessengerCustomerChat from 'react-messenger-customer-chat';
 
 
 const store = createStore(appReducers, composeWithDevTools(
@@ -19,6 +20,11 @@ const store = createStore(appReducers, composeWithDevTools(
 ReactDOM.render(
   <Provider store={store}>
     <App />
+     <MessengerCustomerChat
+      pageId="104269089019086"
+      appId="403072068520652"
+      language= 'en_US'
+    />, 
     <ToastContainer
       position="top-right"
       autoClose={1700}

@@ -6,7 +6,7 @@ import { css } from '@emotion/core';
 import { uploadImage } from '../../utils/upload'
 import callApi from '../../utils/apiCaller';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { actUpdateMeRequset, actChangePasswordMeRequset } from '../../redux/actions/auth';
+import { actUpdateMeRequset, actChangePasswordMeRequset, actFetchUserRequset } from '../../redux/actions/user';
 import { actFetchAddressRequest, actAddAddressRequest } from '../../redux/actions/address';
 
 import { startLoading, doneLoading } from '../../utils/loading'
@@ -66,6 +66,22 @@ class Profile extends Component {
         this.afterOpenModal = this.afterOpenModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
     }
+    async componentDidMount() {
+        id = localStorage.getItem('_id');
+        const idaccount = localStorage.getItem('_idaccount');
+        const res = await this.props.fetch_user(id, idaccount);
+        await this.props.fetch_address(id);
+        this.setState({
+            firstName: res.data.firstName,
+            lastName: res.data.lastName,
+            email: res.data.gmailCustomer,
+            phone: res.data.phoneNumberCustomer,
+            address: res.data.address,
+            avatar: res.data.image,
+            userName: res.data.userCustomer,
+            // listAdresses: resAddress.data
+        })
+    }
 
 
     handleChangeImage = (event) => {
@@ -114,7 +130,7 @@ class Profile extends Component {
         const id = parseInt(localStorage.getItem("_idaccount"));
         const { address, phone, email, firstName, lastName, userName } = this.state;
         let { img, avatar } = this.state;
-        console.log("vao roi");
+
         this.setState({
             loading: true
         })
@@ -143,9 +159,8 @@ class Profile extends Component {
             currentPassword: '',
             newPassword: '',
             reNewPassword: '',
-
         }
-        console.log(editUser)
+
         await this.props.update_me(editUser);
         this.setState({
             loading: false,
@@ -192,27 +207,14 @@ class Profile extends Component {
         this.setState({ modalIsOpen: false });
     }
 
-    async componentDidMount() {
-        id = localStorage.getItem('_id');
-        const res = await callApi(`account/profile?customerId=${id}`, 'GET');
-        await this.props.fetch_address(id);
-        this.setState({
-            firstName: res.data.firstName,
-            lastName: res.data.lastName,
-            email: res.data.gmailCustomer,
-            phone: res.data.phoneNumberCustomer,
-            address: res.data.address,
-            avatar: res.data.image,
-            userName: res.data.userCustomer,
-            // listAdresses: resAddress.data
-        })
-    }
+
     render() {
         const { firstName, lastName, email, phone, address, avatar,
             loading, currentPassword, newPassword, reNewPassword,
             fullnameModel, addressModel, phoneNumberModel, modalIsOpen } = this.state;
-        const { listAdresses } = this.props
-        console.log(listAdresses)
+        const { listAdresses, user } = this.props
+
+
         return (
             <div className="container emp-profile">
 
@@ -294,9 +296,13 @@ class Profile extends Component {
                                 <li className="nav-item">
                                     <a className="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Cá nhân</a>
                                 </li>
-                                <li className="nav-item">
-                                    <a className="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Đổi mật khẩu</a>
-                                </li>
+
+                                {
+                                    user && user.provider == "GOOGLE" ? null :
+                                        <li className="nav-item">
+                                            <a className="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Đổi mật khẩu</a>
+                                        </li>
+                                }
                                 <li className="nav-item">
                                     <a className="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">Quản lý Địa chỉ</a>
                                 </li>
@@ -402,8 +408,8 @@ class Profile extends Component {
                                                 return (
                                                     <ItemAddress ItemAddress={item}></ItemAddress>
                                                 )
-                                            }) : 
-                                            <h4 className=' row col-md-12 mt-10 flex-justify-center'>Chưa có địa chỉ</h4>
+                                            }) :
+                                                <h4 className=' row col-md-12 mt-10 flex-justify-center'>Chưa có địa chỉ</h4>
                                         }
 
                                     </div>
@@ -419,12 +425,16 @@ class Profile extends Component {
 
 const mapStateToProps = (state) => {
     return ({
+        user: state.user,
         listAdresses: state.addresses
     })
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        fetch_user: (id, idaccount) => {
+            return dispatch(actFetchUserRequset(id, idaccount))
+        },
         update_me: (data) => {
             dispatch(actUpdateMeRequset(data))
         },

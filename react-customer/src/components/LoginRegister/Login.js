@@ -32,7 +32,7 @@ class Login extends Component {
 
   handleLoginGoogle = async event =>{
     event.preventDefault();
-    window.location.replace("http://localhost:8080/oauth2/authorize/google");
+    window.location.replace("http://banlinhkienpt.us-west-2.elasticbeanstalk.com/oauth2/authorize/google");
   }
 
   handleSubmit = async event => {

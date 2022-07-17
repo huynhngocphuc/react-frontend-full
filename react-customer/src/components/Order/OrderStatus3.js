@@ -126,10 +126,11 @@ class OrderStatus3 extends Component {
     render() {
         const { orders } = this.props
         const { idOrderReview, idProductReview, ratingPoint, textRating } = this.state
+
         console.log(orders)
         return (
             <div className="content-inner">
-                <section className="tables pt-3">
+                <section className="tables">
                     <div className="container-fluid">
                         <div className="row">
                             <div className="col-lg-12">
@@ -227,23 +228,30 @@ class OrderStatus3 extends Component {
                                                                         <tr key={index}>
 
                                                                             <th scope="row">{item.orderId}</th>
-                                                                            <td>
-                                                                                {item.productName}
-                                                                                <strong
-                                                                                    className="product-quantity"
-                                                                                    style={{
-                                                                                        paddingLeft: 10,
-                                                                                        color: "coral",
-                                                                                        fontStyle: "italic",
-                                                                                    }}
-                                                                                >
-                                                                                    x{item.quantity}
-                                                                                </strong>
+                                                                            <td className='d-flex'>
+                                                                                <div className="fix-order">
+                                                                                    <img src={item.productImage} className="fix-img-order" alt="not found" />
+                                                                                </div>
+                                                                                <div>
+                                                                                    <h6 className='pl-3 pt-10'>{item.productName}</h6>
+                                                                                    <strong
+                                                                                        className="product-quantity"
+                                                                                        style={{
+                                                                                            paddingLeft: 10,
+                                                                                            color: "coral",
+                                                                                            fontStyle: "italic",
+                                                                                        }}
+                                                                                    >
+                                                                                        x{item.quantity}
+                                                                                    </strong>
+                                                                                </div>
+
+
 
                                                                             </td>
                                                                             {/* <td>{formatNumber.format(item.amount)}</td> */}
                                                                             <td>
-                                                                                <Moment format="YYYY/MM/DD">
+                                                                                <Moment format="DD/MM/YYYY">
                                                                                     {item.createDate}
                                                                                 </Moment>
                                                                             </td>
@@ -278,7 +286,7 @@ class OrderStatus3 extends Component {
                                                     )
                                                     :
                                                     (
-                                                        <img src='https://firebasestorage.googleapis.com/v0/b/react-uploadimage-5d9bf.appspot.com/o/ordernull.png?alt=media&token=1029348f-1f9e-4022-b4bd-0c9a81513a95' className="rounded mx-auto d-block"></img>
+                                                        <img src='https://brabantia.com.vn/images/cart-empty.png' className="rounded mx-auto d-block"></img>
 
                                                     )
                                             }

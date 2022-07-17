@@ -87,6 +87,7 @@ class User extends Component {
   render() {
     let { users } = this.props;
     const { searchText, total } = this.state;
+    console.log("user nè",users)
     return (
       <div className="content-inner">
         {/* Page Header*/}
@@ -144,7 +145,7 @@ class User extends Component {
                               <tr key={index}>
                                 <th scope="row">{index + 1}</th>
                                 <td>{item.gmailCustomer}</td>
-                                <td>{item.fullnameCustomer}</td>
+                                <td>{item.lastName}</td>
                                 <td>{item.userCustomer}</td>
                                 <td>{item.phoneNumberCustomer}</td>
                                 <td>{item.address}</td>

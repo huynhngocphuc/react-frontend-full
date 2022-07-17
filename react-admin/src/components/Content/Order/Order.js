@@ -4,6 +4,8 @@ import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'react-moment';
 import { actFetchOrdersRequest, actApproveOrdersRequest, actDeleteOrderRequest } from '../../../redux/actions/order';
+import { actFetchDashboardRequest} from '../../../redux/actions/dashboard'
+
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Paginator from 'react-js-paginator';
@@ -34,6 +36,7 @@ class Order extends Component {
   componentDidMount() {
     const { statusPage } = this.state
     this.fetch_reload_data(statusPage);
+    
   }
 
   fetch_reload_data(statusPage) {
@@ -78,6 +81,8 @@ class Order extends Component {
     const id = event.target.value;
     const { statusPage, currentPage } = this.state
     await this.props.approveOrder(id, statusPage, currentPage);
+    await this.props.fetch_dashboard();
+    
   }
   handleRemove = (id) => {
     MySwal.fire({
@@ -106,7 +111,7 @@ class Order extends Component {
   render() {
     const { orders } = this.props;
     const { searchText, total, statusPage } = this.state;
-
+    console.log(orders)
     return (
       <div className="content-inner">
         {/* Page Header*/}
@@ -132,20 +137,7 @@ class Order extends Component {
                     {/* <button onClick={()=>this.downloadExcel()} style={{ border: 0, background: "white" }}> <i className="fa fa-file-excel-o"
                         style={{fontSize: 18, color: '#1d7044'}}> Excel</i></button> */}
                   </div>
-                  {/* <form
-                    onSubmit={(event) => this.handleSubmit(event)}
-                    className="form-inline md-form form-sm mt-0" 
-                    style={{ justifyContent: 'flex-end', paddingTop: 5, paddingRight: 20 }}>
-                    <div>
-                      <button style={{ border: 0, background: 'white' }}><i className="fa fa-search" aria-hidden="true"></i></button>
-                      <input
-                        name="searchText"
-                        onChange={this.handleChange}
-                        value={searchText}
-                        className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
-                        aria-label="Search" />
-                    </div>
-                  </form> */}
+                  
                   <div className="card-body">
                     <div className="table-responsive">
                       <table className="table table-hover">
@@ -170,7 +162,7 @@ class Order extends Component {
                             return (
                               <tr key={index}>
                                 <th scope="row">{item.orderId}</th>
-                                <td>{item.customerFKDto.fullnameCustomer}</td>
+                                <td>{item.customerFKDto.lastName}</td>
                                 <td>{item.phoneNumber}</td>
                                 <td>
                                   <div className="col">
@@ -229,6 +221,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    fetch_dashboard: () => {
+      dispatch(actFetchDashboardRequest())
+    },
     fetch_orders: (status, offset) => {
       return dispatch(actFetchOrdersRequest(status, offset))
     },

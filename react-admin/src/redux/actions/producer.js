@@ -40,6 +40,7 @@ export const actAddProducerRequest = (data) => {
       toast.success('Thêm nhà cung cấp thành công')
       dispatch(actAddProducer(res.data));
     }
+    return res
   }
 }
 

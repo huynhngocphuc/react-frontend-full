@@ -24,7 +24,8 @@ class ActionUser extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            fullname: '',
+            lastName: '',
+            firstName:'',
             userCustomer: '',
             gmailCustomer: '',
             phoneNumber: '',
@@ -37,8 +38,10 @@ class ActionUser extends Component {
     async componentDidMount() {
         if (id) {
             const res = await callApi(`customer/${id}`, 'GET');
+            console.log("user",res.data)
             this.setState({
-                fullname: res.data.fullnameCustomer,
+                lastName: res.data.lastName,
+                firstName:res.data.firstName,
                 userCustomer: res.data.userCustomer,
                 gmailCustomer: res.data.gmailCustomer,
                 phoneNumber: res.data.phoneNumberCustomer,
@@ -61,23 +64,22 @@ class ActionUser extends Component {
 
     handleSubmit = async (event) => {
         event.preventDefault();
-        const { fullname, userCustomer, gmailCustomer, phoneNumber, address } = this.state;
+        const { lastName, firstName, phoneNumber, address } = this.state;
         this.setState({
             loading: true
         })
-
-
-
-
         const newAddress = (address === '') ? null : address
         const newPhone = (phoneNumber === '') ? null : phoneNumber
-        const newName = (fullname === '') ? null : fullname
+        const newlastName = (lastName === '') ? null : lastName
+        const newfirstName = (firstName === '') ? null : firstName
         if (id) {
             const editUser = {
-                fullname: newName,
+                lastname: newlastName,
+                firstname: newfirstName,
                 phoneNumber: newPhone,
                 address: newAddress
             }
+           
             await this.props.edit_user(id, editUser);
             this.setState({
                 loading: false,
@@ -88,7 +90,7 @@ class ActionUser extends Component {
 
 
     render() {
-        const { fullname, userCustomer, gmailCustomer, phoneNumber, address, redirectToUser, loading } = this.state;
+        const {firstName,lastName ,gmailCustomer, phoneNumber, address, redirectToUser, loading } = this.state;
         if (redirectToUser) {
             return <Redirect to="/customers"></Redirect>
         }
@@ -129,12 +131,16 @@ class ActionUser extends Component {
                                     <div className="card-body">
                                         <form className="form-horizontal" onSubmit={(event) => this.handleSubmit(event)}>
                                             <div className="form-group row">
-                                                <label className="col-sm-3 form-control-label">Tên</label>
-                                                <div className="col-sm-3">
-                                                    <input type="text" onChange={this.handleChange} name="fullname" value={fullname} className="form-control" />
+                                                <label className="col-sm-1 form-control-label">Họ và tên đệm</label>
+                                                <div className="col-sm-2">
+                                                    <input type="text" onChange={this.handleChange} name="firstName" value={firstName} className="form-control" />
                                                 </div>
-                                                <label className="col-sm-3 form-control-label" style={{ textAlign: 'center' }}>Địa chỉ</label>
-                                                <div className="col-sm-3">
+                                                <label className="col-sm-1 form-control-label">Tên</label>
+                                                <div className="col-sm-2">
+                                                    <input type="text" onChange={this.handleChange} name="lastName" value={lastName} className="form-control" />
+                                                </div>
+                                                <label className="col-sm-1 form-control-label" style={{ textAlign: 'center' }}>Địa chỉ</label>
+                                                <div className="col-sm-5">
                                                     <input type="text" onChange={this.handleChange} name="address" value={address} className="form-control" />
                                                 </div>
                                             </div>

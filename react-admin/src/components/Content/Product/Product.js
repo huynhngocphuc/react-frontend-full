@@ -2,11 +2,14 @@ import React, { Component } from 'react'
 import './style.css'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { actFetchProductsRequest,actDeleteProductRequest } from '../../../redux/actions/product';
+import { actFetchProductsRequest, actDeleteProductRequest, actGetProductOfKeyRequest, actGetProductOfCatagoryRequest,actActiveProductRequest } from '../../../redux/actions/product';
+import { actFetchCategoriesRequest } from '../../../redux/actions/category';
+import Switch from "react-switch";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import MyFooter from '../../MyFooter/MyFooter'
 import Paginator from 'react-js-paginator';
+import { is_empty } from '../../../utils/validations';
 const MySwal = withReactContent(Swal)
 
 let token;
@@ -19,33 +22,67 @@ class Product extends Component {
     this.state = {
       total: 0,
       currentPage: 1,
-      searchText: ''
+      searchText: '',
+      category: "All",
+      dataCategory: []
     }
   }
-  componentDidMount() {
-    this.fetch_reload_data();
-  }
-  fetch_reload_data() {
-    // token = localStorage.getItem('_auth');
-    this.props.fetch_products().then(res => {
+  async componentDidMount() {
+    const { currentPage } = this.state
+    const res = await this.props.fetch_products(currentPage);
+    const resCatagory = await this.props.fetch_catagory();
+    if (res && res.status === 200) {
       this.setState({
-        total: res.totalPage
-      });
-    }).catch(err => {
-      console.log(err);
-    })
-  }
-  pageChange(content) {
+        total: res.data.totalPage,
+        currentPage: res.data.currentPage
+      })
+    }
+    if (resCatagory && resCatagory.status == 200) {
+      this.setState({
+        dataCategory: resCatagory.data
+      })
+    }
 
+  }
+  async pageChange(content) {
+    const { searchText, category, currentPage } = this.state
     const page = content;
-    this.props.fetch_products(page);
-    this.setState({
-      currentPage: content
-    })
+    if (category == "All") {
+      if (is_empty(searchText)) {
+        this.props.fetch_products(page);
+        this.setState({
+          currentPage: content
+        })
+      }
+      else {
+        const res = await this.props.find_products(searchText, page)
+        if (res && res.status == 200) {
+
+          this.setState({
+            currentPage: res.data.currentPage,
+            total: res.data.totalPage,
+          })
+        }
+      }
+    }
+    else {
+      const res = await this.props.find_products_by_catagory(category, page)
+      if (res && res.status == 200) {
+        this.setState(
+          {
+            currentPage: res.data.currentPage,
+            total: res.data.totalPage
+          }
+        )
+      }
+
+    }
+
     window.scrollTo(0, 0);
 
   }
-  handleRemove = (id,name) => {
+  handleRemove = (id,currentPage,name) => {
+    // console.log(currentPage )
     MySwal.fire({
       title: `Xóa sản phẩm ${name} ?`,
       text: "Bạn chắc chắn muốn xóa sản phẩm này !",
@@ -56,7 +93,7 @@ class Product extends Component {
       confirmButtonText: 'Yes'
     }).then(async (result) => {
       if (result.value) {
-        await this.props.delete_product(id, token);
+        await this.props.delete_product(id,currentPage, token);
         Swal.fire(
           'Đã xóa!',
           'Sản phẩm của bạn đã được xóa.',
@@ -65,10 +102,69 @@ class Product extends Component {
       }
     })
   }
+  handleActive = async (id,currentPage,name) => {
+   
+    await this.props.active_product(id,currentPage, token);
+  }
+
+  handleChange = event => {
+    const name = event.target.name;
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    this.setState({
+      [name]: value
+    });
+  }
+
+  handleSearchCategory = async event => {
+    const { catagory, currentPage, total } = this.state
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    this.setState({
+      category: value
+    });
+
+    if (value == "All") {
+
+      const resdata = await this.props.fetch_products("1");
+      if (resdata && resdata.status === 200) {
+        this.setState({
+          total: resdata.data.totalPage,
+          currentPage: resdata.data.currentPage
+        })
+      }
+    }
+    else {
+      const res = await this.props.find_products_by_catagory(value)
+      if (res && res.status == 200) {
+
+        this.setState(
+          {
+            currentPage: res.data.currentPage,
+            total: res.data.totalPage
+          }
+        )
+      }
+    }
+
+  }
+
+  handleSearch = async (event) => {
+    event.preventDefault();
+    const { searchText } = this.state;
+    const res = await this.props.find_products(searchText)
+    if (res && res.status == 200) {
+      this.setState({
+        currentPage: res.data.currentPage,
+        total: res.data.totalPage,
+      })
+    }
+  }
+
+
 
   render() {
     let { products } = this.props;
-    const { searchText, total } = this.state;
+    const { searchText, total, dataCategory, category, currentPage } = this.state;
+    console.log(products)
     return (
       <div className="content-inner">
         {/* Page Header*/}
@@ -94,33 +190,63 @@ class Product extends Component {
                     <button style={{ border: 0, background: "white" }}> <i className="fa fa-file-excel-o"
                       style={{ fontSize: 18, color: '#1d7044' }}> Excel</i></button>
                   </div> */}
-                  <form
-                    className="form-inline md-form form-sm mt-0"
-                    style={{ justifyContent: 'flex-end', paddingTop: 5, paddingRight: 20 }}
-                  >
-                    {/* <div>
-                      <button style={{ border: 0, background: 'white' }}> <i className="fa fa-search" aria-hidden="true"></i></button>
-                      <input
-                        name="searchText"
-                        onChange={this.handleChange}
 
-                        className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
-                        aria-label="Search" />
-                    </div> */}
-                    <Link to='/products/add' className="btn btn-primary" >Thêm mới</Link>
+                  <form
+                    className="form-inline md-form form-sm mt-0 justify-content-between"
+                    style={{ justifyContent: 'flex-end', paddingTop: 5, paddingRight: 20 }}
+                    onSubmit={(event) => this.handleSearch(event)}
+                  >
+                    <div className="col-sm-">
+
+                      {
+                        dataCategory && dataCategory.length > 0 ?
+
+                          <select className="form-control" name="category" value={category} onChange={this.handleSearchCategory}>
+                            <option value="All" >All</option>
+                            {
+
+                              dataCategory.map(item => {
+                                return (
+                                  <option key={item.categoryId} value={item.categoryName} >{item.categoryName}</option>
+                                )
+                              })
+                            }
+
+                          </select>
+                          :
+                          <select className="form-control" name="supplierId" />
+
+
+                      }
+                    </div>
+                    <div className='d-flex'>
+                      <div>
+                        <button style={{ border: 0, background: 'white' }}> <i className="fa fa-search" aria-hidden="true"></i></button>
+                        <input
+                          name="searchText"
+                          onChange={this.handleChange}
+                          className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
+                          aria-label="Tìm kiếm" />
+                      </div>
+                      <Link to='/products/add' className="btn btn-primary" >Thêm mới</Link>
+                    </div>
+
                   </form>
                   <div className="card-body">
                     <div className="table-responsive">
                       <table className="table table-hover">
                         <thead>
                           <tr>
+
                             <th>Tên sản phẩm</th>
+                            <th style={{ textAlign: "center" }}>Ảnh</th>
                             <th>Mô tả</th>
                             <th>Giá</th>
                             <th>Tồn kho</th>
                             {/* <th>Properties</th> */}
-                            <th style={{ textAlign: "center" }}>Ảnh</th>
-                            <th style={{ textAlign: "center" }}>Chức năng</th>
+
+                            <th style={{ textAlign: "center" }}>sửa</th>
+                            <th>trạng thái</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -129,26 +255,39 @@ class Product extends Component {
                               <tr key={index}>
 
                                 <td>{item.productName}</td>
-                                <td><p className="text-truncate" style={{ width: 300 }}>{item.descriptionProduct}</p></td>
-                                <td>{item.unitPrice.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})}</td>
-                                <td>{item.quantity}</td>
-                                {/* <td>{item.properties}</td> */}
                                 <td style={{ textAlign: "center" }}>
                                   <div className="fix-cart">
-                                    <img src={item && item.productImage ? item.productImage : null} className="fix-img" alt="not found" />
+                                    <img src={item && item.productImageSet ? item.productImageSet[0].image : null} className="fix-img" alt="not found" />
                                   </div>
                                 </td>
+                                <td><p className="text-truncate" style={{ width: 300 }}>{item.descriptionProduct}</p></td>
+                                <td>{item.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</td>
+                                <td>{item.quantity}</td>
+                                {/* <td>{item.properties}</td> */}
+
                                 <td style={{ textAlign: "center" }}>
                                   <div>
                                     <span title='Edit' className="fix-action"><Link to={`/products/edit/${item.productId}`}> <i className="fa fa-edit"></i></Link></span>
-                                    <span
-                                      onClick={() => this.handleRemove(item.productId,item.productName)}
+                                    {/* <span
+                                      onClick={() => this.handleRemove(item.productId, item.productName)}
                                       title='Delete'
                                       className="fix-action">
                                       <Link to="#">
                                         <i className="fa fa-trash" style={{ color: '#ff00008f' }}></i>
-                                      </Link></span>
+                                      </Link>
+                                    </span> */}
                                   </div>
+
+                                </td>
+                                <td>
+                                  {
+                                    item.isDelete == 'NO' ? 
+                                    <Switch onChange={() => this.handleRemove(item.productId, currentPage, item.productName)} checked={true} />
+                                    : 
+                                    <Switch onChange={() => this.handleActive(item.productId, currentPage, item.productName)} checked={false} />
+                                    
+                                  }
+                                  
                                 </td>
                               </tr>
                             )
@@ -188,8 +327,20 @@ const mapDispatchToProps = (dispatch) => {
     fetch_products: (page) => {
       return dispatch(actFetchProductsRequest(page))
     },
-    delete_product: (id) => {
-      dispatch(actDeleteProductRequest(id))
+    fetch_catagory: () => {
+      return dispatch(actFetchCategoriesRequest())
+    },
+    find_products_by_catagory: (catagory, page) => {
+      return dispatch(actGetProductOfCatagoryRequest(catagory, page))
+    },
+    find_products: (searchText, page) => {
+      return dispatch(actGetProductOfKeyRequest(searchText, page))
+    },
+    delete_product: (id,currentPage) => {
+      dispatch(actDeleteProductRequest(id,currentPage))
+    },
+    active_product: (id,currentPage) => {
+      dispatch(actActiveProductRequest(id,currentPage))
     }
 
   }

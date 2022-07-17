@@ -19,6 +19,7 @@ import orders from './orders';
 import loading from './loading';
 import search from './search'
 import addresses from './address';
+import wishlist from './wishlist';
 
 const appReducers = combineReducers({
     categories,
@@ -34,7 +35,8 @@ const appReducers = combineReducers({
     orders,
     search,
     addresses,
-    user
+    user,
+    wishlist
 });
 
 export default appReducers;

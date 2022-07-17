@@ -69,8 +69,11 @@ export const actFetchOrders = orders => {
 };
 export const actDeleteOrderRequest = (id) => {
   return async dispatch => {
-    await callApi(`orders/cancel/${id}`, "PUT");
-    dispatch(actDeleteOrder(id));
+    const res = await callApi(`orders/cancel/${id}`, "PUT");
+    if(res && res.status === 200){
+      dispatch(actDeleteOrder(id));
+    }
+  
   };
 };
 

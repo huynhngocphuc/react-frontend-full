@@ -42,13 +42,14 @@ class Category extends Component {
   }
   handleRemove = (id,name) => {
     MySwal.fire({
-      title: `Xóa nhà loại sản phẩm ${name} ?`,
-      text: "Bạn chắc chắn muốn xóa loại sản phẩm này này !",
+      title: `Xóa loại sản phẩm ${name} ?`,
+      text: "Bạn chắc chắn muốn xóa loại sản phẩm này !",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes'
+      confirmButtonText: 'Đúng',
+      cancelButtonText: 'Thoát'
     }).then(async (result) => {
       if (result.value) {
         await this.props.delete_category(id);

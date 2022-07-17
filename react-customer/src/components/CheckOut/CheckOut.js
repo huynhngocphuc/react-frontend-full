@@ -12,6 +12,7 @@ import { actFetchCartRequest, actClearRequest } from '../../redux/actions/cart';
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import "./style.css";
+import { is_empty } from "../../utils/validations";
 const MySwal = withReactContent(Swal);
 
 toast.configure();
@@ -26,7 +27,7 @@ class CheckOut extends Component {
       shippingAddress: false,
       checkout: false,
       result: false,
-      linkPaypal: '',
+      linkReplace: '',
       chooseCheckout: 'COD',
       chooseAddress: -1,
       redirectTo: false
@@ -121,16 +122,29 @@ class CheckOut extends Component {
           startLoading();
           resData = await callApi("payment/vnpay", "POST", newOder);
           if (resData && resData.status == 200) {
-            this.setState({ linkPaypal: resData.data, redirectTo: true })
+            this.setState({ linkReplace: resData.data, redirectTo: true })
           }
-
           doneLoading();
           break;
         case "MOMO":
           startLoading();
+          console.log(window.location.origin +"/order")
           resData = await callApi("payment/momo", "POST", newOder);
+          console.log(resData)
           if (resData && resData.status == 200) {
-            this.setState({ linkPaypal: resData.data.payUrl, redirectTo: true })
+            if(is_empty(resData.data.payUrl))
+            {
+              Swal.fire(
+                'Lỗi!',
+                `${resData.data.localMessage}`,
+                'error'
+              )
+              this.setState({ linkReplace: `${window.location.origin}/order/status1`, redirectTo: true })
+            }
+            else{
+              this.setState({ linkReplace: resData.data.payUrl, redirectTo: true })
+            }
+           
           }
           doneLoading();
           break;
@@ -138,7 +152,7 @@ class CheckOut extends Component {
           startLoading();
           resData = await callApi("payment/paypal", "POST", newOder);
           if (resData && resData.status == 200) {
-            this.setState({ linkPaypal: resData.data.link, redirectTo: true })
+              this.setState({ linkReplace: resData.data.link, redirectTo: true })
           }
           doneLoading();
           break
@@ -181,14 +195,14 @@ class CheckOut extends Component {
       shippingAddress,
       checkout,
       result,
-      linkPaypal,
+      linkReplace,
       chooseCheckout,
       chooseAddress
     } = this.state;
     const { addresses } = this.props
 
     if (redirectTo) {
-      return window.location.replace(linkPaypal)
+      return window.location.replace(linkReplace)
     }
     return (
       <div className="checkout-area pt-60 pb-30">

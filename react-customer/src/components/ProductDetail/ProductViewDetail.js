@@ -90,7 +90,7 @@ class ProductViewDetail extends Component {
 
   render() {
     const settings = {
-      customPaging: function(i) {
+      customPaging: function (i) {
         return (
           <Link to="#">
             <img style={{ height: 70, width: "auto" }} src={product.productImageList[i].image} alt="not found" />
@@ -140,29 +140,40 @@ class ProductViewDetail extends Component {
               <div className="product-details-view-content sp-normal-content pt-60">
                 <div className="product-info">
                   <h2>{product.productName}</h2>
+                  {
+                    product.isDelete == 'YES' ?
+                      <h1 className="font-weight-bold">Sản phẩm ngừng kinh doanh</h1>
+                      :
+                      <div className="price-box pt-20">
+                      <span className="new-price new-price-2 mr-30">
+                        {product && product.unitPrice ? product.priceAfterDiscount.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : null}
+                      </span>
+                      {
+                        product.discount > 0 ?
+                          (
+                            <span className="new-price new-price-2" style={{ color: 'black', textDecoration: "line-through" }}>
+                              {product && product.unitPrice ? product.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : null}
+                            </span>
+                          ) :
+                          null
+  
+                      }
+  
+                    </div>
+                  }
 
-                  <div className="price-box pt-20">
-                    <span className="new-price new-price-2 mr-30">
-                      {product && product.unitPrice ? product.priceAfterDiscount.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : null}
-                    </span>
-                    {
-                      product.discount > 0 ?
-                        (
-                          <span className="new-price new-price-2" style={{ color: 'black', textDecoration: "line-through" }}>
-                            {product && product.unitPrice ? product.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' }) : null}
-                          </span>
-                        ) :
-                        null
-
-                    }
-
-                  </div>
+              
                   <div className="product-desc">
                     <p>
                       <span dangerouslySetInnerHTML={{ __html: product.descriptionProduct }}></span>
                     </p>
                   </div>
-                  <div className="single-add-to-cart">
+
+                  {
+                    product.isDelete == 'YES' ?
+                    null
+                    :
+                    <div className="single-add-to-cart">
                     <form className="cart-quantity">
                       <div className="quantity">
                         <label>Số lượng</label>
@@ -193,6 +204,8 @@ class ProductViewDetail extends Component {
                       </div>
                     </form>
                   </div>
+                  }
+                
                 </div>
               </div>
             </div>
@@ -217,8 +230,8 @@ class ProductViewDetail extends Component {
             >
               <div className="product-description">
                 <span dangerouslySetInnerHTML={{ __html: product.descriptionProduct }}></span>
-              
-                <RatingView rating ={product.rating} listReviews = {product.listReviews}></RatingView>
+
+                <RatingView rating={product.rating} listReviews={product.listReviews}></RatingView>
                 {
                   product.listReviews ? (
 

@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 
-import { Link,Redirect } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import { actGetProductRequest } from '../../redux/actions/products';
+import { actAddWishListRequest } from '../../redux/actions/wishlist'
 import { actAddCartRequest } from "../../redux/actions/cart";
 import { startLoading, doneLoading } from '../../utils/loading'
 import { connect } from 'react-redux'
@@ -11,6 +12,7 @@ import BeautyStars from 'beauty-stars';
 import './style.css'
 toast.configure()
 let token, id;
+id = parseInt(localStorage.getItem("_id"));
 class ProductItem extends Component {
 
   constructor(props) {
@@ -34,9 +36,8 @@ class ProductItem extends Component {
   }
   addItemToCart = product => {
     const { quantity } = this.state;
-
-    token = localStorage.getItem("_auth");
     id = parseInt(localStorage.getItem("_id"));
+    token = localStorage.getItem("_auth");
     if (!token) {
       this.setState({
         redirectYourLogin: true
@@ -50,14 +51,23 @@ class ProductItem extends Component {
     }
 
   };
+  addItemToFavorite = (productId) => {
+    startLoading()
+    if (!id) {
+      return toast.error('vui lòng đăng nhập !')
+    }
+    this.props.addWishList(id, productId);
+    doneLoading();
+  }
 
   render() {
     const { product } = this.props;
     const { quantity, redirectYourLogin } = this.state;
+    console.log(product)
     if (redirectYourLogin) {
-      return <Redirect to ='/login'></Redirect>
+      return <Redirect to='/login'></Redirect>
     }
-    
+
     return (
       <div className="col-lg-3 col-md-4 col-sm-6 mt-40">
         {/* single-product-wrap start */}
@@ -67,31 +77,46 @@ class ProductItem extends Component {
               <img className="fix-img" src={product.productImageSet[0].image} alt="Li's Product " />
             </Link>
             {
-              product.discount > 0 ? (
+              product.discount > 0 && product.isDelete == 'NO' ? (
                 <span className="sticker">{product.discount}%</span>
-              ):
-              null
+              ) :
+                null
             }
           </div>
           <div className="product_desc">
             <div className="product_desc_info">
               <h4><Link className="product_name text-truncate" onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`}>{product.productName}</Link></h4>
-              <div className="price-box">
-                <span className="new-price" style={{ color: 'red' }}>{product.priceAfterDiscount.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
-                {
-                   product.discount > 0 ?
-                   (
-                    <span className="new-price" style={{ color: 'black', textDecoration: "line-through" }}>{product.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
-                   ):
-                   null
-                }
-              </div>
+              {
+                product.isDelete == 'NO' ?
+                  <div className="price-box">
+                    <span className="new-price" style={{ color: 'red' }}>{product.priceAfterDiscount.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
+                    {
+                      product.discount > 0 ?
+                        (
+                          <span className="new-price" style={{ color: 'black', textDecoration: "line-through" }}>{product.unitPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</span>
+                        ) :
+                        null
+                    }
+                  </div>
+                  :
+                  null
+              }
+
             </div>
+
             <div className="add-actions">
               <ul className="add-actions-link">
-                <li className="add-cart active"><Link to="#" onClick={() => this.addItemToCart(product)} >Thêm vào giỏ</Link></li>
-                <li><Link onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`} title="quick view" className="quick-view-btn" data-toggle="modal" data-target="#exampleModalCenter"><i className="fa fa-eye" /></Link></li>
-                {/* <li><Link onClick={(id) => this.addItemToFavorite(product.productId)} className="links-details" to="#" title="favorite" ><i className="fa fa-heart-o" /></Link></li> */}
+                {
+                  product.isDelete == 'NO' ?
+                    <div>
+                      <li className="add-cart active"><Link to="#" onClick={() => this.addItemToCart(product)} >Thêm vào giỏ</Link></li>
+                      <li><Link to={`/products/${product.productId}`} title="chi tiểt" className="quick-view-btn" data-toggle="modal" data-target="#exampleModalCenter"><i className="fa fa-eye" /></Link></li>
+                      <li><Link onClick={() => this.addItemToFavorite(product.productId)} className="links-details" to="#" title="yêu thích" ><i className="fa fa-heart-o" /></Link></li>
+                    </div>
+                    :
+                    <h5>sản phẩm ngừng kinh doanh</h5>
+                }
+
               </ul>
             </div>
           </div>
@@ -118,6 +143,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     addCart: (idCustomer, product, quantity) => {
       dispatch(actAddCartRequest(idCustomer, product, quantity));
+    },
+    addWishList: (id, idProduct) => {
+      dispatch(actAddWishListRequest(id, idProduct));
     }
   }
 }

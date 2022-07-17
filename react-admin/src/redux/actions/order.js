@@ -51,7 +51,7 @@ export const actDeliveredOrderRequest = (id,status,page) =>{
   return async dispatch => {
     const res = await callApi(`orders/delivered?page=${newPage}`, 'PUT', data);
     if (res && res.status === 200) {
-      toast.success('duyệt đơn hàng thành công')
+      toast.success('Giao hàng thành công')
       dispatch(actFetchOrdersRequest(status,page));
     }
   }

@@ -3,8 +3,9 @@ let initialState = [];
 
 const findIndexs = (id, state) => {
     let result = -1;
+    console.log("u là trời",state)
     state.forEach((item, index) => {
-        if (item.id === id) {
+        if (item.orderId === id) {
             result = index;
         }
     });

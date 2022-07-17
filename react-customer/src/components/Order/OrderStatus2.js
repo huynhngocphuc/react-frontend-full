@@ -57,7 +57,7 @@ class OrderStatus2 extends Component {
         console.log("oder laays dduioc", orders)
         return (
             <div className="content-inner">
-                <section className="tables pt-3">
+                <section className="tables">
                     <div className="container-fluid">
                         <div className="row">
                             <div className="col-lg-12">
@@ -88,17 +88,26 @@ class OrderStatus2 extends Component {
                                                                                         item.listProduct.map((product, index) => {
                                                                                             return (
                                                                                                 <>
-                                                                                                    <li>{product.productName}
-                                                                                                        <strong
-                                                                                                            className="product-quantity"
-                                                                                                            style={{
-                                                                                                                paddingLeft: 10,
-                                                                                                                color: "coral",
-                                                                                                                fontStyle: "italic",
-                                                                                                            }}
-                                                                                                        >
-                                                                                                            x{product.quantity}
-                                                                                                        </strong>
+                                                                                                    <li className='d-flex' key={index}>
+                                                                                                        <div className="fix-order">
+                                                                                                            <img src={product.productImage} className="fix-img-order" alt="not found" />
+                                                                                                        </div>
+                                                                                                        <div>
+                                                                                                            <h6 className='pl-3 pt-10'>{product.productName}</h6>
+
+                                                                                                            <strong
+                                                                                                                className="pl-3 product-quantity"
+                                                                                                                style={{
+                                                                                                                    paddingLeft: 10,
+                                                                                                                    color: "coral",
+                                                                                                                    fontStyle: "italic",
+                                                                                                                }}
+                                                                                                            >
+                                                                                                                x{product.quantity}
+                                                                                                            </strong>
+                                                                                                        </div>
+
+
                                                                                                     </li>
                                                                                                 </>
 
@@ -124,7 +133,7 @@ class OrderStatus2 extends Component {
                                                         </table>
                                                     ) :
                                                     (
-                                                        <img src='https://firebasestorage.googleapis.com/v0/b/react-uploadimage-5d9bf.appspot.com/o/ordernull.png?alt=media&token=1029348f-1f9e-4022-b4bd-0c9a81513a95' className="rounded mx-auto d-block"></img>
+                                                        <img src='https://brabantia.com.vn/images/cart-empty.png' className="rounded mx-auto d-block"></img>
                                                     )
                                             }
 

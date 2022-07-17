@@ -5,11 +5,13 @@ export default class NavbarOrder extends Component {
     render() {
         return (
 
-            <nav className="side-navbar">
+            <nav className="col-md-2 side-navbar">
+
                 <ul className="list-unstyled">
-                    <li><Link to="/order/status1"> <i className="icon-home" />Đơn đang duyệt </Link></li>
-                    <li><Link to="/order/status2"> <i className="icon icon-bill" />Đơn đang giao</Link></li>
-                    <li><Link to="/order/status3"> <i className="icon-interface-windows" />Đơn đã giao</Link></li>
+                    <li><Link to="/order/status1"> <i className="fa-solid fa-list-check" />Đơn đang duyệt </Link></li>
+                    <li><Link to="/order/status2"> <i className="fa-solid fa-cart-flatbed" />Đơn đang giao</Link></li>
+                    <li><Link to="/order/status3"> <i className="fa-solid fa-clipboard-check" />Đơn đã giao</Link></li>
+                    <li><Link to="/order/status4"> <i className="fa-solid fa-calendar-xmark" />Đơn đã hủy</Link></li>
                 </ul>
             </nav>
 

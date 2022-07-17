@@ -26,7 +26,8 @@ class ActionProducer extends Component {
       supplierImage: '',
       redirectToProducer: false,
       img: null,
-      loading: false
+      loading: false,
+      
     };
     id = this.props.id
   }
@@ -70,18 +71,27 @@ class ActionProducer extends Component {
     if (img !== null && img !== supplierImage) {
       supplierImage = await uploadImage(img);
     }
-    console.log("link ảnh",supplierImage)
     const newSupplierName = supplierName == '' ? null : supplierName;
     const newImage= (supplierImage === '') ? null : supplierImage
     if (!id) {
       const newSupplier = { supplierName: newSupplierName,supplierImage:newImage }
-      await this.props.add_Producer(newSupplier);
-      this.setState({
-        supplierName: '',
-        supplierImage:'',
-        img :null,
-        loading:false
-      })
+      const res = await this.props.add_Producer(newSupplier);
+      if(res && res.status == 201)
+      {
+        this.setState({
+          supplierName: '',
+          img :'',
+          loading:false,
+          redirectToProducer: true
+        })
+      }
+      else{
+        this.setState({
+          loading:false,
+         
+        })
+      }
+     
     }
     else {
       const editSupplier = {
@@ -151,7 +161,7 @@ class ActionProducer extends Component {
 
                       <div className="line" />
                       <div className="form-group row">
-                        <label htmlFor="fileInput" className="col-sm-3 form-control-label">Image</label>
+                        <label htmlFor="fileInput" className="col-sm-3 form-control-label">Hình Ảnh</label>
                         <div className="col-sm-9">
                           <input type="file" onChange={this.handleChangeImage} className="form-control-file" />
                           <div className="fix-cart">
@@ -162,7 +172,7 @@ class ActionProducer extends Component {
                       <div className="line" />
                       <div className="form-group row">
                         <div className="col-sm-4 offset-sm-3">
-                          <button type="reset" className="btn btn-secondary" style={{ marginRight: 2 }}>Thoát</button>
+                          <Link to = '/producers'type="reset" className="btn btn-secondary" style={{ marginRight: 2 }}>Thoát</Link>
                           <button type="submit" className="btn btn-primary">Lưu</button>
                         </div>
                       </div>
@@ -186,7 +196,7 @@ class ActionProducer extends Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     add_Producer: (newProducer) => {
-      dispatch(actAddProducerRequest(newProducer))
+      return dispatch(actAddProducerRequest(newProducer))
     },
     edit_Producer: (id, data) => {
       dispatch(actEditProducerRequest(id, data))

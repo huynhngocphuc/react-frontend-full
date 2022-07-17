@@ -25,6 +25,7 @@ class ActionOrder extends Component {
     async componentDidMount() {
         if (id) {
             const res = await callApi(`orders/detail/${id}`, 'GET');
+            
             const resOrderDetails = res.data.list
             console.log("danh sách sản phẩm", res.data)
             this.setState({
@@ -59,18 +60,7 @@ class ActionOrder extends Component {
         event.preventDefault();
     }
 
-    // sumTotal = (itemAmount, shippingTotal, promoTotal) => {
-    //     const newitemAmount = itemAmount ? itemAmount : 0;
-    //     const newShippingTotal = shippingTotal ? shippingTotal : 0;
-    //     const newpPomoTotal = promoTotal ? promoTotal : 0;
-
-    //     const result = parseInt(newitemAmount) + parseInt(newShippingTotal) - parseInt(newpPomoTotal);
-    //     if (result < 0) {
-    //         return toast.error('ERROR! Total amount can not < 0');
-    //     }
-    //     return result;
-    // }
-
+  
 
 
 
@@ -80,15 +70,8 @@ class ActionOrder extends Component {
         let orderDetailAmount = 0;
         const { history } = this.props
         console.log("props trong action", history)
-        console.log(dataOrderDetails)
-        // if (dataOrderDetails.length > 0) {
-        //     orderDetailAmount = dataOrderDetails.reduce((sum, item) => {
-        //         return sum += item.quantity * item.price
-        //     }, 0)
-        // }
-        // if (redirectToOrder) {
-        //     return <Redirect to='/orders'></Redirect>
-        // }
+        console.log("ủ ủa",dataOrderDetails)
+        
         return (
 
             <div className="content-inner">
@@ -151,7 +134,7 @@ class ActionOrder extends Component {
                                                                                             <td>{item.nameProduct}</td>
                                                                                             <td>
                                                                                                 <div className="fix-cart">
-                                                                                                    <img src={item && item.productImage ? item.productImage : null} className="fix-img" alt="not found" />
+                                                                                                    <img src={item.productImageSet[0].image} className="fix-img" alt="not found" />
                                                                                                 </div>
                                                                                             </td>
                                                                                             <td>{item.quantity}</td>
@@ -213,17 +196,5 @@ class ActionOrder extends Component {
     }
 }
 
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         add_order: (token, newOrder) => {
-//             dispatch(actAddOrderRequest(token, newOrder))
-//         },
-//         get_order: (token, id) => {
-//             dispatch(actGetOrderRequest(token, id))
-//         },
-//         edit_order: (token, id, data) => {
-//             dispatch(actEditOrderRequest(token, id, data))
-//         }
-//     }
-// }
+
 export default (ActionOrder)

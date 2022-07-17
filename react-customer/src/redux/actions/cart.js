@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import callApi from '../../utils/apiCaller';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from "sweetalert2";
+import { actShowLoading, actHiddenLoading } from './loading'
 import withReactContent from "sweetalert2-react-content";
 
 
@@ -115,8 +116,10 @@ export const actUpdateCart = (item) => {
 
 export const actClearRequest = () => {
     return async dispatch => {
+      
         localStorage.setItem('_cart', JSON.stringify([]) );
         dispatch(actClearCart());
+        
     };
 }
 export const actClearCart = (clear) => {

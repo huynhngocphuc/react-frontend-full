@@ -5,13 +5,15 @@ import { toast } from 'react-toastify';
 import { actGetProductRequest } from '../../../../redux/actions/products';
 import { startLoading, doneLoading } from '../../../../utils/loading'
 import { actAddCartRequest } from "../../../../redux/actions/cart"
-
+import {actAddWishListRequest} from '../../../../redux/actions/wishlist'
 import { connect } from 'react-redux'
 import 'react-toastify/dist/ReactToastify.css';
 import BeautyStars from 'beauty-stars';
 import './style.css'
 toast.configure()
 let token,id;
+id = parseInt(localStorage.getItem("_id"));
+
 class TopTreddingProductItems extends Component {
 
   constructor(props) {
@@ -51,6 +53,15 @@ class TopTreddingProductItems extends Component {
     }
     
   };
+  addItemToFavorite = (productId) => {
+    startLoading()
+    if (!id) {
+      return toast.error('vui lòng đăng nhập !')
+    }
+    this.props.addWishList(id,productId);
+    doneLoading();
+  }
+
 
   render() {
     const { product } = this.props;
@@ -86,7 +97,7 @@ class TopTreddingProductItems extends Component {
            <ul className="add-actions-link">
              <li className="add-cart active"><Link to="#" onClick={() => this.addItemToCart(product)} >Thêm vào giỏ</Link></li>
              <li><Link onClick={(id) => this.getInfoProduct(product.productId)} to={`/products/${product.productId}`} title="quick view" className="quick-view-btn" data-toggle="modal" data-target="#exampleModalCenter"><i className="fa fa-eye" /></Link></li>
-             {/* <li><Link onClick={(id) => this.addItemToFavorite(product.productId)} className="links-details" to="#" title="favorite" ><i className="fa fa-heart-o" /></Link></li> */}
+             <li><Link onClick={() => this.addItemToFavorite(product.productId)} className="links-details" to="#" title="favorite" ><i className="fa fa-heart-o" /></Link></li>
            </ul>
          </div>
        </div>
@@ -111,6 +122,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     addCart: (idCustomer,product,quantity) => {
       dispatch(actAddCartRequest(idCustomer,product,quantity));
+    },
+    addWishList: (id,idProduct) =>{
+      dispatch(actAddWishListRequest(id, idProduct));
     }
   }
 }

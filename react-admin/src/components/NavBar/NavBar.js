@@ -29,9 +29,10 @@ class NavBar extends Component {
   }
   render() {
 
-
+    const {dashboard} = this.props
     const { user } = this.state;
     const newUser = user && user.length ? user[0] : null;
+    console.log(dashboard)
 
     return (
       <nav className="side-navbar">
@@ -52,9 +53,23 @@ class NavBar extends Component {
           <li><Link to="/"> <i className="icon-home" />Trang chủ</Link></li>
           <li><Link to="/orders/status1"> <i className="icon icon-bill" /> Đơn hàng </Link>
             <ul className="list-unstyled">
-              <li><Link to="/orders/status1"> Chờ duyệt</Link></li>
-              <li><Link to="/orders/status2">Đang giao</Link></li>
-              <li><Link to="/orders/status3">Đã giao</Link></li>
+              <li>
+                <Link to="/orders/status1"> Chờ duyệt
+                  <span class="ml-3 badge badge-danger">{dashboard.newOrders}</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/orders/status2">
+                  Đang giao
+                  <span class="ml-3 badge badge-warning">{dashboard.quantityOfApprovedOrder}</span>
+                </Link>
+              </li>
+
+              <li>
+                <Link to="/orders/status3">Đã giao
+                <span class="ml-3 badge badge-success">{dashboard.quantityOfDeliveredOrder}</span>
+                </Link>
+                </li>
             </ul>
           </li>
 
@@ -62,7 +77,7 @@ class NavBar extends Component {
           <li><Link to="/products"> <i className="icon icon-website" />Sản phẩm</Link></li>
           <li><Link to="/producers"> <i className="icon icon-list-1" />Nhà cung cấp</Link></li>
           <li><Link to="/customers"> <i className="icon icon-user" />QL người dùng</Link></li>
-          
+
         </ul>
 
       </nav>
@@ -73,6 +88,7 @@ class NavBar extends Component {
 const mapStateToProps = (state) => {
   return {
     nameRole: state.nameRole,
+    dashboard: state.dashboard,
   }
 }
 

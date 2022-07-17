@@ -4,6 +4,7 @@ import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'react-moment';
 import { actFetchOrdersRequest, actDeliveredOrderRequest, actDeleteOrderRequest } from '../../../redux/actions/order';
+import { actFetchDashboardRequest} from '../../../redux/actions/dashboard'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import Paginator from 'react-js-paginator';
@@ -74,12 +75,11 @@ class OrderStatus2 extends Component {
       [name]: value
     });
   }
-  handleBrowse = (event) => {
+  handleBrowse = async (event) => {
     const id = event.target.value;
-
-
     const { statusPage, currentPage } = this.state
-    this.props.deliveredOrder(id, statusPage, currentPage);
+    await this.props.deliveredOrder(id, statusPage, currentPage);
+    await this.props.fetch_dashboard();
 
   }
   handleRemove = (id) => {
@@ -175,7 +175,7 @@ class OrderStatus2 extends Component {
                             return (
                               <tr key={index}>
                                 <th scope="row">{item.orderId}</th>
-                                <td>{item.customerFKDto.fullnameCustomer}</td>
+                                <td>{item.customerFKDto.lastName}</td>
                                 <td>{item.phoneNumber}</td>
                                 <td>
                                   <div className="col">
@@ -236,6 +236,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetch_orders: (status, offset) => {
       return dispatch(actFetchOrdersRequest(status, offset))
+    },
+    fetch_dashboard: () => {
+      dispatch(actFetchDashboardRequest())
     },
     deliveredOrder: (id, status, page) => {
       return dispatch(actDeliveredOrderRequest(id, status, page))

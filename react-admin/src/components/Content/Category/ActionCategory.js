@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import { Link } from 'react-router-dom';
 import { actAddCategoryRequest, actEditCategoryRequest } from '../../../redux/actions/category';
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom';
@@ -130,7 +130,7 @@ class ActionCategory extends Component {
                       <div className="line" />
                       <div className="form-group row">
                         <div className="col-sm-4 offset-sm-3">
-                          <button type="reset" className="btn btn-secondary" style={{ marginRight: 2 }}>Cancel</button>
+                          <Link to='/categories' type="reset" className="btn btn-secondary" style={{ marginRight: 2 }}>Thoát</Link>
                           <button type="submit" className="btn btn-primary">Lưu</button>
                         </div>
                       </div>

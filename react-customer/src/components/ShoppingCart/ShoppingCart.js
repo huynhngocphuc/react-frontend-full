@@ -91,7 +91,7 @@ class ShoppingCart extends Component {
               (
                 <div className="row">
                   <div className="col-sm-12 col-xs-12">
-                    <img src='./images/cartnull.png' className="rounded mx-auto d-block"></img>
+                    <img src='https://brabantia.com.vn/images/cart-empty.png' className="rounded mx-auto d-block"></img>
                   </div>
                 </div>
               )

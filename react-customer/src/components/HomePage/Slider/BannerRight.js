@@ -7,12 +7,12 @@ export default class BannerRight extends Component {
       <div className="col-lg-4 col-md-4 text-center pt-xs-30">
         <div className="li-banner">
           <Link to="#">
-            <img src="https://i.ibb.co/FHr1bng/1-1.jpg" alt="not found" />
+            <img src="./images/slider/2.jpg" alt="not found" />
           </Link>
         </div>
         <div className="li-banner mt-15 mt-sm-30 mt-xs-30">
           <Link to="#">
-            <img src="https://i.ibb.co/27bsVKQ/1-2.jpg" alt="not found" />
+            <img src="./images/slider/3.jpg" alt="not found" />
           </Link>
         </div>
       </div>

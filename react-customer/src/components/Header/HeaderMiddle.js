@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { actFetchCartRequest } from '../../redux/actions/cart';
 import { startLoading, doneLoading } from '../../utils/loading'
 import { actGetProductOfKeyRequest } from '../../redux/actions/products'
+import{actFetchWishListRequest} from '../../redux/actions/wishlist'
 
 
 
@@ -21,6 +22,7 @@ class HeaderMiddle extends Component {
     id = localStorage.getItem("_id");
     if(token){
       this.props.fetch_items(id);
+      this.props.fetch_wishlist(id);
     }
       
   }
@@ -51,15 +53,15 @@ class HeaderMiddle extends Component {
 
   render() {
     const { textSearch } = this.state;
-    const { countCart } = this.props;
+    const { countCart,countWishList } = this.props;
     let count = 0;
-    console.log(countCart)
-
+    let count2 = 0;
     if (countCart.length > 0) {
       countCart.forEach(item => {
        count+=item.quantity
       });    
     }
+    console.log("yêu thích",countWishList)
     return (
       <div className="header-middle pl-sm-0 pr-sm-0 pl-xs-0 pr-xs-0">
         <div className="container">
@@ -102,12 +104,12 @@ class HeaderMiddle extends Component {
               <div className="header-middle-right">
                 <ul className="hm-menu">
                   {/* Begin Header Middle Wishlist Area */}
-                  {/* <li className="hm-wishlist">
-                    <Link to="/product-favorites">
-                      <span className="cart-item-count wishlist-item-count"></span>
-                      <i className="far fa-heart" />
+                  <li className="hm-wishlist">
+                    <Link to="/wishlist">
+                      <span className="cart-item-count wishlist-item-count"> {countWishList.length}</span>
+                      <i className="fa fa-heart-o" />
                     </Link>
-                  </li> */}
+                  </li>
                   {/* Header Middle Wishlist Area End Here */}
                   {/* Begin Header Mini Cart Area */}
                   <li className="hm-minicart">
@@ -133,7 +135,8 @@ class HeaderMiddle extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    countCart: state.cart
+    countCart: state.cart,
+    countWishList: state.wishlist 
   }
 }
 
@@ -144,6 +147,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     fetch_items: (id) => {
       dispatch(actFetchCartRequest(id))
+    },
+    fetch_wishlist: (id)=>{
+      dispatch(actFetchWishListRequest(id))
     }
   }
 }

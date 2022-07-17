@@ -6,12 +6,10 @@ import { actShowLoading, actHiddenLoading } from './loading'
 // lấy toàn bộ sản phẩm
 export const actFetchProductsRequest = (page) => {
     const newPage = page === null || page === undefined ? 1 : page
-
-
     return dispatch => {
         dispatch(actShowLoading());
         return new Promise((resolve, reject) => {
-            callApi(`view/product/search?page=${newPage}`, 'GET')
+            callApi(`view/product/all?page=${newPage}`, 'GET')
                 .then(res => {
                     if (res && res.status === 200) {
                         console.log("đây là trả về", res.data.listProduct)

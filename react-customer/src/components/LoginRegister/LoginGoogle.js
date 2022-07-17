@@ -18,9 +18,9 @@ class LoginGoogle extends Component {
       }
     async componentWillMount()
     {
-        const {token,customerId,id} = this.props
-        console.log(`id cac thu ${token,customerId,id}`)
-        this.props.loginGoogleRequest(token,customerId,id);
+        const {token,customerId,id,provider} = this.props
+        console.log(`id cac thu ${provider}`)
+        await this.props.loginGoogleRequest(token,customerId,id,provider);
     }
     // async componentDidMount(){
     //     const {orderid,paymentId,PayerID} = this.props
@@ -65,8 +65,8 @@ const mapStateToProps = (state) => {
   }
 const mapDispatchToProps = (dispatch) => {
     return {
-      loginGoogleRequest: (token,customerId,id) => {
-        dispatch(actLoginGoogleRequest(token,customerId,id))
+      loginGoogleRequest: (token,customerId,id,provider) => {
+        dispatch(actLoginGoogleRequest(token,customerId,id,provider))
       }
     }
   }

@@ -62,8 +62,8 @@ class Dashboard extends Component {
     
 
     const from = startDateRevenue.getFullYear() + "-" + (startDateRevenue.getMonth() + 1) + "-" + startDateRevenue.getDate() + " " + "00:00:00";
-    const to = endDateRevenue.getFullYear() + "-" + (endDateRevenue.getMonth() + 1) + "-" + endDateRevenue.getDate() + " " + "00:00:00";
-    const dateCurent = dateNow.getFullYear() + "-" + (dateNow.getMonth() + 1) + "-" + dateNow.getDate() + " " + "00:00:00";
+    const to = endDateRevenue.getFullYear() + "-" + (endDateRevenue.getMonth() + 1) + "-" + endDateRevenue.getDate() + " " + "23:50:00";
+    const dateCurent = dateNow.getFullYear() + "-" + (dateNow.getMonth() + 1) + "-" + dateNow.getDate() + " " + "23:58:00";
    if((new Date(from).getTime()) >= (new Date(to).getTime()))
    {
      toast.error('Ngày bắt đầu nhỏ hơn ngày kết thúc')
@@ -179,7 +179,7 @@ class Dashboard extends Component {
 
                 <form onSubmit={this.onFormSubmit}>
                   <div className='row'>
-                    <div className="col-6">
+                    <div className="col-md-6">
                       <strong className='mr-2'>Từ</strong>
                       <DateTimePicker
                         onChange={(date) => this.handleChangeDate(date, 'startDateRevenue')}
@@ -188,7 +188,7 @@ class Dashboard extends Component {
                         format="dd/MM/y"
                       />
                     </div>
-                    <div className="col-6">
+                    <div className="col-md-6">
                       <strong className='mr-2' >Đến</strong>
                       <DateTimePicker
                         onChange={(date) => this.handleChangeDate(date, 'endDateRevenue')}
@@ -246,7 +246,7 @@ class Dashboard extends Component {
                           <td>{item.quantity}</td>
                           <td style={{ textAlign: "center" }}>
                             <div className="fix-cart">
-                              <img src={item && item.productImage ? item.productImage : null} className="fix-img" alt="not found" />
+                              <img src={item && item.productImageSet ? item.productImageSet[0].image : null} className="fix-img" alt="not found" />
                             </div>
                           </td>
                         </tr>

@@ -7,11 +7,11 @@ export default class Slider extends Component {
     return (
       <div className="slider-with-banner">
         <div className="container">
-          <div className="row">
+          <div className="row align-items-center">
             {/* Begin Slider Area */}
             <SliderLeft></SliderLeft>
             {/* Slider Area End Here */}
-
+            <BannerRight></BannerRight>
             {/* Begin Li Banner Area */}
             {/* <BannerRight></BannerRight>t */}
             {/* Li Banner Area End Here */}

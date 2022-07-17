@@ -6,8 +6,8 @@ const user = (state = initialState, action) => {
         case Types.FETCH_USER:
             state = action.user;
             return state;
-        case Types.FETCH_UPDATE:
-            state = action.user;
+        case Types.UPDATE_USER:
+            state = Object.assign({},state,action.user);
             return state;
         default: return state;
     }

@@ -22,20 +22,22 @@ export const actLoginRequest = (user) => {
     };
 }
 
-export const actLoginGoogleRequest = (token, customerId, id) => {
+export const actLoginGoogleRequest = (token, customerId, id,provider) => {
     return async dispatch => {
-        const res = await callApi(`auth/oauth/google?id=${id}&customerId=${customerId}`, 'GET');
+        const res = await callApi(`auth/oauth/google?id=${id}&customerId=${customerId}&provider=${provider}`, 'GET');
 
-        console.log(`duw lieu xem co ten khong${res.data}`)
-        // const token = res.data.token
-        // const id = res.data.customerId
-        // const idAccount = res.data.id
+        console.log(`duw lieu xem co ten khong${provider}`)
         localStorage.setItem('_auth', token);
         localStorage.setItem('_id', customerId);
         localStorage.setItem('_idaccount',id)
+        const data = {provider,...res.data}
+        if(res && res.status === 200)
+        {
+            dispatch(actLogin(token));
+            dispatch(actFetchUser(data));
+        }
+       
         
-        dispatch(actLogin(token));
-        dispatch(actFetchUser(res.data));
 
 
     };
@@ -112,37 +114,9 @@ export const actPasswordRequest = (user) => {
 //     };
 // }
 
-
-export const actUpdateMeRequset = (data) => {
-    return async dispatch => {
-        const res = await callApi('account/profile', 'PUT', data);
-        if (res && res.status === 200) {
-            console.log(res.data)
-            dispatch(actUpdateUser(res.data));
-            toast.success('Cập nhập tài khoản thành công')
-        }
-    };
-}
-
-export const actChangePasswordMeRequset = (data) => {
-    return async dispatch => {
-        const res = await callApi('account/password', 'PUT', data);
-        if (res && res.status === 200) {
-            toast.success('Thay đổi mật khẩu thành công')
-        }
-    };
-}
-
 export const actFetchUser = (user) => {
     return {
         type: Types.FETCH_USER,
         user
     }
 }
-export const actUpdateUser = (user) => {
-    return {
-        type: Types.FETCH_UPDATE,
-        user
-    }
-}
-

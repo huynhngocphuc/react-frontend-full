@@ -7,7 +7,7 @@
   height: 90%;
   width: 90% !important;
   object-fit: contain;
-  padding: 10px;
+  
 }
 .fix-rating {
   display: inline-block;
@@ -147,7 +147,7 @@
 }
 
 .slick-list {
-  height: 395px !important;
+  height: 430px  !important;
   margin-top: 35px !important;
 }
 

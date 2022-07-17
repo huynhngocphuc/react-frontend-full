@@ -25,21 +25,28 @@ class ActionProduct extends Component {
 
   constructor(props) {
     super(props);
+    this.onDrop = (files) => {
+      let data = this.state.filesImage
+      data = data.concat(files)
+
+      this.setState({
+        filesImage: data
+      })
+    };
 
     this.state = {
       productName: '',
       quantity: 0,
-      // hình để đưa lên firebase
-      productImage: '',
+      productImageSet: [],
+      filesImage: [],
       discount: 0,
       unitPrice: 0,
       descriptionProduct: '',
       dataCategories: [],
-      dataProducer: [],
+      dataSupplieres: [],
       categoryId: 1,
       supplierId: 1,
       // hình để đưa ra giao diện
-      img: null,
       redirectToProduct: false,
       loading: false,
     };
@@ -48,30 +55,37 @@ class ActionProduct extends Component {
 
   async componentDidMount() {
     if (id) {
-      const res = await callApi(`product/${id}`, 'GET', null);
+      const res = await callApi(`product/${id}`, 'GET');
       if (res && res.status === 200) {
-        console.log("dữ liệu trả về", res.data, res.data.supplierFKDto.supplierId)
+        console.log("dữ liệu trả về", res.data)
         this.setState({
           productName: res.data.productName,
           quantity: res.data.quantity,
-          productImage: res.data.productImage,
+          productImageSet: res.data.productImageSet,
           discount: res.data.discount,
           unitPrice: res.data.unitPrice,
           descriptionProduct: res.data.descriptionProduct,
-          categoryId:res.data.categoryFKDto.categoryId,
-          supplierId: res.data.supplierFKDto.supplierId
+          categoryId: res.data.categoryFKDto.categoryId,
+          supplierId: res.data.supplierFKDto.supplierId,
+
         })
       }
     }
+    const resCategories = await callApi('category/all', 'GET');
+    if (resCategories && resCategories.status === 200) {
+      this.setState({
+        dataCategories: resCategories.data
+      })
+    }
+    console.log("dữ liệu trả về 2", resCategories.data)
+    const resSupplieres = await callApi('supplier/all', 'GET');
+    if (resSupplieres && resSupplieres.status === 200) {
+      this.setState({
+        dataSupplieres: resSupplieres.data
+      })
+    }
 
-    const resCategories = await callApi('category/all', 'GET', null);
-    this.setState({
-      dataCategories: resCategories.data
-    })
-    const resProducer = await callApi('supplier/all', 'GET', null);
-    this.setState({
-      dataProducer: resProducer.data
-    })
+    console.log("dữ liệu trả về 3", resSupplieres.data)
 
   }
 
@@ -100,6 +114,26 @@ class ActionProduct extends Component {
   handleChangeEditor = (value) => {
     this.setState({ descriptionProduct: value })
   }
+  removeImage = (id, isImage) => {
+    let { productImageSet, filesImage } = this.state
+    if (isImage) {
+      productImageSet.splice(id, 1)
+      this.setState({
+        productImageSet
+      })
+    }
+    else {
+
+
+      filesImage.splice(id, 1)
+      console.log("vaof rooif", filesImage)
+
+      this.setState({
+        filesImage
+      })
+    }
+
+  }
   handleSubmit = async (event) => {
     event.preventDefault();
     const {
@@ -109,16 +143,27 @@ class ActionProduct extends Component {
       unitPrice,
       descriptionProduct,
       categoryId,
-      supplierId, loading } = this.state;
-    let { productImage, img } = this.state;
+      supplierId,
+      filesImage,
+      productImageSet
+    } = this.state;
+
+    const newListImage = []
+    if(productImageSet.length>0){
+        productImageSet.map(item =>{
+        newListImage.push({ name: item.image})
+      })
+    }
     this.setState({
       loading: true
     })
-    if (img !== null && img !== productImage) {
-      console.log("vao rooi");
-      productImage = await uploadImage(img);
-
+    if (filesImage.length > 0)
+    for (const file of filesImage) {
+      const builder = await uploadImage(file);
+      newListImage.push({ name: builder});
     }
+    // up ảnh firebase
+
     const newProductName = productName === '' ? null : productName;
     const newQuantity = parseInt(quantity);
     const newDiscount = parseInt(discount);
@@ -126,47 +171,28 @@ class ActionProduct extends Component {
     const newDescriptionProduct = descriptionProduct === '' ? 'không mô tả' : descriptionProduct;
     const newCategoryId = parseInt(categoryId);
     const newSupplierId = parseInt(supplierId);
-    const newImage = productImage === '' ? 'http://via.placeholder.com/300x200' : productImage;
-    console.log("image", newImage)
+    // const newImage = productImage === '' ? 'http://via.placeholder.com/300x200' : productImage;
+    // console.log("image", newImage)
+    const newProduct = {
+      productName: newProductName,
+      quantity: newQuantity,
+      discount: newDiscount,
+      unitPrice: newUnitPrice,
+      descriptionProduct: newDescriptionProduct,
+      categoryId: newCategoryId,
+      supplierId: newSupplierId,
+      productImage: newListImage
+    }
     if (!id) {
-      const newProduct = {
-        productName: newProductName,
-        quantity: newQuantity,
-        discount: newDiscount,
-        unitPrice: newUnitPrice,
-        descriptionProduct: newDescriptionProduct,
-        categoryId: newCategoryId,
-        supplierId: newSupplierId,
-        productImage: newImage
-      }
-      console.log("data", newProduct)
       await this.props.add_Product(newProduct);
       this.setState({
-        productName: '',
-        quantity: 0,
-        productImage: '',
-        discount: 0,
-        unitPrice: 0,
-        descriptionProduct: '',
-        categoryId: null,
-        supplierId: 1,
-        img : null,
-        loading: false
+        loading: false,
+        redirectToProduct: true
       })
 
     }
     else {
-      const editProduct = {
-        productName: newProductName,
-        quantity: newQuantity,
-        discount: newDiscount,
-        unitPrice: newUnitPrice,
-        descriptionProduct: newDescriptionProduct,
-        categoryId: newCategoryId,
-        supplierId: newSupplierId,
-        productImage: newImage
-      }
-      await this.props.edit_Product(id, editProduct);
+      await this.props.edit_Product(id, newProduct);
       this.setState({
         loading: false,
         redirectToProduct: true
@@ -192,10 +218,11 @@ class ActionProduct extends Component {
   ];
 
   render() {
-    const { productName, quantity, productImage, discount, unitPrice, descriptionProduct, dataProducer, categoryId, dataCategories, supplierId,loading,redirectToProduct} = this.state;
+    const { productName, quantity, productImageSet, filesImage, discount, unitPrice, descriptionProduct, dataSupplieres, categoryId, dataCategories, supplierId, loading, redirectToProduct } = this.state;
     if (redirectToProduct) {
       return <Redirect to='/products'></Redirect>
     }
+    console.log(productImageSet)
     return (
       <div className="content-inner">
         {/* Page Header*/}
@@ -210,14 +237,20 @@ class ActionProduct extends Component {
         </div>
         <header className="page-header">
           <div className="container-fluid">
-            <h2 className="no-margin-bottom">Form Product</h2>
+            <h2 className="no-margin-bottom">Trang sản phẩm</h2>
           </div>
         </header>
         {/* Breadcrumb*/}
         <div className="breadcrumb-holder container-fluid">
           <ul className="breadcrumb">
             <li className="breadcrumb-item"><Link to="/">Trang chủ</Link></li>
-            <li className="breadcrumb-item active">Sản phẩm</li>
+            <li className="breadcrumb-item"><Link to="/products">Sản phẩm</Link></li>
+            {
+              !id ?
+               <li className="breadcrumb-item active">thêm sản phẩm</li>
+               :<li className="breadcrumb-item active"> Sửa sản phẩm</li>
+            }
+            
           </ul>
         </div>
         {/* Forms Section*/}
@@ -275,20 +308,8 @@ class ActionProduct extends Component {
                             className="form-control" />
                         </div>
                       </div>
-                      <div className="line" />
-                      {/* image */}
-                      <div className="form-group row">
-                        <label htmlFor="fileInput" className="col-sm-3 form-control-label">Ảnh</label>
-                        <div className="col-sm-9">
-                          <input
-                            onChange={this.handleChangeImage}
-                            type="file"
-                            className="form-control-file" />
-                          <div className="fix-cart-product">
-                            <img src={productImage || 'http://via.placeholder.com/300x200'} id="output" className="fix-img-product" alt="avatar" />
-                          </div>
-                        </div>
-                      </div>
+
+
                       <div className="line" />
                       {/* mô tả */}
                       <div className="form-group row">
@@ -322,7 +343,7 @@ class ActionProduct extends Component {
                                         id={item.categoryId}
                                         name="categoryId"
                                         checked
-                                        value={categoryId}
+                                        // value={categoryId}
                                         onChange={this.handleChange}
                                         type="radio"
                                         value={item.categoryId}
@@ -331,9 +352,10 @@ class ActionProduct extends Component {
                                       <input
                                         id={item.categoryId}
                                         name="categoryId"
-                                        value={categoryId}
+                                        // value={categoryId}
                                         onChange={this.handleChange}
-                                        type="radio" value={item.categoryId}
+                                        type="radio"
+                                        value={item.categoryId}
                                         className="radio-template" />
                                   }
                                   <label>{item.categoryName}</label>
@@ -354,7 +376,7 @@ class ActionProduct extends Component {
                         <div className="col-sm-9">
                           <select className="form-control mb-3" name="supplierId" value={supplierId} onChange={this.handleChangeSelecProducer}>
                             {
-                              dataProducer && dataProducer.length ? dataProducer.map((item, index) => {
+                              dataSupplieres && dataSupplieres.length ? dataSupplieres.map((item, index) => {
                                 return (
                                   <option key={item.supplierId} value={item.supplierId} >{item.supplierName}</option>
                                 )
@@ -364,6 +386,75 @@ class ActionProduct extends Component {
                         </div>
                       </div>
                       <div className="line" />
+                      {/* image */}
+                      <div className="form-group row">
+                        <label htmlFor="fileInput" className="col-sm-3 form-control-label">Ảnh</label>
+                        <div className="col-9 col-sm-9">
+                          <Dropzone onDrop={this.onDrop}>
+                            {({ getRootProps, getInputProps }) => (
+                              <section style={{ border: '1px dotted' }}>
+                                <div {...getRootProps({ className: 'dropzone' })}>
+                                  <input {...getInputProps()} />
+                                  <h2 className='ml-3'>Chọn ảnh tại đây!!!</h2>
+                                </div>
+                                <aside>
+
+                                  <div>
+                                    {
+                                      productImageSet && productImageSet.length > 0 ?
+                                        productImageSet.map((itemImage, index) => {
+                                          return (
+                                            < span key={itemImage.imageId}>
+                                              <div className='model m-3'>
+                                                <div className="modal-content">
+                                                  <div className="modal-header">
+                                                    <button type="button"
+                                                      onClick={() => this.removeImage(index, true)}
+                                                      className="close_button" >
+                                                      <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                  </div>
+                                                  <img src={itemImage.image} style={{ height: 100, width: 100 }} alt="notfound" />
+                                                </div>
+                                              </div>
+                                            </span>
+
+                                          )
+                                        })
+                                        : null
+
+                                    }
+                                    {
+                                      filesImage && filesImage.length > 0 ?
+                                        filesImage.map((itemImage, index) => {
+
+                                          return (
+                                            < span key={index}>
+                                              <div className='model m-3'>
+                                                <div className="modal-content">
+                                                  <div className="modal-header">
+                                                    <button onClick={() => this.removeImage(index, false)}
+                                                      type="button" className="close_button" >
+                                                      <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                  </div>
+                                                  <img src={URL.createObjectURL(itemImage)} style={{ height: 100, width: 100 }} alt="notfound" />
+                                                </div>
+                                              </div>
+                                            </span>
+
+                                          )
+                                        })
+                                        : null
+
+                                    }
+                                  </div>
+                                </aside>
+                              </section>
+                            )}
+                          </Dropzone>
+                        </div>
+                      </div>
                       {/* chức năng */}
                       <div className="form-group row">
                         <div className="col-sm-4 offset-sm-3">
@@ -376,11 +467,11 @@ class ActionProduct extends Component {
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </div >
+        </section >
         {/* Page Footer*/}
 
-      </div>
+      </div >
     )
   }
 }
